@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EmobilityHubApplication {
+public class EMobilityHubApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EmobilityHubApplication.class, args);
+		SpringApplication.run(EMobilityHubApplication.class, args);
 	}
 
 }
