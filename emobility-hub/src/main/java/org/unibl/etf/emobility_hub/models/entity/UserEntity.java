@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="user")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
