@@ -16,10 +16,19 @@ public class ManufacturerEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(nullable = false)
     private String country;
+
+    @Column(nullable = false)
     private String address;
+
+    @Column(unique = true, nullable = false)
     private String contactPhone;
+
+    @Column(unique = true, nullable = false)
     private String contactFax;
+
+    @Column(unique = true, nullable = false)
     private String contactEmail;
 
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, orphanRemoval = true)

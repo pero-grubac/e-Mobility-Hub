@@ -11,9 +11,12 @@ import java.time.LocalDateTime;
 public class FaultEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Primary Key
+    private Long id;
 
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
     private LocalDateTime dateTime;
 
     @ManyToOne

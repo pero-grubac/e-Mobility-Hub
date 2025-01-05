@@ -19,9 +19,14 @@ public abstract class TransportVehicleEntity {
     @JoinColumn(name = "manufacturer_id", nullable = false)
     private ManufacturerEntity manufacturer;
 
+    @Column(nullable = false)
     private String model;
+
     private double purchasePrice;
+
+    @Column(nullable = false)
     private String image;
+
     private boolean isBroken = false;
     private boolean isRented = false;
 }
