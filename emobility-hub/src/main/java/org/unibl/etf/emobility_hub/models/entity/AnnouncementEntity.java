@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name="promotion")
-public class PromotionEntity {
+@Table(name="announcement")
+public class AnnouncementEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,8 +20,5 @@ public class PromotionEntity {
     private String content;
 
     @Column(nullable = false)
-    private LocalDate startDate;
-
-    @Column(nullable = false)
-    private LocalDate endDate;
+    private LocalDate creationDate;
 }
