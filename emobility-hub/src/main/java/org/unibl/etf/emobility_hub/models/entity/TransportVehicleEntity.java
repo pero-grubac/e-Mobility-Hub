@@ -5,15 +5,15 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="transportVehicle")
+@Table(name="transport_vehicle")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class TransportVehicleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Primary Key
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    private String uniqueIdentifier; // Manually assigned unique ID
+    private String uniqueIdentifier;
 
     @ManyToOne
     @JoinColumn(name = "manufacturer_id", nullable = false)
