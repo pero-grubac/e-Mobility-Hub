@@ -21,4 +21,7 @@ public class AnnouncementEntity {
 
     @Column(nullable = false)
     private LocalDate creationDate;
+
+    @Column(nullable = false)
+    private LocalDate updateDate;
 }
