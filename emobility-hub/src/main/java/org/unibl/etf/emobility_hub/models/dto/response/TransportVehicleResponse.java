@@ -1,14 +1,13 @@
-package org.unibl.etf.emobility_hub.models.dto;
+package org.unibl.etf.emobility_hub.models.dto.response;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.unibl.etf.emobility_hub.models.dto.request.ManufacturerRequest;
 
 @Data
 public class TransportVehicleResponse {
     private Long id;
     private String uniqueIdentifier;
-    private Manufacturer manufacturer;
+    private ManufacturerRequest manufacturerRequest;
     private String model;
     private double purchasePrice;
     private String image;

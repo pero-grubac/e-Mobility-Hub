@@ -1,4 +1,4 @@
-package org.unibl.etf.emobility_hub.models.dto;
+package org.unibl.etf.emobility_hub.models.dto.request;
 
 import jakarta.validation.constraints.Min;
 import lombok.Data;

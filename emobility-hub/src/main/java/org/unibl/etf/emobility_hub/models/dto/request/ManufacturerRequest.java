@@ -1,11 +1,11 @@
-package org.unibl.etf.emobility_hub.models.dto;
+package org.unibl.etf.emobility_hub.models.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class Manufacturer {
+public class ManufacturerRequest {
     private Long id;
 
     @NotNull(message = "Name can not be null")

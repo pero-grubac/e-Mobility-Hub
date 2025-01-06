@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
-import org.unibl.etf.emobility_hub.models.dto.Announcement;
+import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.entity.AnnouncementEntity;
 import org.unibl.etf.emobility_hub.repositories.AnnouncementEntityRepository;
 import org.unibl.etf.emobility_hub.services.AnnouncementService;
@@ -27,36 +27,36 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
 
     @Override
-    public Page<Announcement> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(a -> mapper.map(a, Announcement.class));
+    public Page<AnnouncementRequest> findAll(Pageable pageable) {
+        return repository.findAll(pageable).map(a -> mapper.map(a, AnnouncementRequest.class));
     }
 
     @Override
-    public Announcement create(@Valid Announcement announcement) {
-        AnnouncementEntity entity = mapper.map(announcement, AnnouncementEntity.class);
+    public AnnouncementRequest create(@Valid AnnouncementRequest announcementRequest) {
+        AnnouncementEntity entity = mapper.map(announcementRequest, AnnouncementEntity.class);
         entity.setCreationDate(LocalDate.now());
         entity.setUpdateDate(LocalDate.now());
         repository.saveAndFlush(entity);
-        return mapper.map(entity, Announcement.class);
+        return mapper.map(entity, AnnouncementRequest.class);
     }
 
     @Override
-    public Announcement update(@Valid Announcement announcement) {
-        if (!repository.existsById(announcement.getId()))
-            throw new EntityNotFoundException("Announcement with ID " + announcement.getId() + " not found");
+    public AnnouncementRequest update(@Valid AnnouncementRequest announcementRequest) {
+        if (!repository.existsById(announcementRequest.getId()))
+            throw new EntityNotFoundException("Announcement with ID " + announcementRequest.getId() + " not found");
 
-        AnnouncementEntity entity = mapper.map(announcement, AnnouncementEntity.class);
+        AnnouncementEntity entity = mapper.map(announcementRequest, AnnouncementEntity.class);
         entity.setUpdateDate(LocalDate.now());
         repository.saveAndFlush(entity);
-        return mapper.map(entity, Announcement.class);
+        return mapper.map(entity, AnnouncementRequest.class);
     }
 
     @Override
-    public void delete(Announcement announcement) {
-        if (!repository.existsById(announcement.getId()))
-            throw new EntityNotFoundException("Announcement with ID " + announcement.getId() + " not found");
+    public void delete(AnnouncementRequest announcementRequest) {
+        if (!repository.existsById(announcementRequest.getId()))
+            throw new EntityNotFoundException("Announcement with ID " + announcementRequest.getId() + " not found");
 
-        repository.deleteById(announcement.getId());
+        repository.deleteById(announcementRequest.getId());
         repository.flush();
     }
 }

@@ -1,4 +1,4 @@
-package org.unibl.etf.emobility_hub.models.dto;
+package org.unibl.etf.emobility_hub.models.dto.response;
 
 import lombok.Data;
 
