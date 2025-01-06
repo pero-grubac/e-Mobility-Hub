@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
-import org.unibl.etf.emobility_hub.models.domain.AnnouncementEntity;
+import org.unibl.etf.emobility_hub.models.domain.entity.AnnouncementEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
 import org.unibl.etf.emobility_hub.repositories.AnnouncementEntityRepository;
 import org.unibl.etf.emobility_hub.services.AnnouncementService;
