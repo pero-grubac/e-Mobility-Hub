@@ -23,32 +23,32 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Autowired
     private AnnouncementEntityRepository repository;
     @Autowired
-    private ModelMapper modelMapper;
+    private ModelMapper mapper;
 
 
     @Override
     public Page<Announcement> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(a -> modelMapper.map(a, Announcement.class));
+        return repository.findAll(pageable).map(a -> mapper.map(a, Announcement.class));
     }
 
     @Override
     public Announcement create(@Valid Announcement announcement) {
-        AnnouncementEntity entity = modelMapper.map(announcement, AnnouncementEntity.class);
+        AnnouncementEntity entity = mapper.map(announcement, AnnouncementEntity.class);
         entity.setCreationDate(LocalDate.now());
         entity.setUpdateDate(LocalDate.now());
         repository.saveAndFlush(entity);
-        return modelMapper.map(entity, Announcement.class);
+        return mapper.map(entity, Announcement.class);
     }
 
     @Override
-    public Announcement update(Announcement announcement) {
+    public Announcement update(@Valid Announcement announcement) {
         if (!repository.existsById(announcement.getId()))
             throw new EntityNotFoundException("Announcement with ID " + announcement.getId() + " not found");
 
-        AnnouncementEntity entity = modelMapper.map(announcement, AnnouncementEntity.class);
+        AnnouncementEntity entity = mapper.map(announcement, AnnouncementEntity.class);
         entity.setUpdateDate(LocalDate.now());
         repository.saveAndFlush(entity);
-        return modelMapper.map(entity, Announcement.class);
+        return mapper.map(entity, Announcement.class);
     }
 
     @Override
