@@ -9,7 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
-import org.unibl.etf.emobility_hub.models.entity.AnnouncementEntity;
+import org.unibl.etf.emobility_hub.models.domain.AnnouncementEntity;
+import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
 import org.unibl.etf.emobility_hub.repositories.AnnouncementEntityRepository;
 import org.unibl.etf.emobility_hub.services.AnnouncementService;
 
@@ -27,28 +28,28 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
 
     @Override
-    public Page<AnnouncementRequest> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(a -> mapper.map(a, AnnouncementRequest.class));
+    public Page<AnnouncementResponse> findAll(Pageable pageable) {
+        return repository.findAll(pageable).map(a -> mapper.map(a, AnnouncementResponse.class));
     }
 
     @Override
-    public AnnouncementRequest create(@Valid AnnouncementRequest announcementRequest) {
+    public AnnouncementResponse create(@Valid AnnouncementRequest announcementRequest) {
         AnnouncementEntity entity = mapper.map(announcementRequest, AnnouncementEntity.class);
         entity.setCreationDate(LocalDate.now());
         entity.setUpdateDate(LocalDate.now());
         repository.saveAndFlush(entity);
-        return mapper.map(entity, AnnouncementRequest.class);
+        return mapper.map(entity, AnnouncementResponse.class);
     }
 
     @Override
-    public AnnouncementRequest update(@Valid AnnouncementRequest announcementRequest) {
+    public AnnouncementResponse update(@Valid AnnouncementRequest announcementRequest) {
         if (!repository.existsById(announcementRequest.getId()))
             throw new EntityNotFoundException("Announcement with ID " + announcementRequest.getId() + " not found");
 
         AnnouncementEntity entity = mapper.map(announcementRequest, AnnouncementEntity.class);
         entity.setUpdateDate(LocalDate.now());
         repository.saveAndFlush(entity);
-        return mapper.map(entity, AnnouncementRequest.class);
+        return mapper.map(entity, AnnouncementResponse.class);
     }
 
     @Override

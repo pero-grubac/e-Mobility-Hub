@@ -1,4 +1,4 @@
-package org.unibl.etf.emobility_hub.models.entity;
+package org.unibl.etf.emobility_hub.models.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;

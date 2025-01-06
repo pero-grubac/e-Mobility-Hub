@@ -1,4 +1,4 @@
-package org.unibl.etf.emobility_hub.models.entity;
+package org.unibl.etf.emobility_hub.models.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

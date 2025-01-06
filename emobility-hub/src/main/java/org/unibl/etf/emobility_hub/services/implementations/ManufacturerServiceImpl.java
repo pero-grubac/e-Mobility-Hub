@@ -9,7 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.dto.request.ManufacturerRequest;
-import org.unibl.etf.emobility_hub.models.entity.ManufacturerEntity;
+import org.unibl.etf.emobility_hub.models.domain.ManufacturerEntity;
+import org.unibl.etf.emobility_hub.models.dto.response.ManufacturerResponse;
 import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
 import org.unibl.etf.emobility_hub.services.ManufacturerService;
 
@@ -26,34 +27,34 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     private ModelMapper mapper;
 
     @Override
-    public Page<ManufacturerRequest> getAll(Pageable pageable) {
-        return repository.findAll(pageable).map(m -> mapper.map(m, ManufacturerRequest.class));
+    public Page<ManufacturerResponse> getAll(Pageable pageable) {
+        return repository.findAll(pageable).map(m -> mapper.map(m, ManufacturerResponse.class));
     }
 
     @Override
-    public ManufacturerRequest getById(Long id) {
+    public ManufacturerResponse getById(Long id) {
         Optional<ManufacturerEntity> entity = repository.findById(id);
         if (entity.isEmpty())
             throw new EntityNotFoundException("Manufacturer with ID " + id + " not found");
 
-        return mapper.map(entity.get(), ManufacturerRequest.class);
+        return mapper.map(entity.get(), ManufacturerResponse.class);
     }
 
     @Override
-    public ManufacturerRequest create(@Valid ManufacturerRequest manufacturerRequest) {
+    public ManufacturerResponse create(@Valid ManufacturerRequest manufacturerRequest) {
         ManufacturerEntity entity = mapper.map(manufacturerRequest, ManufacturerEntity.class);
         repository.saveAndFlush(entity);
-        return mapper.map(entity, ManufacturerRequest.class);
+        return mapper.map(entity, ManufacturerResponse.class);
     }
 
     @Override
-    public ManufacturerRequest update(@Valid ManufacturerRequest manufacturerRequest) {
+    public ManufacturerResponse update(@Valid ManufacturerRequest manufacturerRequest) {
         if (!repository.existsById(manufacturerRequest.getId()))
             throw new EntityNotFoundException("Manufacturer with ID " + manufacturerRequest.getId() + " not found");
 
         ManufacturerEntity entity = mapper.map(manufacturerRequest, ManufacturerEntity.class);
         repository.saveAndFlush(entity);
-        return mapper.map(entity, ManufacturerRequest.class);
+        return mapper.map(entity, ManufacturerResponse.class);
 
     }
 
