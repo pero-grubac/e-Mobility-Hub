@@ -5,9 +5,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class Fault {
+public class FaultResponse {
     private Long id;
     private String description;
     private LocalDateTime dateTime;
+    private TransportVehicleResponse vehicle;
 
 }
