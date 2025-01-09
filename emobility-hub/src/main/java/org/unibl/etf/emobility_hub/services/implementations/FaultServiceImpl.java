@@ -42,6 +42,7 @@ public class FaultServiceImpl
         vehicleRepository.saveAndFlush(vehicle);
 
         FaultEntity entity = getMapper().map(faultRequest, FaultEntity.class);
+        entity.setId(null);
         entity.setCreationDateTime(LocalDateTime.now());
         entity.setUpdateDateTime(entity.getCreationDateTime());
         getRepository().saveAndFlush(entity);

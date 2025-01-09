@@ -3,61 +3,46 @@ package org.unibl.etf.emobility_hub.services.implementations;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
+import org.unibl.etf.emobility_hub.base.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.models.domain.entity.PromotionEntity;
 import org.unibl.etf.emobility_hub.models.dto.request.PromotionRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.PromotionResponse;
 import org.unibl.etf.emobility_hub.repositories.PromotionEntityRepository;
 import org.unibl.etf.emobility_hub.services.IPromotionService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
 @Transactional
-public class PromotionServiceImpl implements IPromotionService {
+public class PromotionServiceImpl
+        extends BaseCRUDServiceImpl<PromotionEntity, PromotionRequest, PromotionResponse, PromotionResponse, Long>
+        implements IPromotionService {
 
     @Autowired
-    private PromotionEntityRepository repository;
-
-    @Autowired
-    private ModelMapper mapper;
-
-    @Override
-    public Page<PromotionResponse> getAll(Pageable pageable) {
-        return repository.findAll(pageable).map(p -> mapper.map(p, PromotionResponse.class));
+    public PromotionServiceImpl(ModelMapper mapper, PromotionEntityRepository repository) {
+        super(mapper, repository, PromotionEntity.class, PromotionRequest.class, PromotionResponse.class, PromotionResponse.class);
     }
 
     @Override
     public PromotionResponse create(PromotionRequest promotionRequest) {
-        PromotionEntity entity = mapper.map(promotionRequest, PromotionEntity.class);
+        PromotionEntity entity = getMapper().map(promotionRequest, PromotionEntity.class);
+        entity.setId(null);
         entity.setStartDate(LocalDateTime.parse(promotionRequest.getStartDate()));
         entity.setEndDate(LocalDateTime.parse(promotionRequest.getEndDate()));
-        repository.saveAndFlush(entity);
-        return mapper.map(entity, PromotionResponse.class);
+        getRepository().saveAndFlush(entity);
+        return getMapper().map(entity, PromotionResponse.class);
     }
 
     @Override
     public PromotionResponse update(PromotionRequest promotionRequest) {
-        if (!repository.existsById(promotionRequest.getId()))
-            throw new EntityNotFoundException("Promotion with ID " + promotionRequest.getId() + " not found");
-
-        PromotionEntity entity = mapper.map(promotionRequest, PromotionEntity.class);
+        PromotionEntity entity = findById(promotionRequest.getId());
+        entity.setTitle(promotionRequest.getTitle());
+        entity.setContent(promotionRequest.getContent());
         entity.setStartDate(LocalDateTime.parse(promotionRequest.getStartDate()));
         entity.setEndDate(LocalDateTime.parse(promotionRequest.getEndDate()));
-        repository.saveAndFlush(entity);
-        return mapper.map(entity, PromotionResponse.class);
+        getRepository().saveAndFlush(entity);
+        return getMapper().map(entity, PromotionResponse.class);
     }
 
-    @Override
-    public void delete(Long id) {
-        if (!repository.existsById(id))
-            throw new EntityNotFoundException("Promotion with ID " + id + " not found");
-
-        repository.deleteById(id);
-        repository.flush();
-    }
 }

@@ -7,9 +7,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class PromotionRequest {
-    private Long id;
-
+public class PromotionRequest extends BaseRequest<Long>{
     @NotNull(message = "Title can not be null")
     @NotEmpty(message = "Title can not be empty")
     private String title;

@@ -29,6 +29,7 @@ public class AnnouncementServiceImpl
     @Override
     public AnnouncementResponse create(@Valid AnnouncementRequest announcementRequest) {
         AnnouncementEntity entity = getMapper().map(announcementRequest, AnnouncementEntity.class);
+        entity.setId(null);
         entity.setCreationDate(LocalDateTime.now());
         entity.setUpdateDate(entity.getCreationDate());
         getRepository().saveAndFlush(entity);
@@ -37,7 +38,7 @@ public class AnnouncementServiceImpl
 
     @Override
     public AnnouncementResponse update(@Valid AnnouncementRequest announcementRequest) {
-        AnnouncementEntity entity=findById(announcementRequest.getId());
+        AnnouncementEntity entity = findById(announcementRequest.getId());
         entity.setTitle(announcementRequest.getTitle());
         entity.setContent(announcementRequest.getContent());
         entity.setUpdateDate(LocalDateTime.now());
