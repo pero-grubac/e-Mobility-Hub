@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 public class FaultResponse {
     private Long id;
     private String description;
-    private LocalDateTime dateTime;
+    private LocalDateTime creationDateTime;
+    private LocalDateTime updateDateTime;
     private TransportVehicleResponse vehicle;
 
 }

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import org.unibl.etf.emobility_hub.models.domain.entity.FaultEntity;
 
 @Repository
-public interface FaultEntityRepository extends JpaRepository<FaultEntity, Integer> {
+public interface FaultEntityRepository extends JpaRepository<FaultEntity, Long> {
 }

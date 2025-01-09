@@ -36,7 +36,7 @@ public class AnnouncementServiceImpl implements IAnnouncementService {
     public AnnouncementResponse create(@Valid AnnouncementRequest announcementRequest) {
         AnnouncementEntity entity = mapper.map(announcementRequest, AnnouncementEntity.class);
         entity.setCreationDate(LocalDate.now());
-        entity.setUpdateDate(LocalDate.now());
+        entity.setUpdateDate(entity.getCreationDate());
         repository.saveAndFlush(entity);
         return mapper.map(entity, AnnouncementResponse.class);
     }
@@ -53,11 +53,11 @@ public class AnnouncementServiceImpl implements IAnnouncementService {
     }
 
     @Override
-    public void delete(AnnouncementRequest announcementRequest) {
-        if (!repository.existsById(announcementRequest.getId()))
-            throw new EntityNotFoundException("Announcement with ID " + announcementRequest.getId() + " not found");
+    public void delete(Long id) {
+        if (!repository.existsById(id))
+            throw new EntityNotFoundException("Announcement with ID " + id + " not found");
 
-        repository.deleteById(announcementRequest.getId());
+        repository.deleteById(id);
         repository.flush();
     }
 }

@@ -17,7 +17,10 @@ public class FaultEntity {
     private String description;
 
     @Column(nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDateTime creationDateTime;
+
+    @Column(nullable = false)
+    private LocalDateTime updateDateTime;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id", nullable = false)

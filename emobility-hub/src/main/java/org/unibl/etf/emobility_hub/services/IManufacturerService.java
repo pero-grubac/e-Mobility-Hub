@@ -10,5 +10,5 @@ public interface IManufacturerService {
     ManufacturerResponse getById(Long id);
     ManufacturerResponse create(ManufacturerRequest manufacturerRequest);
     ManufacturerResponse update(ManufacturerRequest manufacturerRequest);
-    void delete(ManufacturerRequest manufacturerRequest);
+    void delete(Long id);
 }

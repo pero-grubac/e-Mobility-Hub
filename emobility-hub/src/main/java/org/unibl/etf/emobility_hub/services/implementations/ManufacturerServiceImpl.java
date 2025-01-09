@@ -59,10 +59,10 @@ public class ManufacturerServiceImpl implements IManufacturerService {
     }
 
     @Override
-    public void delete(ManufacturerRequest manufacturerRequest) {
-        if (!repository.existsById(manufacturerRequest.getId()))
-            throw new EntityNotFoundException("Manufacturer with ID " + manufacturerRequest.getId() + " not found");
-        repository.deleteById(manufacturerRequest.getId());
+    public void delete(Long id) {
+        if (!repository.existsById(id))
+            throw new EntityNotFoundException("Manufacturer with ID " + id + " not found");
+        repository.deleteById(id);
         repository.flush();
     }
 }

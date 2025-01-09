@@ -2,8 +2,10 @@ package org.unibl.etf.emobility_hub.models.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+@Data
 public class TransportVehicleRequest {
     private Long id;
 

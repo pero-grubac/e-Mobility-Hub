@@ -9,5 +9,5 @@ public interface IAnnouncementService {
     Page<AnnouncementResponse> findAll(Pageable pageable);
     AnnouncementResponse create(AnnouncementRequest announcementRequest);
     AnnouncementResponse update(AnnouncementRequest announcementRequest);
-    void delete(AnnouncementRequest announcementRequest);
+    void delete(Long id);
 }
