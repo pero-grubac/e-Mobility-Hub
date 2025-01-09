@@ -9,7 +9,7 @@ import org.unibl.etf.emobility_hub.models.dto.response.detailed.DetailedElectric
 import org.unibl.etf.emobility_hub.services.IElectricCarService;
 
 @RestController
-@RequestMapping("/electric-car")
+@RequestMapping("/electric-cars")
 public class ElectricCarController
         extends BaseVehicleCRUDController<ElectricCarRequest, ElectricCarResponse, DetailedElectricCarResponse> {
     public ElectricCarController(IElectricCarService service) {
