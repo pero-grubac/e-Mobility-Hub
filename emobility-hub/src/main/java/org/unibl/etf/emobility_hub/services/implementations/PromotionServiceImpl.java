@@ -14,6 +14,7 @@ import org.unibl.etf.emobility_hub.repositories.PromotionEntityRepository;
 import org.unibl.etf.emobility_hub.services.IPromotionService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -33,8 +34,8 @@ public class PromotionServiceImpl implements IPromotionService {
     @Override
     public PromotionResponse create(PromotionRequest promotionRequest) {
         PromotionEntity entity = mapper.map(promotionRequest, PromotionEntity.class);
-        entity.setStartDate(LocalDate.parse(promotionRequest.getStartDate()));
-        entity.setEndDate(LocalDate.parse(promotionRequest.getEndDate()));
+        entity.setStartDate(LocalDateTime.parse(promotionRequest.getStartDate()));
+        entity.setEndDate(LocalDateTime.parse(promotionRequest.getEndDate()));
         repository.saveAndFlush(entity);
         return mapper.map(entity, PromotionResponse.class);
     }
@@ -45,8 +46,8 @@ public class PromotionServiceImpl implements IPromotionService {
             throw new EntityNotFoundException("Promotion with ID " + promotionRequest.getId() + " not found");
 
         PromotionEntity entity = mapper.map(promotionRequest, PromotionEntity.class);
-        entity.setStartDate(LocalDate.parse(promotionRequest.getStartDate()));
-        entity.setEndDate(LocalDate.parse(promotionRequest.getEndDate()));
+        entity.setStartDate(LocalDateTime.parse(promotionRequest.getStartDate()));
+        entity.setEndDate(LocalDateTime.parse(promotionRequest.getEndDate()));
         repository.saveAndFlush(entity);
         return mapper.map(entity, PromotionResponse.class);
     }

@@ -17,7 +17,9 @@ import java.time.LocalDateTime;
 
 @Service
 @Transactional
-public class AnnouncementServiceImpl extends BaseCRUDServiceImpl<AnnouncementEntity, AnnouncementRequest, AnnouncementResponse, AnnouncementResponse, Long> implements IAnnouncementService {
+public class AnnouncementServiceImpl
+        extends BaseCRUDServiceImpl<AnnouncementEntity, AnnouncementRequest, AnnouncementResponse, AnnouncementResponse, Long>
+        implements IAnnouncementService {
 
     @Autowired
     public AnnouncementServiceImpl(ModelMapper mapper, AnnouncementEntityRepository repository) {

@@ -5,9 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class ManufacturerRequest {
-    private Long id;
-
+public class ManufacturerRequest extends BaseRequest<Long> {
     @NotNull(message = "Name can not be null")
     @NotEmpty(message = "Name can not be empty")
     private String name;

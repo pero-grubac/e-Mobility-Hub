@@ -22,7 +22,9 @@ import java.time.LocalDateTime;
 
 @Service
 @Transactional
-public class FaultServiceImpl extends BaseCRUDServiceImpl<FaultEntity, FaultRequest, FaultResponse, FaultResponse, Long> implements IFaultService {
+public class FaultServiceImpl
+        extends BaseCRUDServiceImpl<FaultEntity, FaultRequest, FaultResponse, FaultResponse, Long>
+        implements IFaultService {
     @Autowired
     private TransportVehicleRepository vehicleRepository;
 

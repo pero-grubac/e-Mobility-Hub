@@ -9,7 +9,8 @@ import org.unibl.etf.emobility_hub.services.IFaultService;
 
 @RestController
 @RequestMapping("/faults")
-public class FaultController extends BaseCRUDController<FaultRequest, FaultResponse, FaultResponse, Long> {
+public class FaultController
+        extends BaseCRUDController<FaultRequest, FaultResponse, FaultResponse, Long> {
 
     public FaultController(IFaultService service) {
         super(service);

@@ -1,6 +1,7 @@
 package org.unibl.etf.emobility_hub.base;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -46,14 +47,14 @@ public class BaseCRUDServiceImpl<TEntity, TRequest extends BaseRequest<ID>, TRes
     }
 
     @Override
-    public TResponse create(TRequest tRequest) {
+    public TResponse create(@Valid TRequest tRequest) {
         TEntity te = mapper.map(tRequest, entityClass);
         repository.saveAndFlush(te);
         return mapper.map(te, responseClass);
     }
 
     @Override
-    public TResponse update(TRequest tRequest) {
+    public TResponse update(@Valid TRequest tRequest) {
         existsById(tRequest.getId());
         TEntity te = mapper.map(tRequest, entityClass);
         repository.saveAndFlush(te);
