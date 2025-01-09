@@ -6,7 +6,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Table(name="electric_car")
 public class ElectricCarEntity extends TransportVehicleEntity {
     @Column(nullable = false)
-    private LocalDate purchaseDate;
+    private LocalDateTime purchaseDate;
 
     @Column(nullable = false)
     private String description;

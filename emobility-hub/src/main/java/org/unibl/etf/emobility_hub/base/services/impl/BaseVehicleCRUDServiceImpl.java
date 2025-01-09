@@ -105,7 +105,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends TransportVehicleRepo
         return getMapper().map(te, getResponseClass());
     }
 
-    private String saveImageToFileSystem(MultipartFile imageFile, TEntity te) {
+    protected String saveImageToFileSystem(MultipartFile imageFile, TEntity te) {
         String uploadDir = baseDir + File.separator + TransportVehicleEntity.class.getSimpleName().toLowerCase()
                 + File.separator + te.getClass().getSimpleName().toLowerCase() + File.separator
                 + te.getId() + File.separator;
@@ -151,7 +151,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends TransportVehicleRepo
     }
 
 
-    private ManufacturerEntity findManufacturerById(TRequest request) {
+    protected ManufacturerEntity findManufacturerById(TRequest request) {
         ManufacturerEntity entity = manufacturerEntityRepository.findById(request.getManufacturerId()).orElse(null);
         if (entity == null)
             throw new EntityNotFoundException("Manufacturer with ID " + request.getManufacturerId() + " not found");

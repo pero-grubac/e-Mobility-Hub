@@ -4,10 +4,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ElectricCarResponse extends TransportVehicleResponse{
-    private LocalDate purchaseDate;
+    private LocalDateTime purchaseDate;
     private String description;
 }
