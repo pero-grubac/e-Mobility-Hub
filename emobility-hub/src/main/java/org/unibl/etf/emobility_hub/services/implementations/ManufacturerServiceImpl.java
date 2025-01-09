@@ -11,6 +11,7 @@ import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.dto.request.ManufacturerRequest;
 import org.unibl.etf.emobility_hub.models.domain.entity.ManufacturerEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.ManufacturerResponse;
+import org.unibl.etf.emobility_hub.models.dto.response.detailed.DetailedManufacturerResponse;
 import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
 import org.unibl.etf.emobility_hub.services.IManufacturerService;
 
@@ -32,12 +33,12 @@ public class ManufacturerServiceImpl implements IManufacturerService {
     }
 
     @Override
-    public ManufacturerResponse getById(Long id) {
+    public DetailedManufacturerResponse getById(Long id) {
         Optional<ManufacturerEntity> entity = repository.findById(id);
         if (entity.isEmpty())
             throw new EntityNotFoundException("Manufacturer with ID " + id + " not found");
 
-        return mapper.map(entity.get(), ManufacturerResponse.class);
+        return mapper.map(entity.get(), DetailedManufacturerResponse.class);
     }
 
     @Override

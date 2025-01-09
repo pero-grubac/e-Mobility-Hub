@@ -7,7 +7,6 @@ import org.unibl.etf.emobility_hub.models.dto.request.ManufacturerRequest;
 public class TransportVehicleResponse {
     private Long id;
     private String uniqueIdentifier;
-    private ManufacturerRequest manufacturerRequest;
     private String model;
     private double purchasePrice;
     private String image;

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.domain.entity.FaultEntity;
+import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.dto.request.FaultRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.FaultResponse;
 import org.unibl.etf.emobility_hub.repositories.FaultEntityRepository;
@@ -37,8 +38,11 @@ public class FaultServiceImpl implements IFaultService {
 
     @Override
     public FaultResponse create(@Valid FaultRequest faultRequest) {
-        if (!vehicleRepository.existsById(faultRequest.getVehicleId()))
+        TransportVehicleEntity vehicle = vehicleRepository.findById(faultRequest.getVehicleId()).orElse(null);
+        if (vehicle == null)
             throw new EntityNotFoundException("Vehicle with ID " + faultRequest.getVehicleId() + " not found");
+        vehicle.setBroken(true);
+        vehicleRepository.saveAndFlush(vehicle);
 
         FaultEntity entity = mapper.map(faultRequest, FaultEntity.class);
         entity.setCreationDateTime(LocalDateTime.now());
