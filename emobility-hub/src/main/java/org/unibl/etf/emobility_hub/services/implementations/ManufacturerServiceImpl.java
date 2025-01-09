@@ -12,13 +12,13 @@ import org.unibl.etf.emobility_hub.models.dto.request.ManufacturerRequest;
 import org.unibl.etf.emobility_hub.models.domain.entity.ManufacturerEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.ManufacturerResponse;
 import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
-import org.unibl.etf.emobility_hub.services.ManufacturerService;
+import org.unibl.etf.emobility_hub.services.IManufacturerService;
 
 import java.util.Optional;
 
 @Service
 @Transactional
-public class ManufacturerServiceImpl implements ManufacturerService {
+public class ManufacturerServiceImpl implements IManufacturerService {
 
     @Autowired
     private ManufacturerEntityRepository repository;

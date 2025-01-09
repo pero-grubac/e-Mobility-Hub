@@ -12,14 +12,14 @@ import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.domain.entity.AnnouncementEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
 import org.unibl.etf.emobility_hub.repositories.AnnouncementEntityRepository;
-import org.unibl.etf.emobility_hub.services.AnnouncementService;
+import org.unibl.etf.emobility_hub.services.IAnnouncementService;
 
 import java.time.LocalDate;
 
 
 @Service
 @Transactional
-public class AnnouncementServiceImpl implements AnnouncementService {
+public class AnnouncementServiceImpl implements IAnnouncementService {
 
     @Autowired
     private AnnouncementEntityRepository repository;

@@ -1,10 +1,10 @@
 package org.unibl.etf.emobility_hub.models.domain.value;
 
 import jakarta.persistence.Embeddable;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
-@Getter
+@Data
 @EqualsAndHashCode
 @Embeddable
 public class Location {
