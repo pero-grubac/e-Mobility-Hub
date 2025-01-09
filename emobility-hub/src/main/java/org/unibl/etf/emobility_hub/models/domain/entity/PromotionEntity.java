@@ -3,7 +3,7 @@ package org.unibl.etf.emobility_hub.models.domain.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -20,8 +20,8 @@ public class PromotionEntity {
     private String content;
 
     @Column(nullable = false)
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Column(nullable = false)
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 }

@@ -12,7 +12,7 @@ import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
 import org.unibl.etf.emobility_hub.repositories.AnnouncementEntityRepository;
 import org.unibl.etf.emobility_hub.services.IAnnouncementService;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Service
@@ -27,7 +27,7 @@ public class AnnouncementServiceImpl extends BaseCRUDServiceImpl<AnnouncementEnt
     @Override
     public AnnouncementResponse create(@Valid AnnouncementRequest announcementRequest) {
         AnnouncementEntity entity = getMapper().map(announcementRequest, AnnouncementEntity.class);
-        entity.setCreationDate(LocalDate.now());
+        entity.setCreationDate(LocalDateTime.now());
         entity.setUpdateDate(entity.getCreationDate());
         getRepository().saveAndFlush(entity);
         return getMapper().map(entity, AnnouncementResponse.class);
@@ -38,7 +38,7 @@ public class AnnouncementServiceImpl extends BaseCRUDServiceImpl<AnnouncementEnt
         AnnouncementEntity entity=findById(announcementRequest.getId());
         entity.setTitle(announcementRequest.getTitle());
         entity.setContent(announcementRequest.getContent());
-        entity.setUpdateDate(LocalDate.now());
+        entity.setUpdateDate(LocalDateTime.now());
         getRepository().saveAndFlush(entity);
         return getMapper().map(entity, AnnouncementResponse.class);
     }

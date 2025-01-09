@@ -6,7 +6,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.emobility_hub.base.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.domain.entity.FaultEntity;
 import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
@@ -20,21 +22,14 @@ import java.time.LocalDateTime;
 
 @Service
 @Transactional
-public class FaultServiceImpl implements IFaultService {
-
-    @Autowired
-    private FaultEntityRepository repository;
-
+public class FaultServiceImpl extends BaseCRUDServiceImpl<FaultEntity, FaultRequest, FaultResponse, FaultResponse, Long> implements IFaultService {
     @Autowired
     private TransportVehicleRepository vehicleRepository;
 
-    @Autowired
-    private ModelMapper mapper;
-
-    @Override
-    public Page<FaultResponse> getAll(Pageable pageable) {
-        return repository.findAll(pageable).map(f -> mapper.map(f, FaultResponse.class));
+    public FaultServiceImpl(ModelMapper mapper, FaultEntityRepository repository) {
+        super(mapper, repository, FaultEntity.class, FaultRequest.class, FaultResponse.class, FaultResponse.class);
     }
+
 
     @Override
     public FaultResponse create(@Valid FaultRequest faultRequest) {
@@ -44,11 +39,11 @@ public class FaultServiceImpl implements IFaultService {
         vehicle.setBroken(true);
         vehicleRepository.saveAndFlush(vehicle);
 
-        FaultEntity entity = mapper.map(faultRequest, FaultEntity.class);
+        FaultEntity entity = getMapper().map(faultRequest, FaultEntity.class);
         entity.setCreationDateTime(LocalDateTime.now());
         entity.setUpdateDateTime(entity.getCreationDateTime());
-        repository.saveAndFlush(entity);
-        return mapper.map(entity, FaultResponse.class);
+        getRepository().saveAndFlush(entity);
+        return getMapper().map(entity, FaultResponse.class);
     }
 
     @Override
@@ -56,21 +51,14 @@ public class FaultServiceImpl implements IFaultService {
         if (!vehicleRepository.existsById(faultRequest.getVehicleId()))
             throw new EntityNotFoundException("Vehicle with ID " + faultRequest.getVehicleId() + " not found");
 
-        if (!repository.existsById(faultRequest.getId()))
+        if (!getRepository().existsById(faultRequest.getId()))
             throw new EntityNotFoundException("Fault with ID " + faultRequest.getId() + " not found");
 
-        FaultEntity entity = mapper.map(faultRequest, FaultEntity.class);
+        FaultEntity entity = getMapper().map(faultRequest, FaultEntity.class);
         entity.setUpdateDateTime(LocalDateTime.now());
-        repository.saveAndFlush(entity);
-        return mapper.map(entity, FaultResponse.class);
+        getRepository().saveAndFlush(entity);
+        return getMapper().map(entity, FaultResponse.class);
     }
 
-    @Override
-    public void delete(Long id) {
-        if (!repository.existsById(id))
-            throw new EntityNotFoundException("Fault with ID " + id + " not found");
-
-        repository.deleteById(id);
-        repository.flush();
-    }
 }
+

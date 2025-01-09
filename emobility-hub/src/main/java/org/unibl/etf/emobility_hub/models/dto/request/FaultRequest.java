@@ -5,9 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class FaultRequest {
-    private Long id;
-
+public class FaultRequest extends BaseRequest<Long> {
     @NotNull(message = "Description can not be null")
     @NotEmpty(message = "Description can not be empty")
     private String description;
