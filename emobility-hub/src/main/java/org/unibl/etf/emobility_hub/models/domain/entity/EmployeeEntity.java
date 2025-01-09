@@ -1,10 +1,9 @@
 package org.unibl.etf.emobility_hub.models.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.unibl.etf.emobility_hub.models.domain.value.RoleEnum;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -12,5 +11,6 @@ import lombok.EqualsAndHashCode;
 @Table(name="employee")
 public class EmployeeEntity extends UserEntity {
     @Column(nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role;
 }
