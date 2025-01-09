@@ -1,4 +1,4 @@
-package org.unibl.etf.emobility_hub.services.implementations;
+package org.unibl.etf.emobility_hub.base;
 
 import jakarta.transaction.Transactional;
 import lombok.Getter;
@@ -8,23 +8,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.dto.request.BaseRequest;
-import org.unibl.etf.emobility_hub.services.IBaseService;
 
 import java.util.Optional;
 
 @Getter
 @Transactional
-public class BaseServiceImpl<TEntity, TRequest extends BaseRequest<ID>, TResponse, TDetailedResponse, ID> implements IBaseService<TRequest, TResponse, TDetailedResponse, ID> {
+public class BaseCRUDServiceImpl<TEntity, TRequest extends BaseRequest<ID>, TResponse, TDetailedResponse, ID> implements IBaseCRUDService<TRequest, TResponse, TDetailedResponse, ID> {
 
-    private ModelMapper mapper;
-    private JpaRepository<TEntity, ID> repository;
-    private Class<TEntity> entityClass;
-    private Class<TRequest> requestClass;
-    private Class<TResponse> responseClass;
-    private Class<TDetailedResponse> detailedResponseClass;
+    private final ModelMapper mapper;
+    private final JpaRepository<TEntity, ID> repository;
+    private final Class<TEntity> entityClass;
+    private final Class<TRequest> requestClass;
+    private final Class<TResponse> responseClass;
+    private final Class<TDetailedResponse> detailedResponseClass;
 
 
-    public BaseServiceImpl(ModelMapper mapper, JpaRepository<TEntity, ID> repository, Class<TEntity> entityClass, Class<TRequest> requestClass, Class<TResponse> responseClass, Class<TDetailedResponse> detailedResponseClass) {
+    public BaseCRUDServiceImpl(ModelMapper mapper, JpaRepository<TEntity, ID> repository, Class<TEntity> entityClass, Class<TRequest> requestClass, Class<TResponse> responseClass, Class<TDetailedResponse> detailedResponseClass) {
         this.mapper = mapper;
         this.repository = repository;
         this.entityClass = entityClass;
@@ -56,7 +55,6 @@ public class BaseServiceImpl<TEntity, TRequest extends BaseRequest<ID>, TRespons
     @Override
     public TResponse update(TRequest tRequest) {
         existsById(tRequest.getId());
-
         TEntity te = mapper.map(tRequest, entityClass);
         repository.saveAndFlush(te);
         return mapper.map(te, responseClass);
@@ -73,5 +71,12 @@ public class BaseServiceImpl<TEntity, TRequest extends BaseRequest<ID>, TRespons
         if (!repository.existsById(id))
             throw new EntityNotFoundException(entityClass.getSimpleName() + " with ID " + id + " not found");
 
+    }
+
+    protected TEntity findById(ID id) {
+        TEntity te = repository.findById(id).orElse(null);
+        if (te == null)
+            throw new EntityNotFoundException(entityClass.getSimpleName() + " with ID " + id + " not found");
+        return te;
     }
 }

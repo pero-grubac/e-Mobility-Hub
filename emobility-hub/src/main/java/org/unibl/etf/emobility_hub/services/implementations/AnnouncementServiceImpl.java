@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
+import org.unibl.etf.emobility_hub.base.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.domain.entity.AnnouncementEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 
 @Service
 @Transactional
-public class AnnouncementServiceImpl extends BaseServiceImpl<AnnouncementEntity, AnnouncementRequest, AnnouncementResponse, AnnouncementResponse, Long> implements IAnnouncementService {
+public class AnnouncementServiceImpl extends BaseCRUDServiceImpl<AnnouncementEntity, AnnouncementRequest, AnnouncementResponse, AnnouncementResponse, Long> implements IAnnouncementService {
 
     @Autowired
     public AnnouncementServiceImpl(ModelMapper mapper, AnnouncementEntityRepository repository) {
@@ -26,22 +26,21 @@ public class AnnouncementServiceImpl extends BaseServiceImpl<AnnouncementEntity,
 
     @Override
     public AnnouncementResponse create(@Valid AnnouncementRequest announcementRequest) {
-        AnnouncementEntity entity = super.getMapper().map(announcementRequest, AnnouncementEntity.class);
+        AnnouncementEntity entity = getMapper().map(announcementRequest, AnnouncementEntity.class);
         entity.setCreationDate(LocalDate.now());
         entity.setUpdateDate(entity.getCreationDate());
-        super.getRepository().saveAndFlush(entity);
-        return super.getMapper().map(entity, AnnouncementResponse.class);
+        getRepository().saveAndFlush(entity);
+        return getMapper().map(entity, AnnouncementResponse.class);
     }
 
     @Override
     public AnnouncementResponse update(@Valid AnnouncementRequest announcementRequest) {
-        if (!super.getRepository().existsById(announcementRequest.getId()))
-            throw new EntityNotFoundException("Announcement with ID " + announcementRequest.getId() + " not found");
-
-        AnnouncementEntity entity = super.getMapper().map(announcementRequest, AnnouncementEntity.class);
+        AnnouncementEntity entity=findById(announcementRequest.getId());
+        entity.setTitle(announcementRequest.getTitle());
+        entity.setContent(announcementRequest.getContent());
         entity.setUpdateDate(LocalDate.now());
-        super.getRepository().saveAndFlush(entity);
-        return super.getMapper().map(entity, AnnouncementResponse.class);
+        getRepository().saveAndFlush(entity);
+        return getMapper().map(entity, AnnouncementResponse.class);
     }
 
 }
