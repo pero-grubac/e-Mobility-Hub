@@ -1,7 +1,7 @@
 package org.unibl.etf.emobility_hub.controllers;
 
 import org.springframework.web.bind.annotation.*;
-import org.unibl.etf.emobility_hub.base.BaseCRUDController;
+import org.unibl.etf.emobility_hub.base.controllers.BaseCRUDController;
 import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
 import org.unibl.etf.emobility_hub.services.IAnnouncementService;

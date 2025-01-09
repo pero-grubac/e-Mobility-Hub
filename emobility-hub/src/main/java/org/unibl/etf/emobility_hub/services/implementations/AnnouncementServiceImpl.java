@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.emobility_hub.base.BaseCRUDServiceImpl;
+import org.unibl.etf.emobility_hub.base.services.impl.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.domain.entity.AnnouncementEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;

@@ -1,10 +1,11 @@
-package org.unibl.etf.emobility_hub.base;
+package org.unibl.etf.emobility_hub.base.controllers;
 
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.unibl.etf.emobility_hub.base.services.IBaseCRUDService;
 import org.unibl.etf.emobility_hub.models.dto.request.BaseRequest;
 
 @Getter
@@ -23,7 +24,7 @@ public abstract class BaseCRUDController<TRequest extends BaseRequest<ID>, TResp
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TDetailedResponse> getAll(@PathVariable ID id) {
+    public ResponseEntity<TDetailedResponse> getById(@PathVariable ID id) {
         TDetailedResponse response = service.getById(id);
         return ResponseEntity.ok(response);
     }

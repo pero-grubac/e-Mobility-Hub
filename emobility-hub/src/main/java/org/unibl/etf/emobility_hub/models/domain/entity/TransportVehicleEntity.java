@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="transport_vehicle")
+@Table(name = "transport_vehicle")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class TransportVehicleEntity {
     @Id
@@ -27,6 +27,6 @@ public abstract class TransportVehicleEntity {
     @Column(nullable = false)
     private String image;
 
-    private boolean isBroken = false;
-    private boolean isRented = false;
+    private boolean isBroken;
+    private boolean isRented;
 }

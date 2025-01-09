@@ -1,4 +1,4 @@
-package org.unibl.etf.emobility_hub.base;
+package org.unibl.etf.emobility_hub.base.services.impl;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -7,14 +7,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.unibl.etf.emobility_hub.base.services.IBaseCRUDService;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.dto.request.BaseRequest;
 
-import java.util.Optional;
-
 @Getter
 @Transactional
-public class BaseCRUDServiceImpl<TEntity, TRequest extends BaseRequest<ID>, TResponse, TDetailedResponse, ID> implements IBaseCRUDService<TRequest, TResponse, TDetailedResponse, ID> {
+public class BaseCRUDServiceImpl<TEntity, TRequest extends BaseRequest<ID>, TResponse, TDetailedResponse, ID>
+        implements IBaseCRUDService<TRequest, TResponse, TDetailedResponse, ID> {
 
     private final ModelMapper mapper;
     private final JpaRepository<TEntity, ID> repository;
@@ -40,10 +40,8 @@ public class BaseCRUDServiceImpl<TEntity, TRequest extends BaseRequest<ID>, TRes
 
     @Override
     public TDetailedResponse getById(ID id) {
-        Optional<TEntity> entity = repository.findById(id);
-        if (entity.isEmpty())
-            throw new EntityNotFoundException(entityClass.getSimpleName() + " with ID " + id + " not found");
-        return mapper.map(entity.get(), detailedResponseClass);
+        TEntity entity = findById(id);
+        return mapper.map(entity, detailedResponseClass);
     }
 
     @Override

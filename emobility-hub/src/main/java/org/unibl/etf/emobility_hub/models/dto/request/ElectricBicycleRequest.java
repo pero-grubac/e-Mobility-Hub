@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ElectricBicycleRequest extends TransportVehicleRequest{
+public class   ElectricBicycleRequest extends TransportVehicleRequest{
     @Min(value = 1,message = "Range per charge must be greater than 1")
     private double rangePerCharge;
 }

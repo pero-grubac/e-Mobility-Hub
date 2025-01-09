@@ -4,18 +4,15 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.emobility_hub.base.BaseCRUDServiceImpl;
+import org.unibl.etf.emobility_hub.base.services.impl.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.domain.entity.FaultEntity;
 import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.dto.request.FaultRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.FaultResponse;
+import org.unibl.etf.emobility_hub.repositories.ConcreteTransportVehicleRepository;
 import org.unibl.etf.emobility_hub.repositories.FaultEntityRepository;
-import org.unibl.etf.emobility_hub.repositories.TransportVehicleRepository;
 import org.unibl.etf.emobility_hub.services.IFaultService;
 
 import java.time.LocalDateTime;
@@ -26,7 +23,7 @@ public class FaultServiceImpl
         extends BaseCRUDServiceImpl<FaultEntity, FaultRequest, FaultResponse, FaultResponse, Long>
         implements IFaultService {
     @Autowired
-    private TransportVehicleRepository vehicleRepository;
+    private ConcreteTransportVehicleRepository vehicleRepository;
 
     public FaultServiceImpl(ModelMapper mapper, FaultEntityRepository repository) {
         super(mapper, repository, FaultEntity.class, FaultRequest.class, FaultResponse.class, FaultResponse.class);

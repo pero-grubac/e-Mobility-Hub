@@ -1,4 +1,4 @@
-package org.unibl.etf.emobility_hub.base;
+package org.unibl.etf.emobility_hub.base.services;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
