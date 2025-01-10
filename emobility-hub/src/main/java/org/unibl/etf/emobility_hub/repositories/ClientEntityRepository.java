@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import org.unibl.etf.emobility_hub.models.domain.entity.ClientEntity;
 
 @Repository
-public interface ClientEntityRepository extends JpaRepository<ClientEntity, Long> {
+public interface ClientEntityRepository extends UserEntityRepository<ClientEntity> {
 }

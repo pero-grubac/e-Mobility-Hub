@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.unibl.etf.emobility_hub.base.services.IBaseCRUDService;
-import org.unibl.etf.emobility_hub.models.dto.request.BaseRequest;
+import org.unibl.etf.emobility_hub.base.request.BaseRequest;
 
 @Getter
 public abstract class BaseCRUDController<TRequest extends BaseRequest<ID>, TResponse, TDetailedResponse, ID> {

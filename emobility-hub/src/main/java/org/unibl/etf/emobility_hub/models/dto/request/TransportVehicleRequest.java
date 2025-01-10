@@ -5,10 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.web.multipart.MultipartFile;
+import org.unibl.etf.emobility_hub.base.request.BaseRequest;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TransportVehicleRequest extends BaseRequest<Long>{
+public class TransportVehicleRequest extends BaseRequest<Long> {
     @NotNull(message = "Unique identifier can not be null")
     @NotEmpty(message = "Unique identifier can not be empty")
     private String uniqueIdentifier;
