@@ -1,6 +1,7 @@
 package org.unibl.etf.emobility_hub.models.dto.response;
 
 import lombok.Data;
+import org.unibl.etf.emobility_hub.models.domain.value.RoleEnum;
 
 @Data
 public class UserResponse {
@@ -8,6 +9,5 @@ public class UserResponse {
     private String username;
     private String firstName;
     private String lastName;
-    private String email;
-    private String phoneNumber;
+    private RoleEnum role;
 }

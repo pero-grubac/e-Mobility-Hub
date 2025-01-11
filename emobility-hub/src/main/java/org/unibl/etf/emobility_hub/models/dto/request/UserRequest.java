@@ -20,13 +20,4 @@ public class UserRequest extends BaseRequest<Long> {
     @NotNull(message = "Last name can not be null")
     @NotEmpty(message = "Last name can not be empty")
     private String lastName;
-
-    @NotNull(message = "Email can not be null")
-    @NotEmpty(message = "Email can not be empty")
-    private String email;
-
-    @NotNull(message = "Phone number can not be null")
-    @NotEmpty(message = "Phone number can not be empty")
-    private String phoneNumber;
-
 }

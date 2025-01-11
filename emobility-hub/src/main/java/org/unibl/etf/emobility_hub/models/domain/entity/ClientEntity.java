@@ -12,6 +12,12 @@ import lombok.EqualsAndHashCode;
 @Table(name="client")
 public class ClientEntity extends UserEntity{
     @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(unique = true, nullable = false)
+    private String phoneNumber;
+
+    @Column(unique = true, nullable = false)
     private String idCardNumber;
     private String avatarImage;
 }

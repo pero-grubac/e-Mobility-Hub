@@ -13,7 +13,7 @@ import org.unibl.etf.emobility_hub.models.domain.entity.ManufacturerEntity;
 import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.dto.request.TransportVehicleRequest;
 import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
-import org.unibl.etf.emobility_hub.repositories.TransportVehicleRepository;
+import org.unibl.etf.emobility_hub.repositories.JpaTransportVehicleRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Getter
 @Transactional
-public class BaseVehicleCRUDServiceImpl<TRepository extends TransportVehicleRepository<TEntity>, TEntity extends TransportVehicleEntity, TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse>
+public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleRepository<TEntity>, TEntity extends TransportVehicleEntity, TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse>
         implements IBaseVehicleCRUDService<TRequest, TResponse, TDetailedResponse> {
 
     private final ModelMapper mapper;

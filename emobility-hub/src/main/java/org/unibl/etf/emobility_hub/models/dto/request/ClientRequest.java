@@ -15,4 +15,11 @@ public class ClientRequest extends UserRequest {
     @NotEmpty(message = "Id card number can not be empty")
     private String idCardNumber;
 
+    @NotNull(message = "Email can not be null")
+    @NotEmpty(message = "Email can not be empty")
+    private String email;
+
+    @NotNull(message = "Phone number can not be null")
+    @NotEmpty(message = "Phone number can not be empty")
+    private String phoneNumber;
 }

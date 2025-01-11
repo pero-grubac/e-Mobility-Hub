@@ -8,4 +8,6 @@ import lombok.EqualsAndHashCode;
 public class ClientResponse extends UserResponse {
     private String idCardNumber;
     private String image;
+    private String email;
+    private String phoneNumber;
 }

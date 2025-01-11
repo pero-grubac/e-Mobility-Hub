@@ -11,7 +11,7 @@ import org.unibl.etf.emobility_hub.models.domain.entity.FaultEntity;
 import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.dto.request.FaultRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.FaultResponse;
-import org.unibl.etf.emobility_hub.repositories.ConcreteTransportVehicleRepository;
+import org.unibl.etf.emobility_hub.repositories.TransportVehicleRepository;
 import org.unibl.etf.emobility_hub.repositories.FaultEntityRepository;
 import org.unibl.etf.emobility_hub.services.IFaultService;
 
@@ -23,7 +23,7 @@ public class FaultServiceImpl
         extends BaseCRUDServiceImpl<FaultEntity, FaultRequest, FaultResponse, FaultResponse, Long>
         implements IFaultService {
     @Autowired
-    private ConcreteTransportVehicleRepository vehicleRepository;
+    private TransportVehicleRepository vehicleRepository;
 
     public FaultServiceImpl(ModelMapper mapper, FaultEntityRepository repository) {
         super(mapper, repository, FaultEntity.class, FaultRequest.class, FaultResponse.class, FaultResponse.class);
