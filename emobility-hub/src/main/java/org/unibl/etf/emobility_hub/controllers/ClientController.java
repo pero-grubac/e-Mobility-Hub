@@ -14,15 +14,7 @@ import org.unibl.etf.emobility_hub.services.IClientService;
 @RestController
 @RequestMapping("/clients")
 public class ClientController
-        extends BaseCRUDController<ClientRequest, ClientResponse, ClientResponse, Long> {
-    public ClientController(IClientService service) {
-        super(service);
-    }
+         {
 
-    @Override
-    @PostMapping("/register")
-    public ResponseEntity<ClientResponse> create(@RequestBody ClientRequest request) {
-        return super.create(request);
-    }
     // login//register
 }
