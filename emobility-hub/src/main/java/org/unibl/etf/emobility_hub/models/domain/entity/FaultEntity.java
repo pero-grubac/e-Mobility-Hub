@@ -13,7 +13,7 @@ public class FaultEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 1500, nullable = false)
     private String description;
 
     @Column(nullable = false)
