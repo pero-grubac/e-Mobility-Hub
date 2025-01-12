@@ -6,6 +6,6 @@ import java.util.List;
 
 @Data
 public class ParsedVehicleResponse {
-    List<String> errors;
+    List<ParseError> errors;
     List<TransportVehicleResponse> parsedVehicles;
 }

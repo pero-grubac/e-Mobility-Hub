@@ -53,8 +53,9 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
     @Override
     public ParsedVehicleResponse parse(File file) {
         ParsedVehicleResponse response = new ParsedVehicleResponse();
-        List<String> errors = new ArrayList<>();
+        List<ParseError> errors = new ArrayList<>();
         List<TransportVehicleResponse> parsedVehicles = new ArrayList<>();
+        int rowNumber =0;
 
         try (Reader reader = new FileReader(file);
              CSVReader csvReader = new CSVReader(reader)) {
@@ -62,7 +63,7 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
             // Čitanje prvog reda (nazivi kolona)
             String[] headers = csvReader.readNext();
             if (headers == null) {
-                errors.add("CSV file is empty or invalid.");
+                errors.add(new ParseError(rowNumber, "CSV file is empty or invalid.", null));
                 response.setErrors(errors);
                 return response;
             }
@@ -77,11 +78,11 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
                     TransportVehicleResponse transportVehicleResponse = saveVehicle(request);
                     parsedVehicles.add(transportVehicleResponse);
                 } catch (Exception e) {
-                    errors.add("Error processing row: " + Arrays.toString(line) + " - " + e.getMessage());
+                    errors.add(new ParseError(rowNumber, e.getMessage(), mapRow(headers, line)));
                 }
             }
         } catch (IOException | CsvValidationException e) {
-            errors.add("Error reading CSV file: " + e.getMessage());
+            errors.add(new ParseError(rowNumber, "Error reading CSV file: " + e.getMessage(), null));
         }
 
         response.setErrors(errors);
@@ -161,6 +162,8 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
         } else if (isCar) {
             ElectricCarRequest carRequest = new ElectricCarRequest();
             carRequest.setPurchaseDate(parseDateTime(rowData.get("purchaseDate")));
+            if(rowData.get("description") == null || rowData.get("description").isEmpty())
+                throw new IllegalArgumentException("Description is required.");
             carRequest.setDescription(rowData.get("description"));
             request = carRequest;
         } else if (isScooter) {
