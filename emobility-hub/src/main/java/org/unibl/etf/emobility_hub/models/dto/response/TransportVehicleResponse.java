@@ -12,4 +12,5 @@ public class TransportVehicleResponse {
     private String image;
     private boolean isBroken;
     private boolean isRented;
+    private double rentPrice;
 }

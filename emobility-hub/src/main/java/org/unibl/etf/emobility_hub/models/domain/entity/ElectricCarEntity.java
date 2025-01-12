@@ -2,6 +2,7 @@ package org.unibl.etf.emobility_hub.models.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,6 @@ public class ElectricCarEntity extends TransportVehicleEntity {
     @Column(nullable = false)
     private LocalDateTime purchaseDate;
 
-    @Column(nullable = false)
+    @Column(length = 1500, nullable = false)
     private String description;
 }

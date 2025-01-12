@@ -17,4 +17,5 @@ public class ManufacturerController
     public ManufacturerController(IManufacturerService service) {
         super(service);
     }
+
 }

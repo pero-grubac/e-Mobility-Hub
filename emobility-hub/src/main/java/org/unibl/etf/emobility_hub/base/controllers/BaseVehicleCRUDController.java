@@ -68,9 +68,11 @@ public abstract class BaseVehicleCRUDController<TRequest extends TransportVehicl
         return ResponseEntity.ok().build();
     }
 
+    // operater
     @PutMapping("/brake/{id}")
     public ResponseEntity<?> brake(@PathVariable Long id) {
         service.brake(id);
         return ResponseEntity.ok().build();
     }
+    // TODO create from csv
 }

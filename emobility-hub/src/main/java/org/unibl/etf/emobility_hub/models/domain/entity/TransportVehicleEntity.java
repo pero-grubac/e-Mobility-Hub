@@ -29,4 +29,7 @@ public abstract class TransportVehicleEntity {
 
     private boolean isBroken;
     private boolean isRented;
+
+    @Column(nullable = false)
+    private double rentPrice;
 }

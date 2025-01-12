@@ -45,7 +45,12 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/clients/register", "/auth/login", "/users/register").permitAll()
+                        .requestMatchers("/clients/register", "/auth/login", "/users/register","/parse-vehicle").permitAll()
+                        .requestMatchers("/uploads/**").authenticated()
+                        .requestMatchers("/electric-bicycles").hasAnyRole("ADMIN","MANAGER")
+                        .requestMatchers("/electric-cars").hasAnyRole("ADMIN","MANAGER")
+                        .requestMatchers("/electric-scooters").hasAnyRole("ADMIN","MANAGER")
+                        .requestMatchers("/manufacturers").hasAnyRole("ADMIN","MANAGER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())

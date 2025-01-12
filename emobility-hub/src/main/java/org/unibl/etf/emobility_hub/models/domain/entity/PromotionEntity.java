@@ -16,7 +16,7 @@ public class PromotionEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(length = 1500, nullable = false)
     private String content;
 
     @Column(nullable = false)

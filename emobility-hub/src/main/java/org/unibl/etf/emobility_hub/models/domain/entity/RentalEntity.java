@@ -37,6 +37,9 @@ public class RentalEntity {
     @Column(nullable = false)
     private double duration;
 
+    @Column(nullable = false)
+    private double distance;
+
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private ClientEntity client;

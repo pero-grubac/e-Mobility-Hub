@@ -24,5 +24,8 @@ public class TransportVehicleRequest extends BaseRequest<Long> {
     @NotNull(message = "Purchase price can not be null")
     private double purchasePrice;
 
+    @NotNull(message = "Rent price can not be null")
+    private double rentPrice;
+
     private MultipartFile image;
 }

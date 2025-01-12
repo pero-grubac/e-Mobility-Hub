@@ -1,5 +1,6 @@
 package org.unibl.etf.emobility_hub.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +31,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> create(@RequestBody DetailedUserRequest request) {
+    public ResponseEntity<UserResponse> create(@Valid @RequestBody DetailedUserRequest request) {
         UserResponse response = service.create(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<UserResponse> update(@RequestBody DetailedUserRequest request) {
+    public ResponseEntity<UserResponse> update(@Valid @RequestBody DetailedUserRequest request) {
         UserResponse response = service.update(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
