@@ -1,0 +1,71 @@
+{
+  "id": 670882,
+  "num_rows": 100,
+  "file_format": "csv",
+  "name": "ElectricCarRequest",
+  "include_header": true,
+  "columns": [
+    {
+      "name": "uniqueIdentifier",
+      "null_percentage": 0,
+      "type": "GUID",
+      "formula": null
+    },
+    {
+      "name": "manufacturerId",
+      "null_percentage": 0,
+      "type": "Number",
+      "min": 1,
+      "max": 4,
+      "decimals": 0,
+      "formula": null
+    },
+    {
+      "name": "model",
+      "null_percentage": 0,
+      "type": "Car Model",
+      "formula": null
+    },
+    {
+      "name": "purchasePrice",
+      "null_percentage": 0,
+      "type": "Number",
+      "min": 1000,
+      "max": 10000,
+      "decimals": 2,
+      "formula": null
+    },
+    {
+      "name": "rentPrice",
+      "null_percentage": 0,
+      "type": "Number",
+      "min": 1,
+      "max": 100,
+      "decimals": 2,
+      "formula": null
+    },
+    {
+      "name": "image",
+      "null_percentage": 99,
+      "type": "Naughty String",
+      "formula": null
+    },
+    {
+      "name": "purchaseDate",
+      "null_percentage": 0,
+      "type": "Datetime",
+      "min": "01/13/2024",
+      "max": "01/13/2025",
+      "format": "%Y-%m-%dT%H:%M:%SZ",
+      "formula": null
+    },
+    {
+      "name": "description",
+      "null_percentage": 0,
+      "type": "Words",
+      "min": 10,
+      "max": 20,
+      "formula": null
+    }
+  ]
+}
