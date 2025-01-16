@@ -1,5 +1,4 @@
 package org.unibl.etf.emobility_hub_promotions.models.dto.request;
-
 import java.io.Serializable;
 
 public class AuthRequest implements Serializable {
