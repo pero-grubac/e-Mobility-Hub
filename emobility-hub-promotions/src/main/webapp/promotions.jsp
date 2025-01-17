@@ -54,7 +54,7 @@
 		<div class="d-flex justify-content-between align-items-center">
 			<h1>Promotions</h1>
 			<div>
-				<button class="btn btn-primary" onclick="redirectToCreate()">Announcements</button>
+				<button class="btn btn-info" onclick="redirectToAnnouncements()">Announcements</button>
 
 				<button class="btn btn-primary" onclick="redirectToCreate()">Create</button>
 
@@ -154,7 +154,11 @@
 			window.location.href = "createPromotion.jsp";
 		}
 	</script>
-
+	<script>
+		function redirectToAnnouncements() {
+			window.location.href = "announcements.jsp";
+		}
+	</script>
 	<script src="<%=request.getContextPath()%>/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
