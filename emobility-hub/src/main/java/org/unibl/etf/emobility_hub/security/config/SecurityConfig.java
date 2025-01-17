@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.unibl.etf.emobility_hub.security.jwt.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +23,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Autowired
     public UserDetailsServiceImpl userService;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -46,15 +51,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/clients/register", "/auth/login", "/users/register","/parse-vehicle").permitAll()
-                        .requestMatchers("/uploads/**").authenticated()
-                        .requestMatchers("/electric-bicycles").hasAnyRole("ADMIN","MANAGER")
-                        .requestMatchers("/electric-cars").hasAnyRole("ADMIN","MANAGER")
-                        .requestMatchers("/electric-scooters").hasAnyRole("ADMIN","MANAGER")
-                        .requestMatchers("/manufacturers").hasAnyRole("ADMIN","MANAGER")
+                        .requestMatchers("/promotions/**").hasRole("MANAGER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
