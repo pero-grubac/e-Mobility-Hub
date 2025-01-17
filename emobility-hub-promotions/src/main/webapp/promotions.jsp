@@ -56,7 +56,7 @@
 			<div>
 				<button class="btn btn-info" onclick="redirectToAnnouncements()">Announcements</button>
 
-				<button class="btn btn-primary" onclick="redirectToCreate()">Create</button>
+				<button class="btn btn-primary" onclick="redirectToCreate()">Create Promotion</button>
 
 				<form action="logout.jsp" method="post" style="display: inline;">
 					<button type="submit" class="btn btn-danger">Logout</button>

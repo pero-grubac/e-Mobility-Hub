@@ -56,7 +56,7 @@
 			<div>
 				<button class="btn btn-info" onclick="redirectToAnnouncements()">Promotions</button>
 
-				<button class="btn btn-primary" onclick="redirectToCreate()">Create</button>
+				<button class="btn btn-primary" onclick="redirectToCreate()">Create Announcement</button>
 
 				<form action="logout.jsp" method="post" style="display: inline;">
 					<button type="submit" class="btn btn-danger">Logout</button>
@@ -146,12 +146,12 @@
 
 	<script>
 		function redirectToDetails(id) {
-			window.location.href = "promotionDetails.jsp?id=" + id;
+			window.location.href = "announcementDetails.jsp?id=" + id;
 		}
 	</script>
 	<script>
 		function redirectToCreate() {
-			window.location.href = "createPromotion.jsp";
+			window.location.href = "createAnnouncement.jsp";
 		}
 	</script>
 	<script>
