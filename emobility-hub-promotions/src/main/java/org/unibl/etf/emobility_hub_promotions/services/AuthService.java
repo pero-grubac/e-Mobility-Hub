@@ -1,20 +1,21 @@
 package org.unibl.etf.emobility_hub_promotions.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.unibl.etf.emobility_hub_promotions.properties.AppConfig;
+
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
-
-import org.unibl.etf.emobility_hub_promotions.properties.AppConfig;
+import java.util.Map;
 
 public class AuthService implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static AppConfig conf = new AppConfig();
 	private static final String LOGIN_URL = conf.getLoginUrl();
 
-	public  String login(String username, String password) {
+	public String login(String username, String password) {
 		try {
 			URL url = new URL(LOGIN_URL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -30,13 +31,11 @@ public class AuthService implements Serializable {
 
 			int responseCode = conn.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) {
-				try (Scanner scanner = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8)) {
-					StringBuilder response = new StringBuilder();
-					while (scanner.hasNext()) {
-						response.append(scanner.nextLine());
-					}
-					return response.toString();
-				}
+				ObjectMapper objectMapper = new ObjectMapper();
+
+				Map<String, String> responseMap = objectMapper.readValue(conn.getInputStream(), Map.class);
+
+				return responseMap.get("token");
 			} else {
 				throw new RuntimeException("Login failed with HTTP code: " + responseCode);
 			}

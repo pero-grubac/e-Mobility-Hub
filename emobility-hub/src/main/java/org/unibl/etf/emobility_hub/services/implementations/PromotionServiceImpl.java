@@ -3,6 +3,8 @@ package org.unibl.etf.emobility_hub.services.implementations;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.base.services.impl.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.models.domain.entity.PromotionEntity;
@@ -45,4 +47,9 @@ public class PromotionServiceImpl
         return getMapper().map(entity, PromotionResponse.class);
     }
 
+    @Override
+    public Page<PromotionResponse> findAllByContent(String content, Pageable pageable) {
+        return ((PromotionEntityRepository) getRepository()).findByContentContainingIgnoreCase(content, pageable)
+                .map(te -> getMapper().map(te, PromotionResponse.class));
+    }
 }

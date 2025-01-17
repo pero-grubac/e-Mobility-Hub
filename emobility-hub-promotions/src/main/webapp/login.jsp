@@ -12,7 +12,9 @@
 
 <%
     String loginMessage = "";
-    if (request.getParameter("username") != null && request.getParameter("password") != null) {
+    if (authService == null) {
+        loginMessage = "Authentication service is not available.";
+    } else if (request.getParameter("username") != null && request.getParameter("password") != null) {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String token = authService.login(username, password);
