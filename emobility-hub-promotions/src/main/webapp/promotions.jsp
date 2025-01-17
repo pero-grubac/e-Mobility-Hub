@@ -27,7 +27,12 @@
 		return;
 	}
 	String searchQuery = request.getParameter("search");
-
+	if (searchQuery != null) {
+	    searchQuery = searchQuery.trim();
+	    if (searchQuery.isEmpty()) {
+	        searchQuery = null; 
+	    }
+	}
 	int pageNum = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 0;
 	int size = 6;
 	List<PromotionResponseBean> promotions = null;
