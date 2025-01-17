@@ -54,6 +54,7 @@
         }
     </style>
 </head>
+
 <body class="bg-light">
     <div class="container mt-5">
         <form action="logout.jsp" method="post" style="display: inline;">

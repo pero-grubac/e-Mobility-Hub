@@ -5,8 +5,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.format.DateTimeFormatter;
 
 import org.unibl.etf.emobility_hub_promotions.models.beans.AnnouncementResponseBean;
+import org.unibl.etf.emobility_hub_promotions.models.beans.PromotionResponseBean;
 import org.unibl.etf.emobility_hub_promotions.models.dto.PaginatedResponse;
 import org.unibl.etf.emobility_hub_promotions.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub_promotions.models.dto.request.PromotionRequest;
@@ -63,6 +65,54 @@ public class AnnouncementService {
 
 		if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
 			throw new RuntimeException("Failed to create promotion. HTTP error code: " + connection.getResponseCode());
+		}
+	}
+	public AnnouncementResponseBean update(String token, Long id, AnnouncementRequest announcementRequest)
+			throws Exception {
+		URL url = new URL(ANNOUCEMENT_URL);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("PUT");
+		connection.setRequestProperty("Authorization", "Bearer " + token);
+		connection.setRequestProperty("Content-Type", "application/json");
+		connection.setDoOutput(true);
+
+		String jsonRequest = objectMapper.writeValueAsString(announcementRequest);
+
+		try (OutputStream os = connection.getOutputStream()) {
+			os.write(jsonRequest.getBytes());
+			os.flush();
+		}
+
+		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			return objectMapper.readValue(connection.getInputStream(), AnnouncementResponseBean.class);
+		} else {
+			throw new RuntimeException("Failed to update promotion. HTTP error code: " + connection.getResponseCode());
+		}
+	}
+	public void delete(String token, Long id) throws Exception {
+		URL url = new URL(ANNOUCEMENT_URL + "/" + id);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("DELETE");
+		connection.setRequestProperty("Authorization", "Bearer " + token);
+
+		if (connection.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
+			throw new RuntimeException("Failed to delete promotion. HTTP error code: " + connection.getResponseCode());
+		}
+	}
+	public AnnouncementResponseBean getById(String token, Long id) throws Exception {
+		URL url = new URL(ANNOUCEMENT_URL + "/" + id);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("GET");
+		connection.setRequestProperty("Authorization", "Bearer " + token);
+		connection.setRequestProperty("Accept", "application/json");
+
+		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
+				return objectMapper.readValue(reader, AnnouncementResponseBean.class);
+			}
+		} else {
+			throw new RuntimeException(
+					"Failed to fetch promotion details. HTTP error code: " + connection.getResponseCode());
 		}
 	}
 }

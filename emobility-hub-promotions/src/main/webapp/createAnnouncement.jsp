@@ -36,74 +36,48 @@ try {
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Create Announcement</title>
-<!-- Bootstrap CSS -->
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- Datetimepicker CSS -->
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-<style>
-.logout-btn {
-	position: absolute;
-	top: 20px;
-	right: 20px;
-}
-
-h1 {
-	text-align: center;
-	margin-bottom: 30px;
-}
-
-.navigation-buttons {
-	margin-top: 20px;
-}
-</style>
+    <meta charset="ISO-8859-1">
+    <title>Create Announcement</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
 <body class="bg-light">
-	<div class="container mt-5">
-		<form action="logout.jsp" method="post" style="display: inline;">
-			<button type="submit" class="btn btn-danger logout-btn">Logout</button>
-		</form>
+    <div class="container mt-5">
+        <form action="logout.jsp" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-danger logout-btn">Logout</button>
+        </form>
 
-		<h1>Create Announcement</h1>
+        <h1>Create Announcement</h1>
 
-		<%
-		if (errorMessage != null) {
-		%>
-		<div class="alert alert-danger"><%=errorMessage%></div>
-		<%
-		}
-		%>
+        <% if (errorMessage != null) { %>
+            <div class="alert alert-danger"><%= errorMessage %></div>
+        <% } %>
 
-		<form method="post">
-			<div class="card mt-4 shadow-sm">
-				<div class="card-body">
-					<div class="form-group">
-						<label for="title" class="form-label">Title</label> <input
-							type="text" class="form-control" id="title" name="title" required>
-					</div>
-					<div class="form-group">
-						<label for="content" class="form-label">Content</label>
-						<textarea class="form-control" id="content" name="content"
-							rows="3" required></textarea>
-					</div>
-
-				</div>
-				<div class="card-footer d-flex justify-content-between">
-					<button type="submit" name="action" value="create"
-						class="btn btn-primary">Create</button>
-					<button type="button" class="btn btn-secondary"
-						onclick="redirectToAnnouncements()">Back to Announcements</button>
-				</div>
-			</div>
-		</form>
-	</div>
-	<script>
-		function redirectToAnnouncements() {
-			window.location.href = "announcements.jsp";
-		}
-	</script>
+        <form method="post">
+            <div class="card mt-4 shadow-sm">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="content" class="form-label">Content</label>
+                        <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <button type="submit" name="action" value="create" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-secondary" onclick="redirectToAnnouncements()">Back to Announcements</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function redirectToAnnouncements() {
+            window.location.href = "announcements.jsp";
+        }
+    </script>
 </body>
 </html>
+
