@@ -1,12 +1,15 @@
 package org.unibl.etf.emobility_hub_promotions.services;
 
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
 import org.unibl.etf.emobility_hub_promotions.models.beans.AnnouncementResponseBean;
 import org.unibl.etf.emobility_hub_promotions.models.dto.PaginatedResponse;
+import org.unibl.etf.emobility_hub_promotions.models.dto.request.AnnouncementRequest;
+import org.unibl.etf.emobility_hub_promotions.models.dto.request.PromotionRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,5 +47,22 @@ public class AnnouncementService {
 			});
 		}
 	}
+	public void create(String token, AnnouncementRequest announcementRequest) throws Exception {
+		URL url = new URL(ANNOUCEMENT_URL);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Authorization", "Bearer " + token);
+		connection.setRequestProperty("Content-Type", "application/json");
+		connection.setDoOutput(true);
+		String jsonRequest = objectMapper.writeValueAsString(announcementRequest);
 
+		try (OutputStream os = connection.getOutputStream()) {
+			os.write(jsonRequest.getBytes());
+			os.flush();
+		}
+
+		if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+			throw new RuntimeException("Failed to create promotion. HTTP error code: " + connection.getResponseCode());
+		}
+	}
 }
