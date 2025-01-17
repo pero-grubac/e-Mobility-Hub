@@ -4,12 +4,16 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.base.services.impl.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.domain.entity.AnnouncementEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
+import org.unibl.etf.emobility_hub.models.dto.response.PromotionResponse;
 import org.unibl.etf.emobility_hub.repositories.AnnouncementEntityRepository;
+import org.unibl.etf.emobility_hub.repositories.PromotionEntityRepository;
 import org.unibl.etf.emobility_hub.services.IAnnouncementService;
 
 import java.time.LocalDateTime;
@@ -46,4 +50,8 @@ public class AnnouncementServiceImpl
         return getMapper().map(entity, AnnouncementResponse.class);
     }
 
+    @Override
+    public Page<AnnouncementResponse> findAllByContent(String content, Pageable pageable) {
+        return ((AnnouncementEntityRepository) getRepository()).findByContentContainingIgnoreCase(content, pageable)
+                .map(te -> getMapper().map(te, AnnouncementResponse.class));    }
 }

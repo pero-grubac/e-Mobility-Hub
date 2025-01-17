@@ -4,18 +4,18 @@
 	class="org.unibl.etf.emobility_hub_promotions.models.beans.UserBean"
 	scope="session" />
 <%@ page
-	import="org.unibl.etf.emobility_hub_promotions.services.PromotionService"%>
-<%@ page
-	import="org.unibl.etf.emobility_hub_promotions.models.beans.PromotionResponseBean"%>
+	import="org.unibl.etf.emobility_hub_promotions.services.AnnouncementService"%>
 <%@ page
 	import="org.unibl.etf.emobility_hub_promotions.models.dto.PaginatedResponse"%>
+<%@ page
+	import="org.unibl.etf.emobility_hub_promotions.models.beans.AnnouncementResponseBean"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
 <%@ page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Promotions</title>
+<title>Annoucements</title>
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/bootstrap.min.css">
 </head>
@@ -30,17 +30,17 @@
 
 	int pageNum = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 0;
 	int size = 6;
-	List<PromotionResponseBean> promotions = null;
+	List<AnnouncementResponseBean> annoucements = null;
 	int totalPages = 0;
 	String errorMessage = null;
 
 	try {
-		PromotionService promotionService = new PromotionService();
-		PaginatedResponse<PromotionResponseBean> paginatedResponse = promotionService.getPromotions(userBean.getToken(),
+		AnnouncementService service = new AnnouncementService();
+		PaginatedResponse<AnnouncementResponseBean> paginatedResponse = service.getAnnoucements(userBean.getToken(),
 		pageNum, size, searchQuery);
 
 		if (paginatedResponse != null) {
-			promotions = paginatedResponse.getContent();
+			annoucements = paginatedResponse.getContent();
 			totalPages = paginatedResponse.getPage().getTotalPages();
 		}
 	} catch (Exception e) {
@@ -52,9 +52,9 @@
 
 	<div class="container mt-5">
 		<div class="d-flex justify-content-between align-items-center">
-			<h1>Promotions</h1>
+			<h1>Announcements</h1>
 			<div>
-				<button class="btn btn-info" onclick="redirectToAnnouncements()">Announcements</button>
+				<button class="btn btn-info" onclick="redirectToAnnouncements()">Promotions</button>
 
 				<button class="btn btn-primary" onclick="redirectToCreate()">Create</button>
 
@@ -85,35 +85,35 @@
 
 		<div class="row mt-4">
 			<%
-			if (promotions != null && !promotions.isEmpty()) {
+			if (annoucements != null && !annoucements.isEmpty()) {
 			%>
 			<%
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-			for (PromotionResponseBean promotion : promotions) {
+			for (AnnouncementResponseBean annoucement : annoucements) {
 			%>
 			<div class="col-md-4 mb-3">
 				<div class="card">
 					<div class="card-body">
-						<h5 class="card-title"><%=promotion.getTitle()%></h5>
+						<h5 class="card-title"><%=annoucement.getTitle()%></h5>
 						<p class="card-text">
 							<%
-							String shortContent = promotion.getContent().length() > 30
-									? promotion.getContent().substring(0, 30) + "..."
-									: promotion.getContent();
+							String shortContent = annoucement.getContent().length() > 30
+									? annoucement.getContent().substring(0, 30) + "..."
+									: annoucement.getContent();
 							%>
 							<%=shortContent%>
 						</p>
 						<p class="text-muted">
-							From:
-							<%=promotion.getStartDate().format(formatter)%>
+							Created:
+							<%=annoucement.getCreationDate().format(formatter)%>
 						</p>
 						<p class="text-muted">
-							To:
-							<%=promotion.getEndDate().format(formatter)%>
+							Updated:
+							<%=annoucement.getUpdateDate().format(formatter)%>
 						</p>
 
 						<button class="btn btn-primary"
-							onclick="redirectToDetails('<%=promotion.getId()%>')">Details</button>
+							onclick="redirectToDetails('<%=annoucement.getId()%>')">Details</button>
 					</div>
 				</div>
 			</div>
@@ -156,7 +156,7 @@
 	</script>
 	<script>
 		function redirectToAnnouncements() {
-			window.location.href = "announcements.jsp";
+			window.location.href = "promotions.jsp";
 		}
 	</script>
 	<script src="<%=request.getContextPath()%>/js/bootstrap.bundle.min.js"></script>

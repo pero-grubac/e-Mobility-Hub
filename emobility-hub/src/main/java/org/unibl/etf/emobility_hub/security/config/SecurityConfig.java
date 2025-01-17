@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/clients/register", "/auth/login", "/users/register","/parse-vehicle").permitAll()
                         .requestMatchers("/promotions/**").hasRole("MANAGER")
+                        .requestMatchers("/announcements/**").hasRole("MANAGER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())
