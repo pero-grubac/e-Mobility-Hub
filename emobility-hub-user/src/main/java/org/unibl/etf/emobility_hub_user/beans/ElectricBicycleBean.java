@@ -41,6 +41,15 @@ public class ElectricBicycleBean implements Serializable {
 		return false;
 	}
 
+	public String imageById(Long id) {
+		try {
+			return ElectricBicycleDAO.getImageById(id);
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+		}
+		return null;
+	}
+
 	public PaginatedResponse<ElectricBicycleEntity> getElectricBicycles() {
 		return electricBicycles;
 	}

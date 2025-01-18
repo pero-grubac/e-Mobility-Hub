@@ -38,8 +38,7 @@
 				<!-- Upload and Update Image Section -->
 				<form action="clients" method="post" enctype="multipart/form-data"
 					class="mt-3">
-					<input type="hidden" name="action" value="updateAvatar"> 
-					<input
+					<input type="hidden" name="action" value="updateAvatar"> <input
 						type="file" id="avatar" name="avatar" style="display: none;"
 						onchange="form.submit();">
 					<button type="button" class="btn btn-primary w-100"
@@ -101,12 +100,15 @@
 					</div>
 
 					<!-- Action Buttons -->
-					<div class="d-flex justify-content-between">
+					<div class="d-flex justify-content-between mb-3">
 						<button type="submit" class="btn btn-primary">Update
 							Password</button>
+						<button type="button" class="btn btn-success"
+							onclick="redirectToRentals()">Rentals</button>
 						<button type="button" class="btn btn-danger"
 							onclick="deactivateAccount()">Deactivate Account</button>
 					</div>
+
 				</form>
 			</div>
 		</div>
@@ -118,6 +120,9 @@
 			if (confirm("Are you sure you want to deactivate your account?")) {
 				window.location.href = "clients?action=deactivate";
 			}
+		}
+		function redirectToRentals() {
+			window.location.href = "clients?action=rentals";
 		}
 	</script>
 

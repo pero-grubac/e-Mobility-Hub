@@ -1,6 +1,7 @@
 <div class="container-fluid bg-light">
 	<div class="d-flex justify-content-between align-items-center py-3">
-		<h1 class="h3">Welcome</h1>
+		<h1 class="h3" onclick="redirectToWelcome()"
+			style="cursor: pointer; color: #007bff;">Welcome</h1>
 		<div>
 			<button class="btn btn-primary mx-1" onclick="redirectToCar()">Rent
 				Car</button>
@@ -33,5 +34,9 @@
 
 	function redirectToLogout() {
 		window.location.href = "clients?action=logout";
+	}
+
+	function redirectToWelcome() {
+		window.location.href = "clients?action=welcome";
 	}
 </script>
