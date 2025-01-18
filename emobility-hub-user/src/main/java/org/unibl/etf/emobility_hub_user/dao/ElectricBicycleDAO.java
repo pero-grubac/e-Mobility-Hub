@@ -22,6 +22,31 @@ public class ElectricBicycleDAO {
 			+ "VALUES (NOW(), ?, ?, NOW(), NOW())";
 
 	private static final String UPDATE_VEHICLE = "UPDATE transport_vehicle SET isBroken = 1 WHERE id = ?";
+	private static final String SELECT_RENT_PRICE = "SELECT rentPrice FROM transport_vehicle WHERE id = ?";
+
+	public static double getRentPrice(long vehicleId) {
+		Connection connection = null;
+		double rentPrice = 0;
+
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement stmt = connection.prepareStatement(SELECT_RENT_PRICE);
+			stmt.setLong(1, vehicleId);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				rentPrice = rs.getDouble("rentPrice");
+			}
+
+			stmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+
+		return rentPrice;
+	}
 
 	public static PaginatedResponse<ElectricBicycleEntity> getElectricBicyclesPaginated(int page, int size) {
 		PaginatedResponse<ElectricBicycleEntity> response = new PaginatedResponse<>();

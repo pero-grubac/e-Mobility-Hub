@@ -23,6 +23,15 @@ public class ElectricBicycleBean implements Serializable {
 		return false;
 	}
 
+	public double getRentPriceById(long vehicleId) {
+		try {
+			return ElectricBicycleDAO.getRentPrice(vehicleId);
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+		}
+		return 0;
+	}
+
 	public boolean brokeBicycle(long id, String description) {
 		try {
 			return ElectricBicycleDAO.reportFault(id, description);

@@ -50,7 +50,8 @@
 							$<%=bicycle.getRentPrice()%></p>
 						<div class="d-flex justify-content-between">
 							<button class="btn btn-success"
-								onclick="redirectToRent('<%=bicycle.getId()%>')">Rent</button>
+								onclick="openRentModal('<%=bicycle.getId()%>')">Rent</button>
+
 							<button class="btn btn-warning"
 								onclick="openBrokenModal('<%=bicycle.getId()%>')">
 								Broken</button>
@@ -146,6 +147,60 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="rentModal" tabindex="-1"
+		aria-labelledby="rentModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form id="rentForm" method="post" action="clients">
+					<div class="modal-header">
+						<h5 class="modal-title" id="rentModalLabel">Rent Bicycle</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" name="action" value="rentBicycle" /> <input
+							type="hidden" id="rentBicycleId" name="bicycleId" />
+
+						<div class="mb-3">
+							<label for="rentalStart" class="form-label">Rental Start</label>
+							<input type="datetime-local" class="form-control"
+								id="rentalStart" name="rentalStart" required />
+						</div>
+						<div class="mb-3">
+							<label for="rentalEnd" class="form-label">Rental End</label> <input
+								type="datetime-local" class="form-control" id="rentalEnd"
+								name="rentalEnd" required />
+						</div>
+						<div class="mb-3">
+							<label for="startLatitude" class="form-label">Start
+								Latitude</label> <input type="number" step="any" class="form-control"
+								id="startLatitude" name="startLatitude" required />
+						</div>
+						<div class="mb-3">
+							<label for="startLongitude" class="form-label">Start
+								Longitude</label> <input type="number" step="any" class="form-control"
+								id="startLongitude" name="startLongitude" required />
+						</div>
+						<div class="mb-3">
+							<label for="endLatitude" class="form-label">End Latitude</label>
+							<input type="number" step="any" class="form-control"
+								id="endLatitude" name="endLatitude" required />
+						</div>
+						<div class="mb-3">
+							<label for="endLongitude" class="form-label">End
+								Longitude</label> <input type="number" step="any" class="form-control"
+								id="endLongitude" name="endLongitude" required />
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Rent</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<script>
 		function openBrokenModal(bicycleId) {
@@ -173,6 +228,33 @@
 			}
 
 			document.getElementById("brokenForm").submit();
+		}
+		function openRentModal(bicycleId) {
+			document.getElementById("rentBicycleId").value = bicycleId;
+			console.log("Bicycle ID:", document.getElementById("rentBicycleId").value);
+			// Prikazivanje modala
+			const modalElement = document.getElementById("rentModal");
+			const modal = new bootstrap.Modal(modalElement);
+			modal.show();
+		}
+
+		function submitRentForm() {
+			const rentalStart = document.getElementById("rentalStart").value;
+			const rentalEnd = document.getElementById("rentalEnd").value;
+			const startLatitude = document.getElementById("startLatitude").value;
+			const startLongitude = document.getElementById("startLongitude").value;
+			const endLatitude = document.getElementById("endLatitude").value;
+			const endLongitude = document.getElementById("endLongitude").value;
+
+			// Validacija unosa
+			if (!rentalStart || !rentalEnd || !startLatitude || !startLongitude
+					|| !endLatitude || !endLongitude) {
+				alert("All fields are required!");
+				return;
+			}
+
+			// Submitovanje forme
+			document.getElementById("rentForm").submit();
 		}
 	</script>
 
