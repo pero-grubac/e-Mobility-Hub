@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <jsp:useBean id="userBean"
-	class="org.unibl.etf.emobility_hub_promotions.models.beans.UserBean"
+	class="org.unibl.etf.emobility_hub_promotions.beans.UserBean"
 	scope="session" />
 <%@ page
 	import="org.unibl.etf.emobility_hub_promotions.services.AnnouncementService"%>
 <%@ page
 	import="org.unibl.etf.emobility_hub_promotions.models.dto.PaginatedResponse"%>
 <%@ page
-	import="org.unibl.etf.emobility_hub_promotions.models.beans.AnnouncementResponseBean"%>
+	import="org.unibl.etf.emobility_hub_promotions.beans.AnnouncementResponseBean"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
 <%@ page import="java.util.List"%>
 <!DOCTYPE html>

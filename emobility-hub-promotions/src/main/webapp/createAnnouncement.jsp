@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <jsp:useBean id="userBean"
-	class="org.unibl.etf.emobility_hub_promotions.models.beans.UserBean"
+	class="org.unibl.etf.emobility_hub_promotions.beans.UserBean"
 	scope="session" />
 <%@ page
 	import="org.unibl.etf.emobility_hub_promotions.services.AnnouncementService"%>

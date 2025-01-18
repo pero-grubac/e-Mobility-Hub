@@ -9,7 +9,7 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.net.URLEncoder;
 
-import org.unibl.etf.emobility_hub_promotions.models.beans.PromotionResponseBean;
+import org.unibl.etf.emobility_hub_promotions.beans.PromotionResponseBean;
 import org.unibl.etf.emobility_hub_promotions.models.dto.PaginatedResponse;
 import org.unibl.etf.emobility_hub_promotions.models.dto.request.PromotionRequest;
 
