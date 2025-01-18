@@ -23,6 +23,7 @@ public class ElectricBicycleDAO {
 
 	private static final String UPDATE_VEHICLE = "UPDATE transport_vehicle SET isBroken = 1 WHERE id = ?";
 	private static final String SELECT_RENT_PRICE = "SELECT rentPrice FROM transport_vehicle WHERE id = ?";
+	private static final String SELECT_IMAGE_BY_ID = "SELECT image FROM transport_vehicle WHERE id = ?";
 
 	public static double getRentPrice(long vehicleId) {
 		Connection connection = null;
@@ -155,5 +156,29 @@ public class ElectricBicycleDAO {
 			}
 		}
 		return success;
+	}
+
+	public static String getImageById(long vehicleId) {
+		Connection connection = null;
+		String imagePath = null;
+
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement stmt = connection.prepareStatement(SELECT_IMAGE_BY_ID);
+			stmt.setLong(1, vehicleId);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				imagePath = rs.getString("image");
+			}
+
+			stmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+
+		return imagePath;
 	}
 }

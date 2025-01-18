@@ -92,6 +92,7 @@ public class ClientController extends HttpServlet {
 
 			// Izračunavanje distance u km
 			double distance = calculateDistance(startLatitude, startLongitude, endLatitude, endLongitude);
+			distance = Math.round(distance * 100.0) / 100.0;
 
 			// Dohvatanje rentPrice za vozilo
 			double rentPrice = bicycleBean.getRentPriceById(vehicleId);
@@ -104,6 +105,7 @@ public class ClientController extends HttpServlet {
 
 			// Izračunavanje cene
 			double price = duration * rentPrice + distance * 0.1; // Primer formule
+			price = Math.round(price * 100.0) / 100.0;
 
 			// Kreiranje RentalEntity objekta
 			RentalEntity rental = new RentalEntity();
@@ -244,6 +246,8 @@ public class ClientController extends HttpServlet {
 				return handleUpdateAvatar(request, session);
 			case "bicycle":
 				return handlebicycle(request, session);
+			case "rentals":
+				return hendleRentals(request, session);
 			case "brokenVehicle":
 				return handleBrokenVehicle(request, response, session);
 			default:
@@ -255,6 +259,28 @@ public class ClientController extends HttpServlet {
 			return "/WEB-INF/pages/404.jsp";
 		}
 
+	}
+
+	private String hendleRentals(HttpServletRequest request, HttpSession session) {
+		RentalBean rentalBean = new RentalBean();
+		int page = 1; // Default page
+		int size = 6; // Default size (6 bicycles per page)
+		String pageParam = request.getParameter("page");
+		if (pageParam != null && !pageParam.isEmpty()) {
+			try {
+				page = Integer.parseInt(pageParam);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		if (rentalBean.getRentals(page, size)) {
+			session.setAttribute("rentalBean", rentalBean);
+			session.setAttribute("rentalPage", page);
+		} else {
+			session.setAttribute("notification", "Failed to load bicycles.");
+		}
+
+		return "/WEB-INF/pages/rentals.jsp";
 	}
 
 	private String handleBrokenVehicle(HttpServletRequest request, HttpServletResponse response, HttpSession session)
