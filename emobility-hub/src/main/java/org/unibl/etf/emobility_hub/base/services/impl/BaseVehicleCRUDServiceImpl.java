@@ -1,19 +1,22 @@
 package org.unibl.etf.emobility_hub.base.services.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.unibl.etf.emobility_hub.base.services.IBaseVehicleCRUDService;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.domain.entity.ManufacturerEntity;
 import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.dto.request.TransportVehicleRequest;
-import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
 import org.unibl.etf.emobility_hub.repositories.JpaTransportVehicleRepository;
+import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,12 +108,24 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
         return getMapper().map(te, getResponseClass());
     }
 
+    private String getBaseUrl() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            throw new IllegalStateException("No request attributes found. Ensure this method is called in the context of an HTTP request.");
+        }
+        HttpServletRequest request = attributes.getRequest();
+        return request.getScheme() + "://" + // Protokol (http ili https)
+                request.getServerName() + // Ime servera (localhost ili domen)
+                ":" + request.getServerPort() + // Port (8081)
+                request.getContextPath() + "/"; // Kontekst aplikacije (/eMobilityHubUser)
+    }
+
     protected String saveImageToFileSystem(MultipartFile imageFile, TEntity te) {
         String uploadDir = baseDir + File.separator + TransportVehicleEntity.class.getSimpleName().toLowerCase()
                 + File.separator + te.getClass().getSimpleName().toLowerCase() + File.separator
                 + te.getId() + File.separator;
         Path uploadPath = Paths.get(uploadDir);
-
+        System.out.println("uploadDir " + uploadDir);
         if (!Files.exists(uploadPath)) {
             try {
                 Files.createDirectories(uploadPath);
@@ -121,14 +136,16 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
 
         String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileName);
+        System.out.println("filePath " + filePath);
 
         try {
             Files.copy(imageFile.getInputStream(), filePath);
         } catch (IOException e) {
             throw new RuntimeException("Failed to save file to: " + filePath, e);
         }
+        String baseUrl = getBaseUrl();
 
-        return uploadDir + fileName;
+        return baseUrl + uploadDir + fileName;
     }
 
     @Override
