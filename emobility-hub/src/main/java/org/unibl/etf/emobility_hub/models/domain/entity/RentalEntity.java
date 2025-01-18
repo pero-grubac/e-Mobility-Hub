@@ -40,6 +40,8 @@ public class RentalEntity {
     @Column(nullable = false)
     private double distance;
 
+    @Column(nullable = true)
+    private double price;
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private ClientEntity client;

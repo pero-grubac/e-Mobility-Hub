@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.unibl.etf.emobility_hub_user.beans.ClientBean;
+import org.unibl.etf.emobility_hub_user.beans.ElectricBicycleBean;
 import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
 
 @MultipartConfig
@@ -40,8 +41,52 @@ public class ClientController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doGet(req, resp);
+	    String action = req.getParameter("action");
+	    if ("brokenVehicle".equals(action)) {
+	        handleBrokenVehicle(req, resp);
+	    } else {
+	        resp.sendRedirect("clients?action=bicycle");
+	    }
 	}
+
+	private void handleBrokenVehicle(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    HttpSession session = request.getSession();
+	    ElectricBicycleBean bicycleBean = (ElectricBicycleBean) session.getAttribute("bicycleBean");
+	    if (bicycleBean == null) {
+	        bicycleBean = new ElectricBicycleBean();
+	        session.setAttribute("bicycleBean", bicycleBean);
+	    }
+
+	    String idParam = request.getParameter("id");
+	    String reason = request.getParameter("reason");
+
+	    if (idParam == null || reason == null || reason.trim().isEmpty()) {
+	        session.setAttribute("errorMessage", "Invalid request parameters.");
+	        response.sendRedirect("clients?action=bicycle");
+	        return;
+	    }
+
+	    try {
+	        long bicycleId = Long.parseLong(idParam);
+	        boolean isBrokenReported = bicycleBean.brokeBicycle(bicycleId, reason.trim());
+
+	        if (isBrokenReported) {
+	            session.setAttribute("successMessage", "Bicycle reported as broken successfully.");
+	        } else {
+	            session.setAttribute("errorMessage", "Failed to report broken bicycle.");
+	        }
+	    } catch (NumberFormatException e) {
+	        session.setAttribute("errorMessage", "Invalid bicycle ID.");
+	    } catch (Exception e) {
+	        session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+
+	    response.sendRedirect("clients?action=bicycle");
+	}
+
+
+	
 
 	private String getActionFromMultipartRequest(HttpServletRequest request) throws Exception {
 		String action = null;
@@ -102,6 +147,10 @@ public class ClientController extends HttpServlet {
 				return handleDeactivate(session);
 			case "updateAvatar":
 				return handleUpdateAvatar(request, session);
+			case "bicycle":
+				return handlebicycle(request, session);
+			case "brokenVehicle":
+				return handleBrokenVehicle(request, response, session);
 			default:
 				return "/WEB-INF/pages/404.jsp";
 			}
@@ -111,6 +160,69 @@ public class ClientController extends HttpServlet {
 			return "/WEB-INF/pages/404.jsp";
 		}
 
+	}
+
+	private String handleBrokenVehicle(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+			throws IOException {
+		ElectricBicycleBean bicycleBean = new ElectricBicycleBean();
+
+		// Dohvati parametre iz zahteva
+		String idParam = request.getParameter("id");
+		String reason = request.getParameter("reason");
+
+		// Validacija parametara
+		if (idParam == null || reason == null || reason.trim().isEmpty()) {
+			session.setAttribute("errorMessage", "Invalid request parameters.");
+			response.sendRedirect("clients?action=bicycle"); // Redirekcija na listu bicikala
+			return null;
+		}
+
+		try {
+			long bicycleId = Long.parseLong(idParam);
+
+			// Pozovi metodu za prijavljivanje greške
+			boolean isBrokenReported = bicycleBean.brokeBicycle(bicycleId, reason.trim());
+
+			if (isBrokenReported) {
+				session.setAttribute("successMessage", "Bicycle reported as broken successfully.");
+			} else {
+				session.setAttribute("errorMessage", "Failed to report broken bicycle.");
+			}
+		} catch (NumberFormatException e) {
+			session.setAttribute("errorMessage", "Invalid bicycle ID.");
+		} catch (Exception e) {
+			session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		// Redirekcija na listu bicikala
+		response.sendRedirect("clients?action=bicycle");
+		return null; // Ne vraćamo JSP direktno
+	}
+
+	private String handlebicycle(HttpServletRequest request, HttpSession session) {
+
+		ElectricBicycleBean bicycleBean = new ElectricBicycleBean();
+		int page = 1; // Default page
+		int size = 6; // Default size (6 bicycles per page)
+
+		String pageParam = request.getParameter("page");
+		if (pageParam != null && !pageParam.isEmpty()) {
+			try {
+				page = Integer.parseInt(pageParam);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (bicycleBean.getElectricBicycles(page, size)) {
+			session.setAttribute("bicycleBean", bicycleBean);
+			session.setAttribute("currentPage", page);
+		} else {
+			session.setAttribute("notification", "Failed to load bicycles.");
+		}
+
+		return "/WEB-INF/pages/bicycle.jsp";
 	}
 
 	private String handleUpdateAvatar(HttpServletRequest request, HttpSession session) {
