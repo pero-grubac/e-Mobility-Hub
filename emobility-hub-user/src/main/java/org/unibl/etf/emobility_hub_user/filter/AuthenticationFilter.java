@@ -23,7 +23,12 @@ public class AuthenticationFilter implements Filter {
 		HttpSession session = httpRequest.getSession(false);
 
 		String action = httpRequest.getParameter("action");
+		String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 
+		if (path.startsWith("/css/") || path.startsWith("/js/") || path.startsWith("/images/")) {
+			chain.doFilter(request, response);
+			return;
+		}
 		boolean isLoggedIn = (session != null && session.getAttribute("clientBean") != null);
 		boolean isLoginOrRegister = (action == null || action.equals("login") || action.equals("register"));
 
