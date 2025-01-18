@@ -20,4 +20,7 @@ public class ClientEntity extends UserEntity{
     @Column(unique = true, nullable = false)
     private String idCardNumber;
     private String avatarImage;
+
+    private boolean isDeactivated;
+    private boolean isBlocked;
 }

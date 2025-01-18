@@ -1,4 +1,4 @@
-package org.unibl.etf.emobility_hub_promotions.models.beans;
+package org.unibl.etf.emobility_hub_promotions.beans;
 
 import java.io.Serializable;
 import java.util.Objects;

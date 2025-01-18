@@ -7,8 +7,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.time.format.DateTimeFormatter;
 
-import org.unibl.etf.emobility_hub_promotions.models.beans.AnnouncementResponseBean;
-import org.unibl.etf.emobility_hub_promotions.models.beans.PromotionResponseBean;
+import org.unibl.etf.emobility_hub_promotions.beans.AnnouncementResponseBean;
+import org.unibl.etf.emobility_hub_promotions.beans.PromotionResponseBean;
 import org.unibl.etf.emobility_hub_promotions.models.dto.PaginatedResponse;
 import org.unibl.etf.emobility_hub_promotions.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub_promotions.models.dto.request.PromotionRequest;

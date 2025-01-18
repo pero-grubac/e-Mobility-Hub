@@ -1,6 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
-<jsp:useBean id="userBean" class="org.unibl.etf.emobility_hub_promotions.beans.UserBean" scope="session" />
-<jsp:useBean id="authService" class="org.unibl.etf.emobility_hub_promotions.services.AuthService" scope="application" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,29 +8,6 @@
 </head>
 <body class="bg-light">
 
-<%
-    String loginMessage = "";
-    if (authService == null) {
-        loginMessage = "Authentication service is not available.";
-    } else if (request.getParameter("username") != null && request.getParameter("password") != null) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String token = authService.login(username, password);
-
-        if (token != null) {
-            userBean.setUsername(username);
-            userBean.setPassword(password);
-            userBean.setLoggedIn(true);
-            userBean.setToken(token);
-
-            response.sendRedirect("promotions.jsp");
-            return;
-        } else {
-            loginMessage = "Invalid username or password!";
-        }
-    }
-%>
-
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -40,13 +15,19 @@
                     <div class="card-body">
                         <h2 class="text-center mb-4">Login</h2>
 
-                        <% if (!loginMessage.isEmpty()) { %>
+                        <% 
+                            String notification = (String) request.getSession().getAttribute("notification");
+                            if (notification != null && !notification.isEmpty()) { 
+                        %>
                             <div class="alert alert-danger" role="alert">
-                                <%= loginMessage %>
+                                <%= notification %>
                             </div>
+                            <%
+                                request.getSession().removeAttribute("notification");
+                            %>
                         <% } %>
 
-                        <form action="login.jsp" method="post">
+                        <form action="clients?action=login" method="post">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
                                 <input type="text" class="form-control" id="username" name="username" required>
@@ -57,6 +38,10 @@
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>
+
+                        <div class="mt-3 text-center">
+                            <p>Don't have an account? <a href="clients?action=register" class="text-primary">Register here</a></p>
+                        </div>
                     </div>
                 </div>
             </div>
