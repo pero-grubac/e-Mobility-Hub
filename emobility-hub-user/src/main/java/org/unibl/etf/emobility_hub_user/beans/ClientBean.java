@@ -49,4 +49,46 @@ public class ClientBean implements Serializable {
 		}
 		return false;
 	}
+
+	public boolean changePassword(String password) {
+		try {
+			return ClientDAO.updatePassword(entity.getId(), password);
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+		}
+		return false;
+	}
+
+	public void deactivate() {
+		try {
+			ClientDAO.updateIsDeactivated(entity.getId(), true);
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+		}
+	}
+
+	public boolean updateAvater(String path) {
+		try {
+			if (ClientDAO.updateAvatar(entity.getId(), path)) {
+				entity.setAvatarImage(path);
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+		}
+		return false;
+	}
+
+	public ClientEntity getEntity() {
+		return entity;
+	}
+
+	public void setEntity(ClientEntity entity) {
+		this.entity = entity;
+	}
+
+	public void setLoggedIn(boolean isLoggedIn) {
+		this.isLoggedIn = isLoggedIn;
+	}
 }

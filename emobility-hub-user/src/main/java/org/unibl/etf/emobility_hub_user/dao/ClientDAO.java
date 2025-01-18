@@ -16,11 +16,15 @@ public class ClientDAO {
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 	private static final String SQL_SELECT_CLIENT_BY_USERNAME = "SELECT u.id AS userId, u.username, u.password, u.firstName, u.lastName, u.role, "
 			+ "c.email, c.phoneNumber, c.idCardNumber, c.avatarImage, c.isDeactivated, c.isBlocked "
-			+ "FROM user u JOIN client c ON u.id = c.id WHERE u.username = ?";
+			+ "FROM user u JOIN client c ON u.id = c.id WHERE u.username = ? and c.isBlocked=0 and c.isDeactivated=0";
 
 	private static final String SQL_SELECT_BY_USERNAME = "SELECT COUNT(*) AS count FROM user WHERE username = ?";
 	private static final String SQL_INSERT_USER = "INSERT INTO user (username, password, firstName, lastName, role) VALUES (?, ?, ?, ?, ?)";
 	private static final String SQL_INSERT_CLIENT = "INSERT INTO client (id, email, phoneNumber, idCardNumber, avatarImage, isDeactivated, isBlocked) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_UPDATE_PASSWORD = "UPDATE user SET password = ? WHERE id = ?";
+	private static final String SQL_UPDATE_IS_DEACTIVATED = "UPDATE client SET isDeactivated = ? WHERE id = ?";
+	private static final String SQL_UPDATE_AVATAR = "UPDATE client SET avatarImage = ? WHERE id = ?";
+
 	private static final Logger logger = Logger.getLogger(ClientBean.class.getName());
 
 	public static ClientEntity getByUsernameAndPassword(String username, String password) {
@@ -133,6 +137,76 @@ public class ClientDAO {
 			} catch (SQLException rollbackEx) {
 				rollbackEx.printStackTrace();
 			}
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+
+		return success;
+	}
+
+	public static boolean updatePassword(Long userId, String newPassword) {
+		Connection connection = null;
+		boolean success = false;
+
+		try {
+			connection = connectionPool.checkOut();
+			System.out.println(newPassword);
+			PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE_PASSWORD);
+			pstmt.setString(1, BCrypt.hashpw(newPassword, BCrypt.gensalt())); // Hashovanje nove šifre
+			pstmt.setLong(2, userId);
+
+			int affectedRows = pstmt.executeUpdate();
+			success = affectedRows > 0;
+
+			pstmt.close();
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+
+		return success;
+	}
+
+	public static boolean updateIsDeactivated(Long userId, boolean isDeactivated) {
+		Connection connection = null;
+		boolean success = false;
+
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE_IS_DEACTIVATED);
+			pstmt.setBoolean(1, isDeactivated);
+			pstmt.setLong(2, userId);
+
+			int affectedRows = pstmt.executeUpdate();
+			success = affectedRows > 0;
+
+			pstmt.close();
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+
+		return success;
+	}
+
+	public static boolean updateAvatar(Long userId, String avatarUrl) {
+		Connection connection = null;
+		boolean success = false;
+
+		try {
+			connection = connectionPool.checkOut();
+			PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE_AVATAR);
+			pstmt.setString(1, avatarUrl);
+			pstmt.setLong(2, userId);
+
+			int affectedRows = pstmt.executeUpdate();
+			success = affectedRows > 0;
+
+			pstmt.close();
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
 		} finally {
 			connectionPool.checkIn(connection);
 		}
