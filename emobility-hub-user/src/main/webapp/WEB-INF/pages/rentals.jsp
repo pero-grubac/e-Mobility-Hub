@@ -68,9 +68,9 @@
 							<%=String.format("%.2f", rental.getDistance())%>
 							km<br> Price: $<%=String.format("%.2f", rental.getPrice())%><br>
 							Start:
-							<%=rental.getRentalStart().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))%><br>
+							<%=rental.getRentalStart().format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))%><br>
 							End:
-							<%=rental.getRentalEnd().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))%>
+							<%=rental.getRentalEnd().format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))%>
 						</p>
 					</div>
 				</div>

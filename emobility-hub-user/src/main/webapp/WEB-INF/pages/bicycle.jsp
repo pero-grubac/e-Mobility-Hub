@@ -77,15 +77,13 @@
 			%>
 		</div>
 
-		<!-- Pagination -->
 		<nav aria-label="Page navigation">
 			<ul class="pagination justify-content-center">
 				<%
 				int totalPages = bicycles.getPage().getTotalPages();
 				int currentPage = (session.getAttribute("currentPage") != null) ? (Integer) session.getAttribute("currentPage") : 1;
-				int visiblePages = 3; // Broj stranica prikazanih sa svake strane trenutne
+				int visiblePages = 3; 
 
-				// Prva strana
 				if (currentPage > visiblePages + 1) {
 				%>
 				<li class="page-item"><a class="page-link"
@@ -94,7 +92,6 @@
 				<%
 				}
 
-				// Vidljive stranice oko trenutne
 				int startPage = Math.max(1, currentPage - visiblePages);
 				int endPage = Math.min(totalPages, currentPage + visiblePages);
 
@@ -106,7 +103,6 @@
 				<%
 				}
 
-				// Poslednja strana
 				if (currentPage < totalPages - visiblePages) {
 				%>
 				<li class="page-item disabled"><a class="page-link">...</a></li>
@@ -120,7 +116,6 @@
 		</nav>
 
 	</div>
-	<!-- Modal za unos razloga -->
 	<div class="modal fade" id="brokenModal" tabindex="-1"
 		aria-labelledby="brokenModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -134,7 +129,7 @@
 				<div class="modal-body">
 					<form id="brokenForm" method="post" action="clients">
 						<input type="hidden" name="action" value="brokenVehicle">
-						<input type="hidden" id="bicycleId" name="id">
+						<input type="hidden" id="vehicleId" name="id">
 						<div class="mb-3">
 							<label for="reason" class="form-label">Reason</label>
 							<textarea class="form-control" id="reason" name="reason" rows="3"
@@ -165,7 +160,7 @@
 					</div>
 					<div class="modal-body">
 						<input type="hidden" name="action" value="rent" /> <input
-							type="hidden" id="rentBicycleId" name="bicycleId" />
+							type="hidden" id="rentvehicleId" name="vehicleId" />
 
 						<div class="mb-3">
 							<label for="rentalStart" class="form-label">Rental Start</label>
@@ -209,9 +204,9 @@
 	</div>
 
 	<script>
-		function openBrokenModal(bicycleId) {
+		function openBrokenModal(vehicleId) {
 			// Postavljanje ID-a bicikla u modal
-			document.getElementById("bicycleId").value = bicycleId;
+			document.getElementById("vehicleId").value = vehicleId;
 
 			// Prikazivanje modala
 			const modalElement = document.getElementById('brokenModal');
@@ -220,7 +215,7 @@
 		}
 
 		function submitBrokenForm() {
-			const bicycleId = document.getElementById("bicycleId").value;
+			const vehicleId = document.getElementById("vehicleId").value;
 			const reason = document.getElementById("reason").value.trim();
 
 			if (!reason) {
@@ -228,18 +223,16 @@
 				return;
 			}
 
-			if (!bicycleId) {
+			if (!vehicleId) {
 				alert("Bicycle ID is missing!");
 				return;
 			}
 
 			document.getElementById("brokenForm").submit();
 		}
-		function openRentModal(bicycleId) {
-			document.getElementById("rentBicycleId").value = bicycleId;
-			console.log("Bicycle ID:",
-					document.getElementById("rentBicycleId").value);
-			// Prikazivanje modala
+		function openRentModal(vehicleId) {
+			document.getElementById("rentvehicleId").value = vehicleId;
+
 			const modalElement = document.getElementById("rentModal");
 			const modal = new bootstrap.Modal(modalElement);
 			modal.show();

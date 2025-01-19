@@ -18,11 +18,13 @@ import javax.servlet.http.Part;
 
 import org.unibl.etf.emobility_hub_user.beans.ClientBean;
 import org.unibl.etf.emobility_hub_user.beans.ElectricBicycleBean;
+import org.unibl.etf.emobility_hub_user.beans.ElectricCarBean;
 import org.unibl.etf.emobility_hub_user.beans.FaultBean;
 import org.unibl.etf.emobility_hub_user.beans.RentalBean;
 import org.unibl.etf.emobility_hub_user.beans.TransportVehicleBean;
 import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
 import org.unibl.etf.emobility_hub_user.models.entity.RentalEntity;
+
 
 @MultipartConfig
 @WebServlet("/clients")
@@ -72,14 +74,13 @@ public class ClientController extends HttpServlet {
 		TransportVehicleBean transportVehicleBean = new TransportVehicleBean();
 		try {
 
-			long vehicleId = Long.parseLong(request.getParameter("bicycleId"));
+			long vehicleId = Long.parseLong(request.getParameter("vehicleId"));
 			LocalDateTime rentalStart = LocalDateTime.parse(request.getParameter("rentalStart"));
 			LocalDateTime rentalEnd = LocalDateTime.parse(request.getParameter("rentalEnd"));
 			double startLatitude = Double.parseDouble(request.getParameter("startLatitude"));
 			double startLongitude = Double.parseDouble(request.getParameter("startLongitude"));
 			double endLatitude = Double.parseDouble(request.getParameter("endLatitude"));
 			double endLongitude = Double.parseDouble(request.getParameter("endLongitude"));
-
 			if (rentalStart.isAfter(rentalEnd)) {
 				session.setAttribute("errorMessage", "Rental end time must be after start time.");
 				response.sendRedirect("clients?action=welcome");
@@ -144,24 +145,18 @@ public class ClientController extends HttpServlet {
 
 	private void handleBrokenVehicle(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
-		ElectricBicycleBean bicycleBean = (ElectricBicycleBean) session.getAttribute("bicycleBean");
-		if (bicycleBean == null) {
-			bicycleBean = new ElectricBicycleBean();
-			session.setAttribute("bicycleBean", bicycleBean);
-		}
 
 		String idParam = request.getParameter("id");
 		String reason = request.getParameter("reason");
-
 		if (idParam == null || reason == null || reason.trim().isEmpty()) {
 			session.setAttribute("errorMessage", "Invalid request parameters.");
-			response.sendRedirect("clients?action=bicycle");
+			response.sendRedirect("clients?action=welcome");
 			return;
 		}
 		FaultBean faultBean = new FaultBean();
 		try {
-			long bicycleId = Long.parseLong(idParam);
-			boolean isBrokenReported = faultBean.brokeBicycle(bicycleId, reason.trim());
+			long id = Long.parseLong(idParam);
+			boolean isBrokenReported = faultBean.broke(id, reason.trim());
 
 			if (isBrokenReported) {
 				session.setAttribute("successMessage", "Bicycle reported as broken successfully.");
@@ -175,7 +170,7 @@ public class ClientController extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		response.sendRedirect("clients?action=bicycle");
+		response.sendRedirect("clients?action=welcome");
 	}
 
 	private String getActionFromMultipartRequest(HttpServletRequest request) throws Exception {
@@ -241,6 +236,8 @@ public class ClientController extends HttpServlet {
 				return handlebicycle(request, session);
 			case "rentals":
 				return hendleRentals(request, session);
+			case "car":
+				return handleCar(request, session);
 			default:
 				return "/WEB-INF/pages/404.jsp";
 			}
@@ -250,6 +247,29 @@ public class ClientController extends HttpServlet {
 			return "/WEB-INF/pages/404.jsp";
 		}
 
+	}
+
+	private String handleCar(HttpServletRequest request, HttpSession session) {
+		ElectricCarBean electricCarBean = new ElectricCarBean();
+		int page = 1;
+		int size = 6;
+
+		String pageParam = request.getParameter("page");
+		if (pageParam != null && !pageParam.isEmpty()) {
+			try {
+				page = Integer.parseInt(pageParam);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		if (electricCarBean.getElectricCars(page, size)) {
+			session.setAttribute("electricCarBean", electricCarBean);
+			session.setAttribute("currentPage", page);
+		} else {
+			session.setAttribute("notification", "Failed to load bicycles.");
+		}
+
+		return "/WEB-INF/pages/car.jsp";
 	}
 
 	private String hendleRentals(HttpServletRequest request, HttpSession session) {
@@ -278,8 +298,8 @@ public class ClientController extends HttpServlet {
 	private String handlebicycle(HttpServletRequest request, HttpSession session) {
 
 		ElectricBicycleBean bicycleBean = new ElectricBicycleBean();
-		int page = 1; // Default page
-		int size = 6; // Default size (6 bicycles per page)
+		int page = 1;
+		int size = 6;
 
 		String pageParam = request.getParameter("page");
 		if (pageParam != null && !pageParam.isEmpty()) {
