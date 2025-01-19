@@ -21,10 +21,10 @@ public class RentalBean implements Serializable {
 		return false;
 	}
 
-	public boolean getRentals(int page, int size) {
+	public boolean getRentals(int page, int size, Long clientId) {
 		try {
 			rentals = null;
-			rentals = RentalDAO.getPaginatedRentals(page, size);
+			rentals = RentalDAO.getPaginatedRentalsByClient(page, size, clientId);
 			return true;
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
