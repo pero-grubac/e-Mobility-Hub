@@ -1,1 +1,13 @@
-<p>car-detail works!</p>
+<div *ngIf="isLoading" class="loader">Loading...</div>
+
+<div *ngIf="!isLoading">
+  <app-vehicle-detail
+    [vehicle]="car"
+    [additionalData]="additionalData"
+    [isEditMode]="isEditMode"
+    (save)="handleSave($event)"
+    (delete)="handleDelete($event)"
+    (imageUpload)="handleImageUpload($event)"
+  >
+  </app-vehicle-detail>
+</div>

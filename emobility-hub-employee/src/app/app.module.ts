@@ -6,11 +6,9 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { VehicleComponent } from './vehicle/vehicle.component';
 import { VehicleListComponent } from './vehicle/vehicle-list/vehicle-list.component';
 import { VehicleDetailComponent } from './vehicle/vehicle-detail/vehicle-detail.component';
 import { VehicleItemComponent } from './vehicle/vehicle-list/vehicle-item/vehicle-item.component';
-import { CarComponent } from './car/car.component';
 import { CarListComponent } from './car/car-list/car-list.component';
 import { CarDetailComponent } from './car/car-detail/car-detail.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,11 +17,9 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     AppComponent,
     HeaderComponent,
-    VehicleComponent,
     VehicleListComponent,
     VehicleDetailComponent,
     VehicleItemComponent,
-    CarComponent,
     CarListComponent,
     CarDetailComponent,
   ],

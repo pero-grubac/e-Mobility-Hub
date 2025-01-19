@@ -1,9 +1,12 @@
-<app-vehicle-list
-  [vehicles]="cars"
-  [totalPages]="totalPages"
-  [currentPage]="currentPage"
-  [onPageChange]="handlePageChange.bind(this)"
-  (searchEvent)="handleSearch($event)"
-  (addEvent)="handleAdd()"
->
-</app-vehicle-list>
+<div class="car-list-page">
+  <h1>Cars</h1>
+  <app-vehicle-list
+    [vehicles]="cars"
+    [totalPages]="totalPages"
+    [currentPage]="currentPage"
+    [onPageChange]="handlePageChange.bind(this)"
+    (searchEvent)="handleSearch($event)"
+    (addEvent)="handleAdd()"
+    (vehicleSelected)="handleVehicleSelected($event)"
+  ></app-vehicle-list>
+</div>

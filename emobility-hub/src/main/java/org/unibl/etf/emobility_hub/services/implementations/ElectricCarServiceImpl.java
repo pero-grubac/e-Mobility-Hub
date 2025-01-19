@@ -31,7 +31,7 @@ public class ElectricCarServiceImpl
 
     @Override
     public ElectricCarResponse create(ElectricCarRequest request) {
-        ManufacturerEntity manufacturerEntity = findManufacturerById(request);
+        ManufacturerEntity manufacturerEntity = findManufacturerById(request.getManufacturerId());
 
         ElectricCarEntity entity = getMapper().map(request, getEntityClass());
         entity.setId(null);
@@ -50,7 +50,7 @@ public class ElectricCarServiceImpl
 
     @Override
     public ElectricCarResponse update(ElectricCarRequest request) {
-        ManufacturerEntity manufacturerEntity = findManufacturerById(request);
+        ManufacturerEntity manufacturerEntity = findManufacturerById(request.getManufacturerId());
 
         ElectricCarEntity entity = findById(request.getId());
         entity.setModel(request.getModel());

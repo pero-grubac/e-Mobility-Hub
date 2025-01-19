@@ -15,6 +15,8 @@ import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.domain.entity.ManufacturerEntity;
 import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.dto.request.TransportVehicleRequest;
+import org.unibl.etf.emobility_hub.models.dto.response.ManufacturerResponse;
+import org.unibl.etf.emobility_hub.models.dto.response.detailed.IContainManufacturer;
 import org.unibl.etf.emobility_hub.repositories.JpaTransportVehicleRepository;
 import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
 
@@ -28,7 +30,7 @@ import java.util.UUID;
 
 @Getter
 @Transactional
-public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleRepository<TEntity>, TEntity extends TransportVehicleEntity, TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse>
+public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleRepository<TEntity>, TEntity extends TransportVehicleEntity, TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse extends IContainManufacturer>
         implements IBaseVehicleCRUDService<TRequest, TResponse, TDetailedResponse> {
 
     private final ModelMapper mapper;
@@ -85,13 +87,15 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
     @Override
     public TDetailedResponse getById(Long id) {
         TEntity entity = findById(id);
-        return mapper.map(entity, detailedResponseClass);
+        TDetailedResponse respone = mapper.map(entity, detailedResponseClass);
+        respone.setManufacturer(mapper.map(entity.getManufacturer(), ManufacturerResponse.class));
+        return respone;
     }
 
 
     @Override
     public TResponse create(TRequest request) {
-        ManufacturerEntity manufacturerEntity = findManufacturerById(request);
+        ManufacturerEntity manufacturerEntity = findManufacturerById(request.getManufacturerId());
 
         TEntity te = getMapper().map(request, getEntityClass());
         te.setId(null);
@@ -150,7 +154,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
 
     @Override
     public TResponse update(TRequest request) {
-        ManufacturerEntity manufacturerEntity = findManufacturerById(request);
+        ManufacturerEntity manufacturerEntity = findManufacturerById(request.getManufacturerId());
 
         TEntity te = findById(request.getId());
         te.setModel(request.getModel());
@@ -168,10 +172,10 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
     }
 
 
-    protected ManufacturerEntity findManufacturerById(TRequest request) {
-        ManufacturerEntity entity = manufacturerEntityRepository.findById(request.getManufacturerId()).orElse(null);
+    protected ManufacturerEntity findManufacturerById(Long id) {
+        ManufacturerEntity entity = manufacturerEntityRepository.findById(id).orElse(null);
         if (entity == null)
-            throw new EntityNotFoundException("Manufacturer with ID " + request.getManufacturerId() + " not found");
+            throw new EntityNotFoundException("Manufacturer with ID " + id + " not found");
         return entity;
     }
 

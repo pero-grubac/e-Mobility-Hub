@@ -9,9 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.unibl.etf.emobility_hub.base.services.IBaseVehicleCRUDService;
 import org.unibl.etf.emobility_hub.models.dto.request.TransportVehicleRequest;
+import org.unibl.etf.emobility_hub.models.dto.response.detailed.IContainManufacturer;
 
 @Getter
-public abstract class BaseVehicleCRUDController<TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse> {
+public abstract class BaseVehicleCRUDController<TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse extends IContainManufacturer> {
     private final IBaseVehicleCRUDService<TRequest, TResponse, TDetailedResponse> service;
 
     protected BaseVehicleCRUDController(IBaseVehicleCRUDService<TRequest, TResponse, TDetailedResponse> service) {

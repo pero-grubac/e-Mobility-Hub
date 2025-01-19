@@ -34,6 +34,12 @@ export class VehicleListComponent implements OnInit, OnChanges {
   uploadStatus: string | null = null;
   isUploading: boolean = false;
 
+  @Output() vehicleSelected = new EventEmitter<number>();
+
+  onVehicleSelected(vehicleId: number): void {
+    this.vehicleSelected.emit(vehicleId);
+  }
+
   openModal(): void {
     this.isModalOpen = true;
   }
