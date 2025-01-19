@@ -17,8 +17,8 @@ public class RentalDAO {
 			+ "duration, rentalEnd, rentalStart, client_id, vehicle_id, "
 			+ "end_latitude, end_longitude, start_latitude, start_longitude, distance, price) "
 			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-	private static final String SELECT_PAGINATED_RENTALS = "SELECT * FROM rental ORDER BY id DESC LIMIT ? OFFSET ?;";
-	private static final String COUNT_TOTAL_RENTALS = "SELECT COUNT(*) FROM rental;";
+	private static final String SELECT_PAGINATED_RENTALS_BY_CLIENT = "SELECT * FROM rental WHERE client_id = ? ORDER BY id DESC LIMIT ? OFFSET ?;";
+	private static final String COUNT_TOTAL_RENTALS_BY_CLIENT = "SELECT COUNT(*) FROM rental WHERE client_id = ?;";
 
 	public static boolean createRental(RentalEntity rental) {
 		Connection connection = null;
@@ -54,7 +54,7 @@ public class RentalDAO {
 		return success;
 	}
 
-	public static PaginatedResponse<RentalEntity> getPaginatedRentals(int page, int size) {
+	public static PaginatedResponse<RentalEntity> getPaginatedRentalsByClient(int page, int size, long clientId) {
 		Connection connection = null;
 		PaginatedResponse<RentalEntity> response = new PaginatedResponse<>();
 
@@ -64,10 +64,11 @@ public class RentalDAO {
 			// Calculate offset
 			int offset = (page - 1) * size;
 
-			// Fetch paginated rentals
-			PreparedStatement stmt = connection.prepareStatement(SELECT_PAGINATED_RENTALS);
-			stmt.setInt(1, size);
-			stmt.setInt(2, offset);
+			// Fetch paginated rentals by client ID
+			PreparedStatement stmt = connection.prepareStatement(SELECT_PAGINATED_RENTALS_BY_CLIENT);
+			stmt.setLong(1, clientId);
+			stmt.setInt(2, size);
+			stmt.setInt(3, offset);
 
 			ResultSet rs = stmt.executeQuery();
 			List<RentalEntity> rentals = new ArrayList<>();
@@ -93,8 +94,9 @@ public class RentalDAO {
 			rs.close();
 			stmt.close();
 
-			// Fetch total count of rentals
-			PreparedStatement countStmt = connection.prepareStatement(COUNT_TOTAL_RENTALS);
+			// Fetch total count of rentals for the client
+			PreparedStatement countStmt = connection.prepareStatement(COUNT_TOTAL_RENTALS_BY_CLIENT);
+			countStmt.setLong(1, clientId);
 			ResultSet countRs = countStmt.executeQuery();
 
 			long totalElements = 0;

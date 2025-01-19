@@ -1,6 +1,5 @@
 package org.unibl.etf.emobility_hub_user.controller;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +18,9 @@ import javax.servlet.http.Part;
 
 import org.unibl.etf.emobility_hub_user.beans.ClientBean;
 import org.unibl.etf.emobility_hub_user.beans.ElectricBicycleBean;
+import org.unibl.etf.emobility_hub_user.beans.FaultBean;
 import org.unibl.etf.emobility_hub_user.beans.RentalBean;
+import org.unibl.etf.emobility_hub_user.beans.TransportVehicleBean;
 import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
 import org.unibl.etf.emobility_hub_user.models.entity.RentalEntity;
 
@@ -50,8 +51,8 @@ public class ClientController extends HttpServlet {
 
 		if ("brokenVehicle".equals(action)) {
 			handleBrokenVehicle(request, response);
-		} else if ("rentBicycle".equals(action)) {
-			handleRentBicycle(request, response, session);
+		} else if ("rent".equals(action)) {
+			handleRent(request, response, session);
 		} else if ("login".equals(action)) {
 			String address = handleLogin(request, session);
 			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
@@ -65,13 +66,12 @@ public class ClientController extends HttpServlet {
 		}
 	}
 
-	private void handleRentBicycle(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	private void handleRent(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws IOException {
 		RentalBean rentalBean = new RentalBean();
-		ElectricBicycleBean bicycleBean = new ElectricBicycleBean();
+		TransportVehicleBean transportVehicleBean = new TransportVehicleBean();
 		try {
 
-			// Dohvatanje podataka iz forme
 			long vehicleId = Long.parseLong(request.getParameter("bicycleId"));
 			LocalDateTime rentalStart = LocalDateTime.parse(request.getParameter("rentalStart"));
 			LocalDateTime rentalEnd = LocalDateTime.parse(request.getParameter("rentalEnd"));
@@ -80,34 +80,28 @@ public class ClientController extends HttpServlet {
 			double endLatitude = Double.parseDouble(request.getParameter("endLatitude"));
 			double endLongitude = Double.parseDouble(request.getParameter("endLongitude"));
 
-			// Validacija
 			if (rentalStart.isAfter(rentalEnd)) {
 				session.setAttribute("errorMessage", "Rental end time must be after start time.");
-				response.sendRedirect("clients?action=bicycle");
+				response.sendRedirect("clients?action=welcome");
 				return;
 			}
 
-			// Izračunavanje duration u satima
 			double duration = java.time.Duration.between(rentalStart, rentalEnd).toMinutes() / 60.0;
 
-			// Izračunavanje distance u km
 			double distance = calculateDistance(startLatitude, startLongitude, endLatitude, endLongitude);
 			distance = Math.round(distance * 100.0) / 100.0;
 
-			// Dohvatanje rentPrice za vozilo
-			double rentPrice = bicycleBean.getRentPriceById(vehicleId);
+			double rentPrice = transportVehicleBean.getRentPriceById(vehicleId);
 
 			if (rentPrice <= 0) {
 				session.setAttribute("errorMessage", "Invalid vehicle price.");
-				response.sendRedirect("clients?action=bicycle");
+				response.sendRedirect("clients?action=welcome");
 				return;
 			}
 
-			// Izračunavanje cene
-			double price = duration * rentPrice + distance * 0.1; // Primer formule
+			double price = duration * rentPrice * distance * 0.1;
 			price = Math.round(price * 100.0) / 100.0;
 
-			// Kreiranje RentalEntity objekta
 			RentalEntity rental = new RentalEntity();
 			rental.setVehicleId(vehicleId);
 			rental.setRentalStart(rentalStart);
@@ -121,7 +115,7 @@ public class ClientController extends HttpServlet {
 			rental.setPrice(price);
 			ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
 			if (clientBean == null) {
-				response.sendRedirect("clients?action=bicycle");
+				response.sendRedirect("clients?action=welcome");
 				return;
 			}
 			rental.setClientId(clientBean.getEntity().getId());
@@ -135,8 +129,7 @@ public class ClientController extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		// Vraćanje na listu bicikala
-		response.sendRedirect("clients?action=bicycle");
+		response.sendRedirect("clients?action=welcome");
 	}
 
 	private double calculateDistance(double startLat, double startLon, double endLat, double endLon) {
@@ -165,10 +158,10 @@ public class ClientController extends HttpServlet {
 			response.sendRedirect("clients?action=bicycle");
 			return;
 		}
-
+		FaultBean faultBean = new FaultBean();
 		try {
 			long bicycleId = Long.parseLong(idParam);
-			boolean isBrokenReported = bicycleBean.brokeBicycle(bicycleId, reason.trim());
+			boolean isBrokenReported = faultBean.brokeBicycle(bicycleId, reason.trim());
 
 			if (isBrokenReported) {
 				session.setAttribute("successMessage", "Bicycle reported as broken successfully.");
@@ -248,8 +241,6 @@ public class ClientController extends HttpServlet {
 				return handlebicycle(request, session);
 			case "rentals":
 				return hendleRentals(request, session);
-			case "brokenVehicle":
-				return handleBrokenVehicle(request, response, session);
 			default:
 				return "/WEB-INF/pages/404.jsp";
 			}
@@ -273,7 +264,8 @@ public class ClientController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		if (rentalBean.getRentals(page, size)) {
+		ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
+		if (clientBean != null && rentalBean.getRentals(page, size, clientBean.getEntity().getId())) {
 			session.setAttribute("rentalBean", rentalBean);
 			session.setAttribute("rentalPage", page);
 		} else {
@@ -281,44 +273,6 @@ public class ClientController extends HttpServlet {
 		}
 
 		return "/WEB-INF/pages/rentals.jsp";
-	}
-
-	private String handleBrokenVehicle(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws IOException {
-		ElectricBicycleBean bicycleBean = new ElectricBicycleBean();
-
-		// Dohvati parametre iz zahteva
-		String idParam = request.getParameter("id");
-		String reason = request.getParameter("reason");
-
-		// Validacija parametara
-		if (idParam == null || reason == null || reason.trim().isEmpty()) {
-			session.setAttribute("errorMessage", "Invalid request parameters.");
-			response.sendRedirect("clients?action=bicycle"); // Redirekcija na listu bicikala
-			return null;
-		}
-
-		try {
-			long bicycleId = Long.parseLong(idParam);
-
-			// Pozovi metodu za prijavljivanje greške
-			boolean isBrokenReported = bicycleBean.brokeBicycle(bicycleId, reason.trim());
-
-			if (isBrokenReported) {
-				session.setAttribute("successMessage", "Bicycle reported as broken successfully.");
-			} else {
-				session.setAttribute("errorMessage", "Failed to report broken bicycle.");
-			}
-		} catch (NumberFormatException e) {
-			session.setAttribute("errorMessage", "Invalid bicycle ID.");
-		} catch (Exception e) {
-			session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		// Redirekcija na listu bicikala
-		response.sendRedirect("clients?action=bicycle");
-		return null; // Ne vraćamo JSP direktno
 	}
 
 	private String handlebicycle(HttpServletRequest request, HttpSession session) {

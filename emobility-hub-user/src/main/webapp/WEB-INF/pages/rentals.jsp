@@ -10,7 +10,8 @@
 <jsp:useBean id="bicycleBean"
 	class="org.unibl.etf.emobility_hub_user.beans.ElectricBicycleBean"
 	scope="session" />
-
+<jsp:useBean id="transportVehicleBean"
+	class="org.unibl.etf.emobility_hub_user.beans.TransportVehicleBean" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,7 +49,7 @@
 			PaginatedResponse<RentalEntity> rentals = rentalBean.getRentals();
 			if (rentals != null && rentals.getContent() != null) {
 				for (RentalEntity rental : rentals.getContent()) {
-					String imagePath = bicycleBean.imageById(rental.getVehicleId());
+					String imagePath = transportVehicleBean.imageById(rental.getVehicleId());
 					if (imagePath == null || imagePath.isEmpty()) {
 				imagePath = request.getContextPath() + "/images/default-avatar.png";
 					}

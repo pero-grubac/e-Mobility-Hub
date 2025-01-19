@@ -45,9 +45,15 @@
 				<div class="card">
 					<img src="<%=imagePath%>" class="card-img-top" alt="Bicycle Image">
 					<div class="card-body">
-						<h5 class="card-title"><%=bicycle.getModel()%></h5>
+						<h4 class="card-title"><%=bicycle.getModel()%></h4>
+						<h6 class="card-title"><%=bicycle.getManufacturerName()%></h6>
 						<p class="card-text">
-							$<%=bicycle.getRentPrice()%></p>
+							$<%=bicycle.getRentPrice()%>
+							<br> Range per charge:
+							<%=bicycle.getRangePerCharge()%>
+							km
+						</p>
+
 						<div class="d-flex justify-content-between">
 							<button class="btn btn-success"
 								onclick="openRentModal('<%=bicycle.getId()%>')">Rent</button>
@@ -158,7 +164,7 @@
 							aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<input type="hidden" name="action" value="rentBicycle" /> <input
+						<input type="hidden" name="action" value="rent" /> <input
 							type="hidden" id="rentBicycleId" name="bicycleId" />
 
 						<div class="mb-3">
@@ -231,7 +237,8 @@
 		}
 		function openRentModal(bicycleId) {
 			document.getElementById("rentBicycleId").value = bicycleId;
-			console.log("Bicycle ID:", document.getElementById("rentBicycleId").value);
+			console.log("Bicycle ID:",
+					document.getElementById("rentBicycleId").value);
 			// Prikazivanje modala
 			const modalElement = document.getElementById("rentModal");
 			const modal = new bootstrap.Modal(modalElement);
