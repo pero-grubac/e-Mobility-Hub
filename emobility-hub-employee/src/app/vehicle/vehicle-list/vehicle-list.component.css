@@ -1,0 +1,77 @@
+.vehicle-list-container {
+  max-width: 1400px;
+  margin: 32px auto;
+  padding: 16px;
+}
+
+.vehicle-list-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.search-bar-container {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.search-input {
+  width: 350px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.add-button,
+.upload-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-button:hover,
+.upload-button:hover {
+  background-color: #0056b3;
+}
+
+.vehicle-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  justify-items: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  gap: 8px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination button:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
