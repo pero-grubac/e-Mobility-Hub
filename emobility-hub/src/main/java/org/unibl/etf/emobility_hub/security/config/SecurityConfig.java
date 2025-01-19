@@ -68,6 +68,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/announcements").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.DELETE,"/announcements/{id:[\\d]+}").hasRole("MANAGER")
 
+                        .requestMatchers(HttpMethod.GET,"/electric-cars/getByModel").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/electric-cars/{id:[\\d]+}").permitAll()
+
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())
