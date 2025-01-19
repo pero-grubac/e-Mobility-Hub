@@ -1,19 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page
-	import="org.unibl.etf.emobility_hub_user.models.entity.ElectricBicycleEntity"%>
+	import="org.unibl.etf.emobility_hub_user.models.entity.ElectricCarEntity"%>
 <%@ page import="java.util.List"%>
 <%@ page
 	import="org.unibl.etf.emobility_hub_user.models.dto.PaginatedResponse"%>
-<jsp:useBean id="bicycleBean"
-	class="org.unibl.etf.emobility_hub_user.beans.ElectricBicycleBean"
+<jsp:useBean id="electricCarBean"
+	class="org.unibl.etf.emobility_hub_user.beans.ElectricCarBean"
 	scope="session" />
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Bicycles</title>
+<title>Electric Cars</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -30,37 +30,36 @@
 	<jsp:include page="header.html" />
 	<div class="container mt-5">
 
-		<h2 class="mb-4">Electric Bicycles</h2>
+		<h2 class="mb-4">Electric Cars</h2>
 
 		<div class="row">
 			<%
-			PaginatedResponse<ElectricBicycleEntity> bicycles = bicycleBean.getElectricBicycles();
-			if (bicycles != null && bicycles.getContent() != null) {
-				for (ElectricBicycleEntity bicycle : bicycles.getContent()) {
-					String imagePath = (bicycle.getImage() != null && !bicycle.getImage().isEmpty())
-					? bicycle.getImage()
+			PaginatedResponse<ElectricCarEntity> cars = electricCarBean.getElectricCars();
+			if (cars != null && cars.getContent() != null) {
+				for (ElectricCarEntity car : cars.getContent()) {
+					String imagePath = (car.getImage() != null && !car.getImage().isEmpty())
+					? car.getImage()
 					: request.getContextPath() + "/images/default-avatar.png";
 			%>
 			<div class="col-md-4 mb-4">
 				<div class="card">
-					<img src="<%=imagePath%>" class="card-img-top" alt="Bicycle Image">
+					<img src="<%=imagePath%>" class="card-img-top" alt="Car Image">
 					<div class="card-body">
-						<h4 class="card-title"><%=(bicycle.getModel() != null) ? bicycle.getModel() : "Unknown Model"%></h4>
-						<h6 class="card-title"><%=(bicycle.getManufacturerName() != null) ? bicycle.getManufacturerName() : "Unknown Manufacturer"%></h6>
+						<h4 class="card-title"><%=(car.getModel() != null) ? car.getModel() : "Unknown Model"%></h4>
+						<h6 class="card-title"><%=(car.getManufacturerName() != null) ? car.getManufacturerName() : "Unknown Manufacturer"%></h6>
 						<p class="card-text">
-							$<%=(bicycle.getRentPrice() != 0) ? bicycle.getRentPrice() : "N/A"%>
-							<br> Range per charge:
-							<%=(bicycle.getRangePerCharge() != 0) ? bicycle.getRangePerCharge() + " km" : "N/A"%>
+							$<%=car.getRentPrice() != 0 ? car.getRentPrice() : "N/A"%><br>
+							Purchase date:
+							<%=car.getPurchaseDate().format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy"))%>
 						</p>
 
 
 						<div class="d-flex justify-content-between">
 							<button class="btn btn-success"
-								onclick="openRentModal('<%=bicycle.getId()%>')">Rent</button>
+								onclick="openRentModal('<%=car.getId()%>')">Rent</button>
 
 							<button class="btn btn-warning"
-								onclick="openBrokenModal('<%=bicycle.getId()%>')">
-								Broken</button>
+								onclick="openBrokenModal('<%=car.getId()%>')">Broken</button>
 						</div>
 					</div>
 				</div>
@@ -70,7 +69,7 @@
 			} else {
 			%>
 			<div class="col-12">
-				<p>No bicycles available.</p>
+				<p>No cars available.</p>
 			</div>
 			<%
 			}
@@ -80,34 +79,37 @@
 		<nav aria-label="Page navigation">
 			<ul class="pagination justify-content-center">
 				<%
-				int totalPages = bicycles.getPage().getTotalPages();
+				int totalPages = cars.getPage().getTotalPages();
 				int currentPage = (session.getAttribute("currentPage") != null) ? (Integer) session.getAttribute("currentPage") : 1;
-				int visiblePages = 3; 
+				int visiblePages = 3; // Broj stranica prikazanih sa svake strane trenutne
 
+				// Prva strana
 				if (currentPage > visiblePages + 1) {
 				%>
 				<li class="page-item"><a class="page-link"
-					href="clients?action=bicycle&page=1">1</a></li>
+					href="clients?action=electricCar&page=1">1</a></li>
 				<li class="page-item disabled"><a class="page-link">...</a></li>
 				<%
 				}
 
+				// Vidljive stranice oko trenutne
 				int startPage = Math.max(1, currentPage - visiblePages);
 				int endPage = Math.min(totalPages, currentPage + visiblePages);
 
 				for (int i = startPage; i <= endPage; i++) {
 				%>
 				<li class="page-item <%=(i == currentPage) ? "active" : ""%>">
-					<a class="page-link" href="clients?action=bicycle&page=<%=i%>"><%=i%></a>
+					<a class="page-link" href="clients?action=car&page=<%=i%>"><%=i%></a>
 				</li>
 				<%
 				}
 
+				// Poslednja strana
 				if (currentPage < totalPages - visiblePages) {
 				%>
 				<li class="page-item disabled"><a class="page-link">...</a></li>
 				<li class="page-item"><a class="page-link"
-					href="clients?action=bicycle&page=<%=totalPages%>"><%=totalPages%></a>
+					href="clients?action=car&page=<%=totalPages%>"><%=totalPages%></a>
 				</li>
 				<%
 				}
@@ -122,7 +124,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="brokenModalLabel">Report Broken
-						Bicycle</h5>
+						Car</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -133,8 +135,7 @@
 						<div class="mb-3">
 							<label for="reason" class="form-label">Reason</label>
 							<textarea class="form-control" id="reason" name="reason" rows="3"
-								maxlength="255"
-								placeholder="Enter reason for the broken bicycle..."></textarea>
+								maxlength="255" placeholder="Enter reason for the broken car..."></textarea>
 						</div>
 					</form>
 
@@ -154,7 +155,7 @@
 			<div class="modal-content">
 				<form id="rentForm" method="post" action="clients">
 					<div class="modal-header">
-						<h5 class="modal-title" id="rentModalLabel">Rent Bicycle</h5>
+						<h5 class="modal-title" id="rentModalLabel">Rent Car</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
@@ -196,19 +197,18 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Rent</button>
+						<button type="button" class="btn btn-primary"
+							onclick="submitRentForm()">Rent</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 
+
 	<script>
 		function openBrokenModal(vehicleId) {
-			// Postavljanje ID-a bicikla u modal
 			document.getElementById("vehicleId").value = vehicleId;
-
-			// Prikazivanje modala
 			const modalElement = document.getElementById('brokenModal');
 			const modal = new bootstrap.Modal(modalElement);
 			modal.show();
@@ -224,7 +224,7 @@
 			}
 
 			if (!vehicleId) {
-				alert("Bicycle ID is missing!");
+				alert("Car ID is missing!");
 				return;
 			}
 
@@ -232,32 +232,29 @@
 		}
 		function openRentModal(vehicleId) {
 			document.getElementById("rentvehicleId").value = vehicleId;
-
 			const modalElement = document.getElementById("rentModal");
 			const modal = new bootstrap.Modal(modalElement);
 			modal.show();
 		}
-
 		function submitRentForm() {
-			const rentalStart = document.getElementById("rentalStart").value;
-			const rentalEnd = document.getElementById("rentalEnd").value;
-			const startLatitude = document.getElementById("startLatitude").value;
-			const startLongitude = document.getElementById("startLongitude").value;
-			const endLatitude = document.getElementById("endLatitude").value;
-			const endLongitude = document.getElementById("endLongitude").value;
+		    const rentalStart = document.getElementById("rentalStart").value;
+		    const rentalEnd = document.getElementById("rentalEnd").value;
+		    const startLatitude = document.getElementById("startLatitude").value;
+		    const startLongitude = document.getElementById("startLongitude").value;
+		    const endLatitude = document.getElementById("endLatitude").value;
+		    const endLongitude = document.getElementById("endLongitude").value;
 
-			// Validacija unosa
-			if (!rentalStart || !rentalEnd || !startLatitude || !startLongitude
-					|| !endLatitude || !endLongitude) {
-				alert("All fields are required!");
-				return;
-			}
+		    // Validacija unosa
+		    if (!rentalStart || !rentalEnd || !startLatitude || !startLongitude || !endLatitude || !endLongitude) {
+		        alert("All fields are required!");
+		        return;
+		    }
 
-			// Submitovanje forme
-			document.getElementById("rentForm").submit();
+		    // Submitovanje forme
+		    document.getElementById("rentForm").submit();
 		}
-	</script>
 
+	</script>
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>

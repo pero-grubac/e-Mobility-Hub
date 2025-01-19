@@ -16,7 +16,7 @@ public class ElectricCarDAO {
 	private static final String SELECT_ELECTRIC_CARS_PAGINATED = "SELECT ec.id, tv.uniqueIdentifier, m.name AS manufacturer_name, tv.model, tv.purchasePrice, "
 			+ "tv.image, tv.isBroken, tv.rentPrice, ec.purchaseDate, ec.description " + "FROM electric_car ec "
 			+ "JOIN transport_vehicle tv ON ec.id = tv.id " + "JOIN manufacturer m ON tv.manufacturer_id = m.id "
-			+ "ORDER BY ec.id DESC LIMIT ? OFFSET ?";
+			+ "WHERE tv.isBroken = 0 " + "ORDER BY ec.id DESC LIMIT ? OFFSET ?";
 
 	private static final String COUNT_ELECTRIC_CARS = "SELECT COUNT(*) FROM electric_car;";
 
