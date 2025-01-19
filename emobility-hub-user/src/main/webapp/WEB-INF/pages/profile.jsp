@@ -16,7 +16,6 @@
 </head>
 <body class="bg-light">
 
-	<!-- Include Header -->
 	<jsp:include page="header.html" />
 
 	<div class="container mt-5">
@@ -30,12 +29,10 @@
 		%>
 
 		<div class="row">
-			<!-- Profile Image Section -->
 			<div class="col-md-4 text-center">
 				<img src="<%=avatarPath%>" alt="Profile Image"
 					class="img-thumbnail mb-3" style="width: 100%; max-width: 300px;">
 
-				<!-- Upload and Update Image Section -->
 				<form action="clients" method="post" enctype="multipart/form-data"
 					class="mt-3">
 					<input type="hidden" name="action" value="updateAvatar"> <input
@@ -48,12 +45,10 @@
 
 			</div>
 
-			<!-- Profile Details Section -->
 			<div class="col-md-8">
 				<form action="clients" method="post">
 					<input type="hidden" name="action" value="changePassword">
 
-					<!-- Display Attributes -->
 					<div class="mb-3">
 						<label for="username" class="form-label">Username</label> <input
 							type="text" id="username" name="username" class="form-control"
@@ -92,14 +87,12 @@
 							value="<%=clientBean.getEntity().getIdCardNumber()%>" readonly>
 					</div>
 
-					<!-- Password Update -->
 					<div class="mb-3">
 						<label for="password" class="form-label">New Password</label> <input
 							type="password" id="password" name="password"
 							class="form-control" placeholder="Enter new password" required>
 					</div>
 
-					<!-- Action Buttons -->
 					<div class="d-flex justify-content-between mb-3">
 						<button type="submit" class="btn btn-primary">Update
 							Password</button>
@@ -114,7 +107,6 @@
 		</div>
 	</div>
 
-	<!-- Deactivate Account Confirmation -->
 	<script>
 		function deactivateAccount() {
 			if (confirm("Are you sure you want to deactivate your account?")) {

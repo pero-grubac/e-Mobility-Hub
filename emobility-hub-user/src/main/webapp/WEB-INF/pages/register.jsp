@@ -14,7 +14,6 @@
                     <div class="card-body">
                         <h2 class="text-center mb-4">Register</h2>
 
-                        <!-- Registration Form -->
                         <form action="clients" method="post">
                             <input type="hidden" name="action" value="register">
                             
@@ -49,7 +48,6 @@
                             <button type="submit" class="btn btn-primary w-100">Register</button>
                         </form>
 
-                        <!-- Back to Login Button -->
                         <div class="mt-3 text-center">
                             <form action="clients" method="get">
                                 <input type="hidden" name="action" value="login">

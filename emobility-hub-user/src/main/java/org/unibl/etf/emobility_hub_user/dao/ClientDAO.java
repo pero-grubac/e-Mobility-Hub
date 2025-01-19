@@ -152,7 +152,7 @@ public class ClientDAO {
 			connection = connectionPool.checkOut();
 			System.out.println(newPassword);
 			PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE_PASSWORD);
-			pstmt.setString(1, BCrypt.hashpw(newPassword, BCrypt.gensalt())); // Hashovanje nove šifre
+			pstmt.setString(1, BCrypt.hashpw(newPassword, BCrypt.gensalt())); 
 			pstmt.setLong(2, userId);
 
 			int affectedRows = pstmt.executeUpdate();

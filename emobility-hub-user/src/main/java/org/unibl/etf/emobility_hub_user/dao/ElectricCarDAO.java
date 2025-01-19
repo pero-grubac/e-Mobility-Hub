@@ -18,7 +18,8 @@ public class ElectricCarDAO {
 			+ "JOIN transport_vehicle tv ON ec.id = tv.id " + "JOIN manufacturer m ON tv.manufacturer_id = m.id "
 			+ "WHERE tv.isBroken = 0 " + "ORDER BY ec.id DESC LIMIT ? OFFSET ?";
 
-	private static final String COUNT_ELECTRIC_CARS = "SELECT COUNT(*) FROM electric_car;";
+	private static final String COUNT_ELECTRIC_CARS = "SELECT COUNT(*) " + "FROM electric_car es "
+			+ "JOIN transport_vehicle tv ON es.id = tv.id " + "WHERE tv.isBroken = 0";
 
 	public static PaginatedResponse<ElectricCarEntity> getElectricCarsPaginated(int page, int size) {
 		PaginatedResponse<ElectricCarEntity> response = new PaginatedResponse<>();
@@ -29,7 +30,6 @@ public class ElectricCarDAO {
 		try {
 			connection = connectionPool.checkOut();
 
-			// Dohvati ukupan broj automobila
 			PreparedStatement countStmt = connection.prepareStatement(COUNT_ELECTRIC_CARS);
 			ResultSet countRs = countStmt.executeQuery();
 			if (countRs.next()) {
@@ -39,7 +39,6 @@ public class ElectricCarDAO {
 			}
 			countStmt.close();
 
-			// Dohvati automobile sa paginacijom
 			PreparedStatement stmt = connection.prepareStatement(SELECT_ELECTRIC_CARS_PAGINATED);
 			stmt.setInt(1, size);
 			stmt.setInt(2, (page - 1) * size);
@@ -61,7 +60,6 @@ public class ElectricCarDAO {
 			}
 			stmt.close();
 
-			// Popuni metapodatke i sadržaj
 			metadata.setSize(size);
 			metadata.setNumber(page);
 			response.setContent(cars);

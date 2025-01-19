@@ -21,7 +21,6 @@
 </head>
 <body class="bg-light">
 	<%
-	// Provera sesije korisnika
 	if (userBean == null || !userBean.isLoggedIn() || userBean.getToken() == null || userBean.getToken().isEmpty()) {
 		response.sendRedirect("login.jsp");
 		return;

@@ -19,12 +19,12 @@ import javax.servlet.http.Part;
 import org.unibl.etf.emobility_hub_user.beans.ClientBean;
 import org.unibl.etf.emobility_hub_user.beans.ElectricBicycleBean;
 import org.unibl.etf.emobility_hub_user.beans.ElectricCarBean;
+import org.unibl.etf.emobility_hub_user.beans.ElectricScooterBean;
 import org.unibl.etf.emobility_hub_user.beans.FaultBean;
 import org.unibl.etf.emobility_hub_user.beans.RentalBean;
 import org.unibl.etf.emobility_hub_user.beans.TransportVehicleBean;
 import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
 import org.unibl.etf.emobility_hub_user.models.entity.RentalEntity;
-
 
 @MultipartConfig
 @WebServlet("/clients")
@@ -134,13 +134,13 @@ public class ClientController extends HttpServlet {
 	}
 
 	private double calculateDistance(double startLat, double startLon, double endLat, double endLon) {
-		final int R = 6371; // Radius of the Earth in kilometers
+		final int R = 6371;
 		double latDistance = Math.toRadians(endLat - startLat);
 		double lonDistance = Math.toRadians(endLon - startLon);
 		double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + Math.cos(Math.toRadians(startLat))
 				* Math.cos(Math.toRadians(endLat)) * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		return R * c; // Distance in kilometers
+		return R * c;
 	}
 
 	private void handleBrokenVehicle(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -238,6 +238,8 @@ public class ClientController extends HttpServlet {
 				return hendleRentals(request, session);
 			case "car":
 				return handleCar(request, session);
+			case "scooter":
+				return handleScooter(request, session);
 			default:
 				return "/WEB-INF/pages/404.jsp";
 			}
@@ -247,6 +249,29 @@ public class ClientController extends HttpServlet {
 			return "/WEB-INF/pages/404.jsp";
 		}
 
+	}
+
+	private String handleScooter(HttpServletRequest request, HttpSession session) {
+		ElectricScooterBean electricScooterBean = new ElectricScooterBean();
+		int page = 1;
+		int size = 6;
+
+		String pageParam = request.getParameter("page");
+		if (pageParam != null && !pageParam.isEmpty()) {
+			try {
+				page = Integer.parseInt(pageParam);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		if (electricScooterBean.getElectricScooters(page, size)) {
+			session.setAttribute("electricScooterBean", electricScooterBean);
+			session.setAttribute("currentPage", page);
+		} else {
+			session.setAttribute("notification", "Failed to load bicycles.");
+		}
+
+		return "/WEB-INF/pages/scooter.jsp";
 	}
 
 	private String handleCar(HttpServletRequest request, HttpSession session) {
@@ -274,8 +299,8 @@ public class ClientController extends HttpServlet {
 
 	private String hendleRentals(HttpServletRequest request, HttpSession session) {
 		RentalBean rentalBean = new RentalBean();
-		int page = 1; // Default page
-		int size = 6; // Default size (6 bicycles per page)
+		int page = 1;
+		int size = 6;
 		String pageParam = request.getParameter("page");
 		if (pageParam != null && !pageParam.isEmpty()) {
 			try {
@@ -356,10 +381,10 @@ public class ClientController extends HttpServlet {
 						is.read(data);
 						fos.write(data);
 					}
-					String baseUrl = request.getScheme() + "://" + // Protokol (http ili https)
-							request.getServerName() + // Ime servera (localhost ili domen)
-							":" + request.getServerPort() + // Port (8081)
-							request.getContextPath() + "/"; // Kontekst aplikacije (/eMobilityHubUser)
+					String baseUrl = request.getScheme() + "://" + 
+							request.getServerName() + 
+							":" + request.getServerPort() +
+							request.getContextPath() + "/"; 
 
 					String dbPath = baseUrl + relativePath + "/" + fileName;
 					dbPath = dbPath.replace("\\", "/");
