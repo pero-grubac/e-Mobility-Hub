@@ -1,0 +1,43 @@
+.custom-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .menu-button {
+    font-size: 16px;
+    font-weight: 500;
+    color: black;
+    background-color: white;
+    border-radius: 20px;
+    padding: 6px 16px;
+    margin: 0 5px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .logout-button {
+    background-color: #d32f2f;
+    color: white;
+    border-radius: 20px;
+    padding: 6px 16px;
+    margin-left: 10px;
+
+    &:hover {
+      background-color: #b71c1c;
+    }
+  }
+}
