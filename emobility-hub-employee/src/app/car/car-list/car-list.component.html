@@ -1,0 +1,9 @@
+<app-vehicle-list
+  [vehicles]="cars"
+  [totalPages]="totalPages"
+  [currentPage]="currentPage"
+  [onPageChange]="handlePageChange.bind(this)"
+  (searchEvent)="handleSearch($event)"
+  (addEvent)="handleAdd()"
+>
+</app-vehicle-list>

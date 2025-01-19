@@ -20,7 +20,7 @@ public class ParseVehicleController {
     @PostMapping
     public ResponseEntity<ParsedVehicleResponse> parseVehicles(@RequestParam("csv") MultipartFile csv) {
         if (csv == null || csv.isEmpty()) {
-            return ResponseEntity.badRequest().body(null); // Vraća grešku ako fajl nije poslat
+            return ResponseEntity.badRequest().body(null);
         }
 
         try {
@@ -29,13 +29,12 @@ public class ParseVehicleController {
 
             ParsedVehicleResponse response = service.parse(tempFile);
 
-            // Brisanje privremenog fajla
             tempFile.delete();
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body(null); // Greška prilikom obrade fajla
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 

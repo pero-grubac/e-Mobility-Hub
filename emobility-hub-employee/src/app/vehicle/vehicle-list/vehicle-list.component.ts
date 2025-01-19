@@ -7,6 +7,7 @@ import {
   OnChanges,
 } from '@angular/core';
 import { Vehicle } from '../../models/vehicle.model';
+import { ParseVehicle } from '../../services/parseVehicle.service';
 
 @Component({
   selector: 'app-vehicle-list',
@@ -14,6 +15,7 @@ import { Vehicle } from '../../models/vehicle.model';
   styleUrls: ['./vehicle-list.component.css'],
 })
 export class VehicleListComponent implements OnInit, OnChanges {
+  constructor(private parseVehicle: ParseVehicle) {}
   @Input() vehicles: Vehicle[] = [];
   @Input() entityType: string = '';
 
@@ -26,6 +28,58 @@ export class VehicleListComponent implements OnInit, OnChanges {
   @Output() uploadEvent = new EventEmitter<void>();
 
   displayedPages: (number | string)[] = [];
+
+  isModalOpen: boolean = false;
+  selectedFile: File | null = null;
+  uploadStatus: string | null = null;
+  isUploading: boolean = false;
+
+  openModal(): void {
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedFile = null;
+  }
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      console.log('Selected file:', file);
+
+      if (file.type !== 'text/csv') {
+        alert('Please upload a valid CSV file.');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size exceeds the 5MB limit.');
+        return;
+      }
+      this.selectedFile = file;
+    }
+  }
+
+  uploadFile(): void {
+    if (this.selectedFile) {
+      this.isUploading = true;
+      this.uploadStatus = 'Uploading...';
+      this.parseVehicle.uploadCsv(this.selectedFile).subscribe({
+        next: (response) => {
+          console.log('Upload successful:', response);
+          this.isUploading = false;
+          this.uploadStatus = 'Upload successful!';
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error('Upload failed:', error);
+          this.isUploading = false;
+          this.uploadStatus = 'Upload failed. Please try again.';
+          console.error('Upload failed:', error);
+        },
+      });
+    }
+  }
 
   ngOnInit(): void {
     this.updateDisplayedPages();
