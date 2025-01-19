@@ -205,10 +205,8 @@
 
 	<script>
 		function openBrokenModal(vehicleId) {
-			// Postavljanje ID-a bicikla u modal
 			document.getElementById("vehicleId").value = vehicleId;
 
-			// Prikazivanje modala
 			const modalElement = document.getElementById('brokenModal');
 			const modal = new bootstrap.Modal(modalElement);
 			modal.show();
@@ -246,14 +244,12 @@
 			const endLatitude = document.getElementById("endLatitude").value;
 			const endLongitude = document.getElementById("endLongitude").value;
 
-			// Validacija unosa
 			if (!rentalStart || !rentalEnd || !startLatitude || !startLongitude
 					|| !endLatitude || !endLongitude) {
 				alert("All fields are required!");
 				return;
 			}
 
-			// Submitovanje forme
 			document.getElementById("rentForm").submit();
 		}
 	</script>

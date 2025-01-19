@@ -61,10 +61,8 @@ public class RentalDAO {
 		try {
 			connection = connectionPool.checkOut();
 
-			// Calculate offset
 			int offset = (page - 1) * size;
 
-			// Fetch paginated rentals by client ID
 			PreparedStatement stmt = connection.prepareStatement(SELECT_PAGINATED_RENTALS_BY_CLIENT);
 			stmt.setLong(1, clientId);
 			stmt.setInt(2, size);
@@ -94,7 +92,6 @@ public class RentalDAO {
 			rs.close();
 			stmt.close();
 
-			// Fetch total count of rentals for the client
 			PreparedStatement countStmt = connection.prepareStatement(COUNT_TOTAL_RENTALS_BY_CLIENT);
 			countStmt.setLong(1, clientId);
 			ResultSet countRs = countStmt.executeQuery();
@@ -107,10 +104,8 @@ public class RentalDAO {
 			countRs.close();
 			countStmt.close();
 
-			// Calculate total pages
 			int totalPages = (int) Math.ceil((double) totalElements / size);
 
-			// Set response
 			PageMetadata pageMetadata = new PageMetadata();
 			pageMetadata.setSize(size);
 			pageMetadata.setNumber(page);

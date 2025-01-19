@@ -17,9 +17,8 @@ public class ElectricBicycleDAO {
 			+ "JOIN transport_vehicle tv ON eb.id = tv.id " + "JOIN manufacturer m ON tv.manufacturer_id = m.id "
 			+ "WHERE tv.isBroken = 0 " + "ORDER BY eb.id DESC " + "LIMIT ? OFFSET ?";
 
-	private static final String COUNT_ELECTRIC_BICYCLES = "SELECT COUNT(*) FROM electric_bicycle;";
-
-	
+	private static final String COUNT_ELECTRIC_BICYCLES = "SELECT COUNT(*) " + "FROM electric_bicycle es "
+			+ "JOIN transport_vehicle tv ON es.id = tv.id " + "WHERE tv.isBroken = 0";
 
 	public static PaginatedResponse<ElectricBicycleEntity> getElectricBicyclesPaginated(int page, int size) {
 		PaginatedResponse<ElectricBicycleEntity> response = new PaginatedResponse<>();
@@ -30,7 +29,6 @@ public class ElectricBicycleDAO {
 		try {
 			connection = connectionPool.checkOut();
 
-			// Dohvati ukupni broj elemenata
 			PreparedStatement countStmt = connection.prepareStatement(COUNT_ELECTRIC_BICYCLES);
 			ResultSet countRs = countStmt.executeQuery();
 			if (countRs.next()) {
@@ -40,7 +38,6 @@ public class ElectricBicycleDAO {
 			}
 			countStmt.close();
 
-			// Dohvati podatke sa paginacijom
 			PreparedStatement stmt = connection.prepareStatement(SELECT_ELECTRIC_BICYCLES_PAGINATED);
 			stmt.setInt(1, size);
 			stmt.setInt(2, (page - 1) * size);
@@ -61,7 +58,6 @@ public class ElectricBicycleDAO {
 			}
 			stmt.close();
 
-			// Popuni metapodatke i sadržaj
 			metadata.setSize(size);
 			metadata.setNumber(page);
 			response.setContent(bicycles);
@@ -76,6 +72,4 @@ public class ElectricBicycleDAO {
 		return response;
 	}
 
-
-	
 }

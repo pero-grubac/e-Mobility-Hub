@@ -47,8 +47,8 @@ try {
 	}
 } catch (Exception e) {
 	errorMessage = "Error: " + e.getMessage();
-	//session.invalidate();
-	//response.sendRedirect("login.jsp");
+	session.invalidate();
+	response.sendRedirect("login.jsp");
 	return;
 }
 %>
@@ -58,10 +58,8 @@ try {
 <head>
 <meta charset="ISO-8859-1">
 <title>Promotion Details</title>
-<!-- Bootstrap 3 CSS -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- Datetimepicker CSS -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
 <style>
@@ -136,7 +134,6 @@ h1 {
 			</div>
 		</form>
 
-		<!-- Back to Promotions Button -->
 		<div class="navigation-buttons mt-4">
 			<button class="btn btn-secondary" onclick="redirectToAnnouncements()">Back
 				to Announcements</button>

@@ -81,9 +81,8 @@
 				<%
 				int totalPages = cars.getPage().getTotalPages();
 				int currentPage = (session.getAttribute("currentPage") != null) ? (Integer) session.getAttribute("currentPage") : 1;
-				int visiblePages = 3; // Broj stranica prikazanih sa svake strane trenutne
+				int visiblePages = 3; 
 
-				// Prva strana
 				if (currentPage > visiblePages + 1) {
 				%>
 				<li class="page-item"><a class="page-link"
@@ -92,7 +91,6 @@
 				<%
 				}
 
-				// Vidljive stranice oko trenutne
 				int startPage = Math.max(1, currentPage - visiblePages);
 				int endPage = Math.min(totalPages, currentPage + visiblePages);
 
@@ -104,7 +102,6 @@
 				<%
 				}
 
-				// Poslednja strana
 				if (currentPage < totalPages - visiblePages) {
 				%>
 				<li class="page-item disabled"><a class="page-link">...</a></li>
@@ -244,13 +241,11 @@
 		    const endLatitude = document.getElementById("endLatitude").value;
 		    const endLongitude = document.getElementById("endLongitude").value;
 
-		    // Validacija unosa
 		    if (!rentalStart || !rentalEnd || !startLatitude || !startLongitude || !endLatitude || !endLongitude) {
 		        alert("All fields are required!");
 		        return;
 		    }
 
-		    // Submitovanje forme
 		    document.getElementById("rentForm").submit();
 		}
 

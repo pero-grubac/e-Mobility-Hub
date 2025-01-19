@@ -16,9 +16,8 @@ public class FaultDAO {
 
 		try {
 			connection = connectionPool.checkOut();
-			connection.setAutoCommit(false); // Počinjemo transakciju
+			connection.setAutoCommit(false); 
 
-			// Unos greške u tabelu fault
 			PreparedStatement faultStmt = connection.prepareStatement(INSERT_FAULT);
 			faultStmt.setString(1, description);
 			faultStmt.setLong(2, vehicleId);
@@ -26,27 +25,26 @@ public class FaultDAO {
 			faultStmt.close();
 
 			if (rowsInserted > 0) {
-				// Ažuriranje transport_vehicle tabele
 				PreparedStatement vehicleStmt = connection.prepareStatement(UPDATE_VEHICLE);
 				vehicleStmt.setLong(1, vehicleId);
 				int rowsUpdated = vehicleStmt.executeUpdate();
 				vehicleStmt.close();
 
 				if (rowsUpdated > 0) {
-					connection.commit(); // Potvrđujemo transakciju
+					connection.commit(); 
 					success = true;
 				} else {
-					connection.rollback(); // Vraćamo ako ažuriranje nije uspelo
+					connection.rollback(); 
 				}
 			} else {
-				connection.rollback(); // Vraćamo ako unos greške nije uspeo
+				connection.rollback(); 
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
 				if (connection != null) {
-					connection.rollback(); // Vraćamo sve u slučaju greške
+					connection.rollback(); 
 				}
 			} catch (Exception rollbackEx) {
 				rollbackEx.printStackTrace();
@@ -54,7 +52,7 @@ public class FaultDAO {
 		} finally {
 			try {
 				if (connection != null) {
-					connection.setAutoCommit(true); // Vraćamo na automatsko potvrđivanje
+					connection.setAutoCommit(true);
 					connectionPool.checkIn(connection);
 				}
 			} catch (Exception ex) {

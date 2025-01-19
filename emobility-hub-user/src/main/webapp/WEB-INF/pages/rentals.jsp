@@ -87,7 +87,6 @@
 			%>
 		</div>
 
-		<!-- Pagination -->
 		<nav>
 			<ul class="pagination">
 				<%
