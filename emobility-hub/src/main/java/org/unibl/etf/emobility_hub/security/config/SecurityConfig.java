@@ -3,6 +3,7 @@ package org.unibl.etf.emobility_hub.security.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -51,8 +52,22 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/clients/register", "/auth/login", "/users/register","/uploads/**","/electric-bicycles/**").permitAll()
-                        .requestMatchers("/promotions/**").hasRole("MANAGER")
-                        .requestMatchers("/announcements/**").hasRole("MANAGER")
+                        .requestMatchers("/rss/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET,"/promotions/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/promotions").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.GET,"/promotions/getAll").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST,"/promotions").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.PUT,"/promotions").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE,"/promotions/{id:[\\d]+}").hasRole("MANAGER")
+
+                        .requestMatchers(HttpMethod.GET,"/announcements/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/announcements").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.GET,"/announcements/getAll").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST,"/announcements").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.PUT,"/announcements").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE,"/announcements/{id:[\\d]+}").hasRole("MANAGER")
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())

@@ -45,14 +45,14 @@
 				<div class="card">
 					<img src="<%=imagePath%>" class="card-img-top" alt="Bicycle Image">
 					<div class="card-body">
-						<h4 class="card-title"><%=bicycle.getModel()%></h4>
-						<h6 class="card-title"><%=bicycle.getManufacturerName()%></h6>
+						<h4 class="card-title"><%=(bicycle.getModel() != null) ? bicycle.getModel() : "Unknown Model"%></h4>
+						<h6 class="card-title"><%=(bicycle.getManufacturerName() != null) ? bicycle.getManufacturerName() : "Unknown Manufacturer"%></h6>
 						<p class="card-text">
-							$<%=bicycle.getRentPrice()%>
+							$<%=(bicycle.getRentPrice() != 0) ? bicycle.getRentPrice() : "N/A"%>
 							<br> Range per charge:
-							<%=bicycle.getRangePerCharge()%>
-							km
+							<%=(bicycle.getRangePerCharge() != 0) ? bicycle.getRangePerCharge() + " km" : "N/A"%>
 						</p>
+
 
 						<div class="d-flex justify-content-between">
 							<button class="btn btn-success"

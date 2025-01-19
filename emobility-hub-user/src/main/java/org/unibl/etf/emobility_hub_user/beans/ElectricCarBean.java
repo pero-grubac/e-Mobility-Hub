@@ -12,7 +12,7 @@ public class ElectricCarBean implements Serializable {
 	PaginatedResponse<ElectricCarEntity> electricCars = new PaginatedResponse<ElectricCarEntity>();
 	private static final Logger logger = Logger.getLogger(ElectricCarBean.class.getName());
 
-	public boolean getElectricBicycles(int page, int size) {
+	public boolean getElectricCars(int page, int size) {
 		try {
 			electricCars = null;
 			electricCars = ElectricCarDAO.getElectricCarsPaginated(page, size);
@@ -24,12 +24,14 @@ public class ElectricCarBean implements Serializable {
 		return false;
 	}
 
-	public PaginatedResponse<ElectricCarEntity> getElectricBicycles() {
+	public PaginatedResponse<ElectricCarEntity> getElectricCars() {
 		return electricCars;
 	}
 
-	public void setElectricBicycles(PaginatedResponse<ElectricCarEntity> electricBicycles) {
-		this.electricCars = electricBicycles;
+	public void setElectricCars(PaginatedResponse<ElectricCarEntity> electricCars) {
+		this.electricCars = electricCars;
 	}
+
+	
 
 }
