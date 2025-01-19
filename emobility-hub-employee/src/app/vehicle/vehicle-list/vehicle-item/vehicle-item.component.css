@@ -11,6 +11,14 @@
   justify-content: center;
   align-items: center;
   margin: 16px auto; /* Razmak između elemenata */
+  cursor: pointer; /* Promjena kursora na pointer */
+  transition: all 0.3s ease; /* Animacija za hover efekte */
+}
+
+.vehicle-item:hover {
+  background-color: #f5f5f5; /* Promjena boje pozadine */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Povećaj sjenku */
+  transform: scale(1.03); /* Lagano povećanje veličine */
 }
 
 .vehicle-image {
@@ -24,4 +32,10 @@
 .vehicle-model {
   font-weight: bold;
   font-size: 16px;
+  color: #333; /* Tamnija boja teksta */
+  transition: color 0.3s ease; /* Animacija za boju teksta */
+}
+
+.vehicle-item:hover .vehicle-model {
+  color: #007bff; /* Promjena boje teksta na hover */
 }
