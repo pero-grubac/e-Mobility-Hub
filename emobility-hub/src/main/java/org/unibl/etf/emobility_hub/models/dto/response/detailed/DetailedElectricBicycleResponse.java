@@ -7,6 +7,6 @@ import org.unibl.etf.emobility_hub.models.dto.response.ManufacturerResponse;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DetailedElectricBicycleResponse extends ElectricBicycleResponse {
+public class DetailedElectricBicycleResponse extends ElectricBicycleResponse implements  IContainManufacturer{
     private ManufacturerResponse manufacturer;
 }

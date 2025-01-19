@@ -4,8 +4,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.unibl.etf.emobility_hub.models.dto.request.TransportVehicleRequest;
+import org.unibl.etf.emobility_hub.models.dto.response.detailed.IContainManufacturer;
 
-public interface IBaseVehicleCRUDService<TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse> {
+public interface IBaseVehicleCRUDService<TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse extends IContainManufacturer> {
     Page<TResponse> findAll(Pageable pageable);
 
     TDetailedResponse getById(Long id);

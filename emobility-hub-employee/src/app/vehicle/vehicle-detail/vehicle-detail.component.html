@@ -1,1 +1,61 @@
-<p>vehicle-detail works!</p>
+<div class="vehicle-details-container">
+  <!-- Slika vozila -->
+  <div class="vehicle-image-container">
+    <img
+      [src]="vehicle.image || 'assets/images/default-avatar.png'"
+      alt="{{ vehicle.model }}"
+      class="vehicle-image"
+    />
+    <div class="image-upload">
+      <input
+        type="file"
+        id="imageUpload"
+        (change)="onImageSelected($event)"
+        accept="image/*"
+      />
+      <label for="imageUpload">Upload Image</label>
+    </div>
+  </div>
+
+  <!-- Osnovne informacije -->
+  <div class="vehicle-info">
+    <h2>{{ vehicle.model }}</h2>
+    <p><strong>Unique ID:</strong> {{ vehicle.uniqueIdentifier }}</p>
+    <p>
+      <strong>Purchase Price:</strong> {{ vehicle.purchasePrice | currency }}
+    </p>
+    <p><strong>Rent Price:</strong> {{ vehicle.rentPrice | currency }}</p>
+    <p><strong>Is Broken:</strong> {{ vehicle.isBroken ? "Yes" : "No" }}</p>
+    <p><strong>Is Rented:</strong> {{ vehicle.isRented ? "Yes" : "No" }}</p>
+
+    <!-- Dodatne informacije -->
+    <div *ngIf="additionalData">
+      <div *ngFor="let key of objectKeys(additionalData)">
+        <p>
+          <strong>{{ key }}:</strong> {{ additionalData[key] }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Akcione dugmad -->
+    <div class="actions">
+      <button
+        *ngIf="isEditMode"
+        class="action-button save-button"
+        (click)="saveDetails()"
+      >
+        Save
+      </button>
+      <button
+        *ngIf="!isEditMode"
+        class="action-button edit-button"
+        (click)="editDetails()"
+      >
+        Edit
+      </button>
+      <button class="action-button delete-button" (click)="deleteVehicle()">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

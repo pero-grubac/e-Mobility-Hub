@@ -1,0 +1,90 @@
+.vehicle-details-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.vehicle-image-container {
+  text-align: center;
+}
+
+.vehicle-image {
+  width: 300px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.image-upload {
+  margin-top: 10px;
+}
+
+.image-upload input {
+  display: none;
+}
+
+.image-upload label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.image-upload label:hover {
+  background-color: #0056b3;
+}
+
+.vehicle-info {
+  flex: 1;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px; /* Razmak između dugmadi */
+  justify-content: center; /* Poravnanje na sredinu */
+  flex-wrap: wrap;
+}
+
+.action-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-button:hover {
+  transform: scale(1.05);
+}
+
+.save-button {
+  background-color: #28a745; /* Zelena */
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.edit-button {
+  background-color: #007bff; /* Plava */
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.delete-button {
+  background-color: #dc3545; /* Crvena */
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}

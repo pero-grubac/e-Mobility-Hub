@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Car } from '../../models/car.models';
 import { CarService } from '../../services/car.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-car-list',
@@ -14,12 +15,14 @@ export class CarListComponent implements OnInit {
   pageSize: number = 12;
   searchTerm: string = '';
 
-  constructor(private carService: CarService) {}
+  constructor(private carService: CarService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadCars();
   }
-
+  handleVehicleSelected(vehicleId: number): void {
+    this.router.navigate(['/car', vehicleId]);
+  }
   loadCars(searchTerm: string = ''): void {
     this.carService
       .getCars(this.currentPage, this.pageSize, searchTerm)
