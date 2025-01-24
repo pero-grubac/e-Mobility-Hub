@@ -1,13 +1,103 @@
-<div *ngIf="isLoading" class="loader">Loading...</div>
+<div class="car-detail-container" *ngIf="car">
+  <div class="content-container">
+    <!-- Slika vozila -->
+    <div class="image-container">
+      <img
+        [src]="
+          selectedImagePreview ||
+          car.image ||
+          'assets/images/default-avatar.png'
+        "
+        alt="{{ car.model }}"
+        class="car-image"
+      />
+      <div class="image-info">
+        <p><strong>Upload Image</strong></p>
+        <label for="imageUpload" class="custom-file-upload">
+          Choose File
+        </label>
+        <input
+          type="file"
+          id="imageUpload"
+          (change)="onImageSelected($event)"
+          accept="image/*"
+        />
+      </div>
+    </div>
 
-<div *ngIf="!isLoading">
-  <app-vehicle-detail
-    [vehicle]="car"
-    [additionalData]="additionalData"
-    [isEditMode]="isEditMode"
-    (save)="handleSave($event)"
-    (delete)="handleDelete($event)"
-    (imageUpload)="handleImageUpload($event)"
-  >
-  </app-vehicle-detail>
+    <!-- Informacije o vozilu -->
+    <div class="info-container">
+      <h2>Car Details</h2>
+      <form>
+        <div class="form-group">
+          <label>Model</label>
+          <input
+            type="text"
+            [(ngModel)]="car.model"
+            name="model"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Purchase Price</label>
+          <input
+            type="number"
+            [(ngModel)]="car.purchasePrice"
+            name="purchasePrice"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Rent Price</label>
+          <input
+            type="number"
+            [(ngModel)]="car.rentPrice"
+            name="rentPrice"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Purchase Date</label>
+          <input
+            type="datetime-local"
+            [(ngModel)]="car.purchaseDate"
+            name="purchaseDate"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea
+            [(ngModel)]="car.description"
+            name="description"
+            class="form-control"
+            required
+          ></textarea>
+        </div>
+        <div class="form-group" *ngIf="car.manufacturer">
+          <p><strong>Manufacturer:</strong> {{ car.manufacturer.name }}</p>
+          <p><strong>Address:</strong> {{ car.manufacturer.address }}</p>
+          <p>
+            <strong>Contact Phone:</strong> {{ car.manufacturer.contactPhone }}
+          </p>
+          <p>
+            <strong>Contact Email:</strong> {{ car.manufacturer.contactEmail }}
+          </p>
+        </div>
+        <div class="form-group">
+          <p><strong>Unique ID:</strong> {{ car.uniqueIdentifier }}</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Akcije -->
+  <div class="actions">
+    <button class="btn btn-success" (click)="updateCar()">Update</button>
+    <button class="btn btn-danger" (click)="deleteCar()">Delete</button>
+  </div>
 </div>

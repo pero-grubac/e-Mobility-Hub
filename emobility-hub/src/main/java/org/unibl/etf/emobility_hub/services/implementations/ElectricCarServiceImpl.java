@@ -57,7 +57,8 @@ public class ElectricCarServiceImpl
         entity.setPurchasePrice(request.getPurchasePrice());
         entity.setManufacturer(manufacturerEntity);
         entity.setPurchaseDate(LocalDateTime.parse(request.getPurchaseDate()));
-
+        entity.setPurchasePrice(request.getPurchasePrice());
+        entity.setDescription(request.getDescription());
         if (request.getImage() != null && !request.getImage().isEmpty()) {
             MultipartFile imageFile = request.getImage();
             String imagePath = saveImageToFileSystem(imageFile, entity);

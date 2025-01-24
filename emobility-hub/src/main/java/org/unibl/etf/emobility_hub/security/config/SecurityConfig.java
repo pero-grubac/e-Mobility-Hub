@@ -50,6 +50,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/clients/register", "/auth/login", "/users/register","/uploads/**","/electric-bicycles/**").permitAll()
                         .requestMatchers("/rss/**").permitAll()
@@ -70,6 +71,10 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET,"/electric-cars/getByModel").permitAll()
                         .requestMatchers(HttpMethod.GET,"/electric-cars/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/electric-cars").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/electric-cars").permitAll()
+
+                        .requestMatchers(HttpMethod.GET,"/manufacturers").permitAll()
 
                         .requestMatchers(HttpMethod.POST,"/parse-vehicle").permitAll()
 
