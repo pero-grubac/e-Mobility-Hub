@@ -75,7 +75,7 @@ export class CarDetailComponent implements OnInit {
   }
 
   deleteCar(): void {
-    /*  this.carService.deleteCar(this.car.id).subscribe({
+    this.carService.deleteCar(this.car.id).subscribe({
       next: () => {
         alert('Car deleted successfully!');
         this.router.navigate(['/cars']);
@@ -84,7 +84,6 @@ export class CarDetailComponent implements OnInit {
         console.error('Error deleting car:', err);
       },
     });
-  }*/
   }
   private formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -94,7 +93,6 @@ export class CarDetailComponent implements OnInit {
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const seconds = date.getSeconds().toString().padStart(2, '0');
 
-    // Vraćamo format: YYYY-MM-DDTHH:mm:ss
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
 }

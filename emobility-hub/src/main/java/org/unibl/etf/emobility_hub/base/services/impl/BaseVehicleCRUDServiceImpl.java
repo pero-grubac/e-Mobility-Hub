@@ -184,34 +184,44 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
         TEntity te = findById(id);
         deleteImageFromFileSystem(te.getImage());
         repository.deleteById(id);
-        getRepository().flush();
+        repository.flush();
     }
 
     private void deleteImageFromFileSystem(String imagePath) {
-        Path filePath = Paths.get(imagePath);
-        Path folderPath = filePath.getParent();
+        if (imagePath == null || imagePath.isEmpty()) {
+            return;
+        }
+
+        String baseUrl = getBaseUrl();
+        if (!imagePath.startsWith(baseUrl)) {
+            System.err.println("Invalid image path: " + imagePath);
+            return;
+        }
+
+        String relativePath = imagePath.replace(baseUrl, "").replace("/", File.separator);
+        Path filePath = Paths.get(baseDir + File.separator + relativePath);
 
         try {
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
-                System.out.println("File deleted successfully: " + imagePath);
+                System.out.println("File deleted: " + filePath);
             } else {
-                System.out.println("File does not exist: " + imagePath);
+                System.err.println("File not found: " + filePath);
             }
-            if (folderPath != null && Files.exists(folderPath)) {
-                try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(folderPath)) {
-                    if (!directoryStream.iterator().hasNext()) {
-                        Files.delete(folderPath);
-                        System.out.println("Folder deleted successfully: " + folderPath);
-                    } else {
-                        System.out.println("Folder is not empty, cannot delete: " + folderPath);
-                    }
+
+            Path parentDir = filePath.getParent();
+            if (parentDir != null && Files.exists(parentDir) && Files.isDirectory(parentDir)) {
+                boolean isEmpty = Files.list(parentDir).findAny().isEmpty();
+                if (isEmpty) {
+                    Files.delete(parentDir);
+                    System.out.println("Deleted empty directory: " + parentDir);
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete file: " + imagePath, e);
+            throw new RuntimeException("Failed to delete file: " + filePath, e);
         }
     }
+
 
     protected void setIsBroken(Long id, Boolean isBroken) {
         TEntity te = findById(id);
