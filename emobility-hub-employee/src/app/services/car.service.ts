@@ -26,4 +26,7 @@ export class CarService {
   getById(id: number): Observable<DetailedCar> {
     return this.http.get<DetailedCar>(`${this.baseUrl}/${id}`);
   }
+  updateCar(carData: FormData): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}`, carData);
+  }
 }

@@ -38,7 +38,7 @@ public abstract class BaseVehicleCRUDController<TRequest extends TransportVehicl
     }
 
     @PutMapping
-    public ResponseEntity<TResponse> update(@Valid @RequestBody TRequest request) {
+    public ResponseEntity<TResponse> update(@Valid @ModelAttribute TRequest request) {
         TResponse response = service.update(request);
         return ResponseEntity.ok(response);
     }
