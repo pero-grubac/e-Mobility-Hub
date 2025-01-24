@@ -5,3 +5,7 @@ export interface Manufacturer {
   contactPhone: string;
   contactEmail: string;
 }
+export interface BaseManufacturer {
+  id: number;
+  name: string;
+}

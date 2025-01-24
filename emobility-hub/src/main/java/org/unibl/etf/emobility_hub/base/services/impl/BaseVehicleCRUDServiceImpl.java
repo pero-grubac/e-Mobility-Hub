@@ -155,7 +155,6 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
     @Override
     public TResponse update(TRequest request) {
         ManufacturerEntity manufacturerEntity = findManufacturerById(request.getManufacturerId());
-
         TEntity te = findById(request.getId());
         te.setModel(request.getModel());
         te.setPurchasePrice(request.getPurchasePrice());

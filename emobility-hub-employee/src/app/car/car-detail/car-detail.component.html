@@ -29,6 +29,11 @@
     <div class="info-container">
       <h2>Car Details</h2>
       <form>
+        <!-- Unique ID -->
+        <div class="form-group">
+          <p><strong>Unique ID:</strong> {{ car.uniqueIdentifier }}</p>
+        </div>
+
         <div class="form-group">
           <label>Model</label>
           <input
@@ -78,8 +83,29 @@
             required
           ></textarea>
         </div>
+
+        <!-- Izbor proizvođača -->
+        <div class="form-group">
+          <label>Manufacturer</label>
+          <select
+            [(ngModel)]="selectedManufacturerId"
+            (change)="onManufacturerChange()"
+            name="manufacturer"
+            class="form-control"
+          >
+            <option
+              *ngFor="let manufacturer of manufacturers"
+              [value]="manufacturer.id"
+            >
+              {{ manufacturer.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Prikaz trenutnog proizvođača -->
         <div class="form-group" *ngIf="car.manufacturer">
-          <p><strong>Manufacturer:</strong> {{ car.manufacturer.name }}</p>
+          <p><strong>Manufacturer Details:</strong></p>
+          <p><strong>Name:</strong> {{ car.manufacturer.name }}</p>
           <p><strong>Address:</strong> {{ car.manufacturer.address }}</p>
           <p>
             <strong>Contact Phone:</strong> {{ car.manufacturer.contactPhone }}
@@ -87,9 +113,6 @@
           <p>
             <strong>Contact Email:</strong> {{ car.manufacturer.contactEmail }}
           </p>
-        </div>
-        <div class="form-group">
-          <p><strong>Unique ID:</strong> {{ car.uniqueIdentifier }}</p>
         </div>
       </form>
     </div>
