@@ -29,4 +29,7 @@ export class CarService {
   updateCar(carData: FormData): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}`, carData);
   }
+  deleteCar(id:number){
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
 }
