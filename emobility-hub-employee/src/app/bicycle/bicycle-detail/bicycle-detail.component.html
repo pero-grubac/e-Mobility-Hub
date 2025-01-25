@@ -1,1 +1,119 @@
-<p>bicycle-detail works!</p>
+<div class="bicycle-detail-container" *ngIf="bicycle">
+  <div class="content-container">
+    <!-- Slika vozila -->
+    <div class="image-container">
+      <img
+        [src]="
+          selectedImagePreview ||
+          bicycle.image ||
+          'assets/images/default-avatar.png'
+        "
+        alt="{{ bicycle.model }}"
+        class="bicycle-image"
+      />
+      <div class="image-info">
+        <p><strong>Upload Image</strong></p>
+        <label for="imageUpload" class="custom-file-upload">
+          Choose File
+        </label>
+        <input
+          type="file"
+          id="imageUpload"
+          (change)="onImageSelected($event)"
+          accept="image/*"
+        />
+      </div>
+    </div>
+
+    <!-- Informacije o vozilu -->
+    <div class="info-container">
+      <h2>Bicycle Details</h2>
+      <form>
+        <!-- Unique ID -->
+        <div class="form-group">
+          <p><strong>Unique ID:</strong> {{ bicycle.uniqueIdentifier }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Model</label>
+          <input
+            type="text"
+            [(ngModel)]="bicycle.model"
+            name="model"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Purchase Price</label>
+          <input
+            type="number"
+            [(ngModel)]="bicycle.purchasePrice"
+            name="purchasePrice"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Rent Price</label>
+          <input
+            type="number"
+            [(ngModel)]="bicycle.rentPrice"
+            name="rentPrice"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Range per charge</label>
+          <input
+            [(ngModel)]="bicycle.rangePerCharge"
+            name="rangePerCharge"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <!-- Izbor proizvođača -->
+        <div class="form-group">
+          <label>Manufacturer</label>
+          <select
+            [(ngModel)]="selectedManufacturerId"
+            (change)="onManufacturerChange()"
+            name="manufacturer"
+            class="form-control"
+          >
+            <option
+              *ngFor="let manufacturer of manufacturers"
+              [value]="manufacturer.id"
+            >
+              {{ manufacturer.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Prikaz trenutnog proizvođača -->
+        <div class="form-group" *ngIf="bicycle.manufacturer">
+          <p><strong>Manufacturer Details:</strong></p>
+          <p><strong>Name:</strong> {{ bicycle.manufacturer.name }}</p>
+          <p><strong>Address:</strong> {{ bicycle.manufacturer.address }}</p>
+          <p>
+            <strong>Contact Phone:</strong>
+            {{ bicycle.manufacturer.contactPhone }}
+          </p>
+          <p>
+            <strong>Contact Email:</strong>
+            {{ bicycle.manufacturer.contactEmail }}
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Akcije -->
+  <div class="actions">
+    <button class="btn btn-success" (click)="updateBicycle()">Update</button>
+    <button class="btn btn-danger" (click)="deleteBicycle()">Delete</button>
+  </div>
+</div>
