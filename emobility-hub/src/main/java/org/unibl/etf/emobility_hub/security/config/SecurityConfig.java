@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/clients/register", "/auth/login", "/users/register","/uploads/**","/electric-bicycles/**").permitAll()
+                        .requestMatchers("/clients/register", "/auth/login", "/users/register","/uploads/**").permitAll()
                         .requestMatchers("/rss/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET,"/promotions/{id:[\\d]+}").permitAll()

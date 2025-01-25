@@ -9,6 +9,8 @@ import org.unibl.etf.emobility_hub.models.dto.response.detailed.IContainManufact
 public interface IBaseVehicleCRUDService<TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse extends IContainManufacturer> {
     Page<TResponse> findAll(Pageable pageable);
 
+    Page<TResponse> getAllByModel(String model, Pageable pageable);
+
     TDetailedResponse getById(Long id);
 
     TResponse create(@Valid TRequest request);
