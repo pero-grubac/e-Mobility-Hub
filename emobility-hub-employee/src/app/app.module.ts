@@ -12,6 +12,8 @@ import { CarDetailComponent } from './car/car-detail/car-detail.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { BicycleListComponent } from './bicycle/bicycle-list/bicycle-list.component';
+import { BicycleDetailComponent } from './bicycle/bicycle-detail/bicycle-detail.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     VehicleItemComponent,
     CarListComponent,
     CarDetailComponent,
+    BicycleListComponent,
+    BicycleDetailComponent,
   ],
   imports: [
     BrowserModule,

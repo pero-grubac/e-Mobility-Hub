@@ -42,9 +42,7 @@ export class CarListComponent implements OnInit {
     console.log('Add button clicked');
   }
 
-  handleUpload(): void {
-    console.log('Upload button clicked');
-  }
+
 
   handlePageChange(page: number): void {
     this.currentPage = page;
