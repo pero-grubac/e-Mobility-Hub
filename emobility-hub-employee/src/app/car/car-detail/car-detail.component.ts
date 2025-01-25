@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CarService } from '../../services/car.service';
 import { BaseManufacturer } from '../../models/manufacturer.model';
 import { ManufacturerService } from '../../services/manufacturer.service';
+import { UtilService } from '../../services/util.service';
 
 @Component({
   selector: 'app-car-detail',
@@ -21,7 +22,8 @@ export class CarDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private carService: CarService,
-    private manufacturerService: ManufacturerService
+    private manufacturerService: ManufacturerService,
+    private utilService: UtilService
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +36,7 @@ export class CarDetailComponent implements OnInit {
     this.carService.getById(id).subscribe({
       next: (car) => {
         this.car = car;
-        this.selectedManufacturerId = car.manufacturer.id; // Postavljamo selektovani proizvođač
+        this.selectedManufacturerId = car.manufacturer.id;
       },
       error: (err) => {
         console.error('Error fetching car details:', err);
@@ -59,7 +61,7 @@ export class CarDetailComponent implements OnInit {
         (m) => m.id === this.selectedManufacturerId
       );
       if (selectedManufacturer) {
-        this.car.manufacturer.id = selectedManufacturer.id; // Ažuriramo ID proizvođača
+        this.car.manufacturer.id = selectedManufacturer.id; 
       }
     }
   }
@@ -79,7 +81,7 @@ export class CarDetailComponent implements OnInit {
 
   updateCar(): void {
     const formData = new FormData();
-    const formattedDate = this.formatDate(new Date(this.car.purchaseDate));
+    const formattedDate = this.utilService.formatDate(new Date(this.car.purchaseDate));
 
     formData.append('id', this.car.id.toString());
     formData.append('uniqueIdentifier', this.car.uniqueIdentifier);
@@ -117,14 +119,5 @@ export class CarDetailComponent implements OnInit {
     });
   }
 
-  private formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
 
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-  }
 }
