@@ -1,0 +1,12 @@
+<div class="bicycle-list-page">
+  <h1>Bicycles</h1>
+  <app-vehicle-list
+    [vehicles]="bicycles"
+    [totalPages]="totalPages"
+    [currentPage]="currentPage"
+    [onPageChange]="handlePageChange.bind(this)"
+    (searchEvent)="handleSearch($event)"
+    (addEvent)="handleAdd()"
+    (vehicleSelected)="handleVehicleSelected($event)"
+  ></app-vehicle-list>
+</div>
