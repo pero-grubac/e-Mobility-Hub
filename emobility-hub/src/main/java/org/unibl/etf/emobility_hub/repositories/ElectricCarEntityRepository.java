@@ -7,5 +7,4 @@ import org.unibl.etf.emobility_hub.models.domain.entity.ElectricCarEntity;
 
 @Repository
 public interface ElectricCarEntityRepository extends JpaTransportVehicleRepository<ElectricCarEntity> {
-    Page<ElectricCarEntity> findAllByModelIgnoreCaseContaining(String model, Pageable pageable);
 }

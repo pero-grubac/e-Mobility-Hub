@@ -65,7 +65,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
         if (te.isRented())
             return false;
         te.setRented(true);
-        getRepository().save(te);
+        repository.save(te);
         return true;
     }
 
@@ -85,11 +85,16 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
     }
 
     @Override
+    public Page<TResponse> getAllByModel(String model, Pageable pageable) {
+        return repository.findAllByModelIgnoreCaseContaining(model,pageable).map(te->mapper.map(te,responseClass));
+    }
+
+    @Override
     public TDetailedResponse getById(Long id) {
         TEntity entity = findById(id);
-        TDetailedResponse respone = mapper.map(entity, detailedResponseClass);
-        respone.setManufacturer(mapper.map(entity.getManufacturer(), ManufacturerResponse.class));
-        return respone;
+        TDetailedResponse response = mapper.map(entity, detailedResponseClass);
+        response.setManufacturer(mapper.map(entity.getManufacturer(), ManufacturerResponse.class));
+        return response;
     }
 
 
@@ -97,19 +102,19 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
     public TResponse create(TRequest request) {
         ManufacturerEntity manufacturerEntity = findManufacturerById(request.getManufacturerId());
 
-        TEntity te = getMapper().map(request, getEntityClass());
+        TEntity te = getMapper().map(request, entityClass);
         te.setId(null);
         te.setManufacturer(manufacturerEntity);
 
         if (request.getImage() != null && !request.getImage().isEmpty()) {
             MultipartFile imageFile = request.getImage();
-            getRepository().saveAndFlush(te);
+           repository.saveAndFlush(te);
             String imagePath = saveImageToFileSystem(imageFile, te);
             te.setImage(imagePath);
         }
-        getRepository().saveAndFlush(te);
+        repository.saveAndFlush(te);
 
-        return getMapper().map(te, getResponseClass());
+        return getMapper().map(te, responseClass);
     }
 
     private String getBaseUrl() {
@@ -165,9 +170,9 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
             String imagePath = saveImageToFileSystem(imageFile, te);
             te.setImage(imagePath);
         }
-        getRepository().saveAndFlush(te);
+       repository.saveAndFlush(te);
 
-        return getMapper().map(te, getResponseClass());
+        return getMapper().map(te, responseClass);
     }
 
 
@@ -225,11 +230,11 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
     protected void setIsBroken(Long id, Boolean isBroken) {
         TEntity te = findById(id);
         te.setBroken(isBroken);
-        getRepository().saveAndFlush(te);
+       repository.saveAndFlush(te);
     }
 
     protected Page<TResponse> getAll(Pageable pageable, Boolean isBroken) {
-        return repository.findAllByIsBroken(pageable, isBroken).map(e -> getMapper().map(e, getResponseClass()));
+        return repository.findAllByIsBroken(pageable, isBroken).map(e -> mapper.map(e, getResponseClass()));
     }
 
     protected void existsById(Long id) {

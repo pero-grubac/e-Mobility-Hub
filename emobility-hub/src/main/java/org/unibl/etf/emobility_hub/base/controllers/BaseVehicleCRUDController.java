@@ -25,6 +25,15 @@ public abstract class BaseVehicleCRUDController<TRequest extends TransportVehicl
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/getByModel")
+    public ResponseEntity<Page<TResponse>> getByModel(Pageable pageable, @RequestParam(required = false) String search) {
+        if (search != null && !search.isEmpty()) {
+            Page<TResponse> responses = service.getAllByModel(search, pageable);
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        }
+        return findAll(pageable);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TDetailedResponse> getById(@PathVariable Long id) {
         TDetailedResponse response = service.getById(id);

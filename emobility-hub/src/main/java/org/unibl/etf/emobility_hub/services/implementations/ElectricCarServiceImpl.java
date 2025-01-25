@@ -3,8 +3,6 @@ package org.unibl.etf.emobility_hub.services.implementations;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.unibl.etf.emobility_hub.base.services.impl.BaseVehicleCRUDServiceImpl;
@@ -69,10 +67,10 @@ public class ElectricCarServiceImpl
         return getMapper().map(entity, getResponseClass());
     }
 
-    @Override
+ /*   @Override
     public Page<ElectricCarResponse> getAllByModel(String model, Pageable pageable) {
         return ((ElectricCarEntityRepository) super.getRepository()).findAllByModelIgnoreCaseContaining(model, pageable)
                 .map(ece -> getMapper().map(ece, getResponseClass()));
 
-    }
+    }*/
 }

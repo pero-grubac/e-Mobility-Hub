@@ -10,4 +10,5 @@ import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 public interface JpaTransportVehicleRepository<T extends TransportVehicleEntity>
         extends JpaRepository<T, Long> {
     Page<T> findAllByIsBroken(Pageable pageable,Boolean isBroken);
+    Page<T> findAllByModelIgnoreCaseContaining(String model,Pageable pageable);
 }
