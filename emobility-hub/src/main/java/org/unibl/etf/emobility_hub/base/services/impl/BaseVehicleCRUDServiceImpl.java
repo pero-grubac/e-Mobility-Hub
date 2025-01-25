@@ -22,7 +22,6 @@ import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -123,10 +122,10 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
             throw new IllegalStateException("No request attributes found. Ensure this method is called in the context of an HTTP request.");
         }
         HttpServletRequest request = attributes.getRequest();
-        return request.getScheme() + "://" + // Protokol (http ili https)
-                request.getServerName() + // Ime servera (localhost ili domen)
-                ":" + request.getServerPort() + // Port (8081)
-                request.getContextPath() + "/"; // Kontekst aplikacije (/eMobilityHubUser)
+        return request.getScheme() + "://" +
+                request.getServerName() +
+                ":" + request.getServerPort() +
+                request.getContextPath() + "/";
     }
 
     protected String saveImageToFileSystem(MultipartFile imageFile, TEntity te) {
@@ -143,7 +142,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
             }
         }
 
-        String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+        String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileName);
         System.out.println("filePath " + filePath);
 

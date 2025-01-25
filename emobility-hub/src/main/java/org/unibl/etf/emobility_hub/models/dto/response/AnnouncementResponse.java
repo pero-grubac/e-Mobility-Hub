@@ -2,7 +2,6 @@ package org.unibl.etf.emobility_hub.models.dto.response;
 
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
