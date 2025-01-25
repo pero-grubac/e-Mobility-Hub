@@ -11,9 +11,7 @@ import org.unibl.etf.emobility_hub.base.services.impl.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.domain.entity.AnnouncementEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
-import org.unibl.etf.emobility_hub.models.dto.response.PromotionResponse;
 import org.unibl.etf.emobility_hub.repositories.AnnouncementEntityRepository;
-import org.unibl.etf.emobility_hub.repositories.PromotionEntityRepository;
 import org.unibl.etf.emobility_hub.services.IAnnouncementService;
 
 import java.time.LocalDateTime;

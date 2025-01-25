@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.unibl.etf.emobility_hub.models.dto.request.UserRequest;
 import org.unibl.etf.emobility_hub.models.dto.request.detailed.DetailedUserRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.UserResponse;
 import org.unibl.etf.emobility_hub.services.IUserService;

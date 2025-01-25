@@ -67,10 +67,5 @@ public class ElectricCarServiceImpl
         return getMapper().map(entity, getResponseClass());
     }
 
- /*   @Override
-    public Page<ElectricCarResponse> getAllByModel(String model, Pageable pageable) {
-        return ((ElectricCarEntityRepository) super.getRepository()).findAllByModelIgnoreCaseContaining(model, pageable)
-                .map(ece -> getMapper().map(ece, getResponseClass()));
 
-    }*/
 }

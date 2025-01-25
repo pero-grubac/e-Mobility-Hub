@@ -1,6 +1,5 @@
 package org.unibl.etf.emobility_hub.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.unibl.etf.emobility_hub.base.controllers.BaseVehicleCRUDController;
@@ -17,5 +16,4 @@ public class ElectricBicycleController
         super(service);
     }
 
-    //@GetMapping("/getByModel")
 }

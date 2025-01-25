@@ -46,5 +46,4 @@ public class ClientController {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    // TODO block,unblock promijena za login operatre/admin
 }

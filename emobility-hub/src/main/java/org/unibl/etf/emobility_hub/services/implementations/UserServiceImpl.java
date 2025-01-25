@@ -12,7 +12,6 @@ import org.unibl.etf.emobility_hub.exception.ConflictException;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.domain.entity.UserEntity;
 import org.unibl.etf.emobility_hub.models.domain.value.RoleEnum;
-import org.unibl.etf.emobility_hub.models.dto.request.UserRequest;
 import org.unibl.etf.emobility_hub.models.dto.request.detailed.DetailedUserRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.UserResponse;
 import org.unibl.etf.emobility_hub.repositories.UserEntityRepository;

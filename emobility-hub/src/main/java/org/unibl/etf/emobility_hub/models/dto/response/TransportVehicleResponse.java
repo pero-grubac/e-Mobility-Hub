@@ -1,7 +1,6 @@
 package org.unibl.etf.emobility_hub.models.dto.response;
 
 import lombok.Data;
-import org.unibl.etf.emobility_hub.models.dto.request.ManufacturerRequest;
 
 @Data
 public class TransportVehicleResponse {

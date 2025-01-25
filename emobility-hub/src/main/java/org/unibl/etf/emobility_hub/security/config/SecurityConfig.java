@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
-        return  new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -52,35 +52,45 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/clients/register", "/auth/login", "/users/register","/uploads/**").permitAll()
+                        .requestMatchers("/clients/register", "/auth/login", "/users/register", "/uploads/**").permitAll()
                         .requestMatchers("/rss/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET,"/promotions/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/promotions").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.GET,"/promotions/getAll").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.POST,"/promotions").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT,"/promotions").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE,"/promotions/{id:[\\d]+}").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/promotions/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/promotions").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/promotions/getAll").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/promotions").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.PUT, "/promotions").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/promotions/{id:[\\d]+}").hasRole("MANAGER")
 
-                        .requestMatchers(HttpMethod.GET,"/announcements/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/announcements").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.GET,"/announcements/getAll").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.POST,"/announcements").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT,"/announcements").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE,"/announcements/{id:[\\d]+}").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/announcements/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/announcements").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/announcements/getAll").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/announcements").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.PUT, "/announcements").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/announcements/{id:[\\d]+}").hasRole("MANAGER")
 
-                        .requestMatchers(HttpMethod.GET,"/electric-cars/getByModel").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/electric-cars/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"/electric-cars").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/electric-cars").permitAll()
-                        .requestMatchers(HttpMethod.DELETE,"/electric-cars/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/electric-cars/getByModel").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/electric-cars/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/electric-cars").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/electric-cars").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/electric-cars/{id:[\\d]+}").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/electric-scooters/getByModel").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/electric-scooters/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/electric-scooters").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/electric-scooters").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/electric-scooters/{id:[\\d]+}").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/electric-bicycles/getByModel").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/electric-bicycles/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/electric-bicycles").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/electric-bicycles").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/electric-bicycles/{id:[\\d]+}").permitAll()
 
-                        .requestMatchers(HttpMethod.GET,"/manufacturers").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/manufacturers/getAll").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/manufacturers").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/manufacturers/getAll").permitAll()
 
-                        .requestMatchers(HttpMethod.POST,"/parse-vehicle").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/parse-vehicle").permitAll()
 
 
                         .anyRequest().authenticated()
