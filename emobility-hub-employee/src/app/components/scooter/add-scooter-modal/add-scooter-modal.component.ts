@@ -1,30 +1,30 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { BaseManufacturer } from '../../../models/manufacturer.model';
-import { BicycleService } from '../../../services/bicycle.service';
-import { ManufacturerService } from '../../../services/manufacturer.service';
 import { v4 as uuidv4 } from 'uuid';
+import { BaseManufacturer } from '../../../models/manufacturer.model';
+import { ManufacturerService } from '../../../services/manufacturer.service';
+import { ScooterService } from '../../../services/scooter.service';
 
 @Component({
-  selector: 'app-add-bicycle-modal',
-  templateUrl: './add-bicycle-modal.component.html',
-  styleUrl: './add-bicycle-modal.component.css',
+  selector: 'app-add-scooter-modal',
+  templateUrl: './add-scooter-modal.component.html',
+  styleUrl: './add-scooter-modal.component.css',
 })
-export class AddBicycleModalComponent {
-  bicycle = {
+export class AddScooterModalComponent {
+  scooter = {
     uniqueIdentifier: '',
     model: '',
     purchasePrice: null,
     rentPrice: null,
-    rangePerCharge: '',
+    maxSpeed: '',
     manufacturerId: null,
   };
   manufacturers: BaseManufacturer[] = [];
   selectedImageFile: File | null = null;
 
   constructor(
-    private dialogRef: MatDialogRef<AddBicycleModalComponent>,
-    private bicycleService: BicycleService,
+    private dialogRef: MatDialogRef<AddScooterModalComponent>,
+    private scooterService: ScooterService,
     private manufacturerService: ManufacturerService
   ) {}
 
@@ -47,18 +47,18 @@ export class AddBicycleModalComponent {
 
   onAdd(): void {
     const formData = new FormData();
-    formData.append('model', this.bicycle.model);
-    formData.append('purchasePrice', this.bicycle.purchasePrice.toString());
-    formData.append('rentPrice', this.bicycle.rentPrice.toString());
-    formData.append('rangePerCharge', this.bicycle.rangePerCharge);
-    formData.append('manufacturerId', this.bicycle.manufacturerId);
-    formData.append('uniqueIdentifier', this.bicycle.uniqueIdentifier);
+    formData.append('model', this.scooter.model);
+    formData.append('purchasePrice', this.scooter.purchasePrice.toString());
+    formData.append('rentPrice', this.scooter.rentPrice.toString());
+    formData.append('maxSpeed', this.scooter.maxSpeed);
+    formData.append('manufacturerId', this.scooter.manufacturerId);
+    formData.append('uniqueIdentifier', this.scooter.uniqueIdentifier);
 
     if (this.selectedImageFile) {
       formData.append('image', this.selectedImageFile);
     }
 
-    this.bicycleService.addBicycle(formData).subscribe(() => {
+    this.scooterService.addScooter(formData).subscribe(() => {
       this.dialogRef.close(true);
     });
   }
@@ -68,15 +68,15 @@ export class AddBicycleModalComponent {
   }
   isFormValid(): boolean {
     return (
-      this.bicycle.uniqueIdentifier.trim() !== '' &&
-      this.bicycle.model.trim() !== '' &&
-      this.bicycle.purchasePrice !== null &&
-      this.bicycle.rentPrice !== null &&
-      this.bicycle.rangePerCharge !== null &&
-      this.bicycle.manufacturerId !== null
+      this.scooter.uniqueIdentifier.trim() !== '' &&
+      this.scooter.model.trim() !== '' &&
+      this.scooter.purchasePrice !== null &&
+      this.scooter.rentPrice !== null &&
+      this.scooter.maxSpeed !== null &&
+      this.scooter.manufacturerId !== null
     );
   }
   generateUniqueId(): void {
-    this.bicycle.uniqueIdentifier = uuidv4();
+    this.scooter.uniqueIdentifier = uuidv4();
   }
 }

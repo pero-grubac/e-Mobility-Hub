@@ -37,4 +37,7 @@ export class ScooterService {
   deleteScooter(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+  addScooter(scooterData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}`, scooterData);
+  }
 }
