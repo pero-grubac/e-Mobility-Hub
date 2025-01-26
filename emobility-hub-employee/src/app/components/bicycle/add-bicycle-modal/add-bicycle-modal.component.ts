@@ -72,7 +72,7 @@ export class AddBicycleModalComponent {
       this.bicycle.model.trim() !== '' &&
       this.bicycle.purchasePrice !== null &&
       this.bicycle.rentPrice !== null &&
-      this.bicycle.rangePerCharge.trim() !== '' &&
+      this.bicycle.rangePerCharge !== null &&
       this.bicycle.manufacturerId !== null
     );
   }

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Scooter } from '../../../models/scooter.model';
 import { Router } from '@angular/router';
 import { ScooterService } from '../../../services/scooter.service';
+import { AddScooterModalComponent } from '../add-scooter-modal/add-scooter-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-scooter-list',
@@ -15,7 +17,12 @@ export class ScooterListComponent implements OnInit {
   pageSize: number = 12;
   searchTerm: string = '';
 
-  constructor(private scooterService: ScooterService, private router: Router) {}
+  constructor(
+    private scooterService: ScooterService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
+
   ngOnInit(): void {
     this.loadScooters();
   }
@@ -39,7 +46,15 @@ export class ScooterListComponent implements OnInit {
   }
 
   handleAdd(): void {
-    console.log('Add button clicked');
+    const dialogRef = this.dialog.open(AddScooterModalComponent, {
+      width: '600px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadScooters();
+      }
+    });
   }
 
   handlePageChange(page: number): void {
