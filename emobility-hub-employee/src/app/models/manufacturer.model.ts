@@ -4,6 +4,8 @@ export interface Manufacturer {
   address: string;
   contactPhone: string;
   contactEmail: string;
+  contactFax: string;
+  country: string;
 }
 export interface BaseManufacturer {
   id: number;

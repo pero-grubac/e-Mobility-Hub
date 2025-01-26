@@ -97,6 +97,7 @@
         <div class="form-group" *ngIf="scooter.manufacturer">
           <p><strong>Manufacturer Details:</strong></p>
           <p><strong>Name:</strong> {{ scooter.manufacturer.name }}</p>
+          <p><strong>Country:</strong> {{ scooter.manufacturer.country }}</p>
           <p><strong>Address:</strong> {{ scooter.manufacturer.address }}</p>
           <p>
             <strong>Contact Phone:</strong>
@@ -105,6 +106,9 @@
           <p>
             <strong>Contact Email:</strong>
             {{ scooter.manufacturer.contactEmail }}
+          </p>
+          <p>
+            <strong>Contact Fax:</strong> {{ scooter.manufacturer.contactFax }}
           </p>
         </div>
       </form>
