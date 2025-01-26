@@ -1,0 +1,29 @@
+.search-input {
+  width: 70%;
+  padding: 8px;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.add-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+}
+
+.scooter-list-page {
+  padding: 16px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #333;
+}

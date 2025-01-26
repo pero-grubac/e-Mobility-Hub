@@ -1,1 +1,12 @@
-<p>scooter-list works!</p>
+<div class="scooter-list-page">
+  <h1>Scooters</h1>
+  <app-vehicle-list
+    [vehicles]="scooters"
+    [totalPages]="totalPages"
+    [currentPage]="currentPage"
+    [onPageChange]="handlePageChange.bind(this)"
+    (searchEvent)="handleSearch($event)"
+    (addEvent)="handleAdd()"
+    (vehicleSelected)="handleVehicleSelected($event)"
+  ></app-vehicle-list>
+</div>
