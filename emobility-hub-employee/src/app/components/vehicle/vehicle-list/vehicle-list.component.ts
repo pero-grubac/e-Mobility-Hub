@@ -6,8 +6,8 @@ import {
   Output,
   OnChanges,
 } from '@angular/core';
-import { Vehicle } from '../../models/vehicle.model';
-import { ParseVehicle } from '../../services/parseVehicle.service';
+import { Vehicle } from '../../../models/vehicle.model';
+import { ParseVehicle } from '../../../services/parseVehicle.service';
 
 @Component({
   selector: 'app-vehicle-list',

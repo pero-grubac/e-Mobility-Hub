@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { DetailedBicycle } from '../../models/bicycle.models';
-import { BaseManufacturer } from '../../models/manufacturer.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BicycleService } from '../../services/bicycle.service';
-import { ManufacturerService } from '../../services/manufacturer.service';
-import { UtilService } from '../../services/util.service';
+import { DetailedBicycle } from '../../../models/bicycle.models';
+import { BaseManufacturer } from '../../../models/manufacturer.model';
+import { BicycleService } from '../../../services/bicycle.service';
+import { ManufacturerService } from '../../../services/manufacturer.service';
+import { UtilService } from '../../../services/util.service';
 
 @Component({
   selector: 'app-bicycle-detail',

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DetailedCar } from '../../models/car.models';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CarService } from '../../services/car.service';
-import { BaseManufacturer } from '../../models/manufacturer.model';
-import { ManufacturerService } from '../../services/manufacturer.service';
-import { UtilService } from '../../services/util.service';
+import { DetailedCar } from '../../../models/car.models';
+import { BaseManufacturer } from '../../../models/manufacturer.model';
+import { CarService } from '../../../services/car.service';
+import { ManufacturerService } from '../../../services/manufacturer.service';
+import { UtilService } from '../../../services/util.service';
+
 
 @Component({
   selector: 'app-car-detail',
