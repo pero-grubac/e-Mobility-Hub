@@ -4,7 +4,6 @@ import { BaseManufacturer } from '../../../models/manufacturer.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ManufacturerService } from '../../../services/manufacturer.service';
 import { ScooterService } from '../../../services/scooter.service';
-import { UtilService } from '../../../services/util.service';
 
 @Component({
   selector: 'app-scooter-detail',
@@ -22,14 +21,15 @@ export class ScooterDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private scooterService: ScooterService,
-    private manufacturerService: ManufacturerService,
-    private utilService: UtilService
+    private manufacturerService: ManufacturerService
   ) {}
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadScooterDetailes(id);
     this.loadManufacturers();
   }
+
   loadScooterDetailes(id: number): void {
     this.scooterService.getById(id).subscribe({
       next: (bicycle) => {
@@ -41,6 +41,7 @@ export class ScooterDetailComponent implements OnInit {
       },
     });
   }
+
   loadManufacturers(): void {
     this.manufacturerService.getAll().subscribe({
       next: (manufacturers) => {
@@ -61,6 +62,7 @@ export class ScooterDetailComponent implements OnInit {
       }
     }
   }
+
   onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -72,5 +74,41 @@ export class ScooterDetailComponent implements OnInit {
       };
       reader.readAsDataURL(this.selectedImageFile);
     }
+  }
+  updateScooter(): void {
+    const formData = new FormData();
+
+    formData.append('id', this.scooter.id.toString());
+    formData.append('uniqueIdentifier', this.scooter.uniqueIdentifier);
+    formData.append('manufacturerId', this.selectedManufacturerId.toString());
+    formData.append('model', this.scooter.model);
+    formData.append('purchasePrice', this.scooter.purchasePrice.toString());
+    formData.append('rentPrice', this.scooter.rentPrice.toString());
+    formData.append('maxSpeed', this.scooter.maxSpeed.toString());
+
+    if (this.selectedImageFile) {
+      formData.append('image', this.selectedImageFile);
+    }
+    this.scooterService.updateScooter(formData).subscribe({
+      next: () => {
+        alert('Scooter updated successfully!');
+        this.router.navigate(['/scooters']);
+      },
+      error: (err) => {
+        console.error('Error updating scooter:', err);
+      },
+    });
+  }
+
+  deleteScooter(): void {
+    this.scooterService.deleteScooter(this.scooter.id).subscribe({
+      next: () => {
+        alert('Scooter deleted successfully!');
+        this.router.navigate(['/scooters']);
+      },
+      error: (err) => {
+        console.error('Error deleting scooter:', err);
+      },
+    });
   }
 }
