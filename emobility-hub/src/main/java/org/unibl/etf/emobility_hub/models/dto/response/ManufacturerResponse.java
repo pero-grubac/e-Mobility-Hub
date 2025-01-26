@@ -10,4 +10,5 @@ public class ManufacturerResponse {
     private String address;
     private String contactPhone;
     private String contactEmail;
+    private String contactFax;
 }
