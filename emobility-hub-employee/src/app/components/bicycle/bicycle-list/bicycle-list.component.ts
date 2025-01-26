@@ -21,7 +21,6 @@ export class BicycleListComponent implements OnInit {
     this.loadBicycles();
   }
   handleVehicleSelected(vehicleId: number): void {
-    console.log("his")
     console.log(vehicleId)
     this.router.navigate(['/bicycle', vehicleId]);
   }
