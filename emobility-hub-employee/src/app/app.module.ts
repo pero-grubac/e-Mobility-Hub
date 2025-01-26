@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +18,7 @@ import { VehicleItemComponent } from './components/vehicle/vehicle-list/vehicle-
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
 import { ScooterListComponent } from './components/scooter/scooter-list/scooter-list.component';
 import { ScooterDetailComponent } from './components/scooter/scooter-detail/scooter-detail.component';
+import { AddCarModalComponent } from './components/car/add-car-modal/add-car-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,13 +32,16 @@ import { ScooterDetailComponent } from './components/scooter/scooter-detail/scoo
     BicycleDetailComponent,
     ScooterListComponent,
     ScooterDetailComponent,
+    AddCarModalComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     FormsModule,
     MatToolbarModule,
+    MatDialogModule,
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
