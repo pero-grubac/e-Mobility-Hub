@@ -1,31 +1,30 @@
 import { Component } from '@angular/core';
-import { BaseManufacturer } from '../../../models/manufacturer.model';
-import { CarService } from '../../../services/car.service';
-import { ManufacturerService } from '../../../services/manufacturer.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { BaseManufacturer } from '../../../models/manufacturer.model';
+import { BicycleService } from '../../../services/bicycle.service';
+import { ManufacturerService } from '../../../services/manufacturer.service';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
-  selector: 'app-add-car-modal',
-  templateUrl: './add-car-modal.component.html',
-  styleUrl: './add-car-modal.component.css',
+  selector: 'app-add-bicycle-modal',
+  templateUrl: './add-bicycle-modal.component.html',
+  styleUrl: './add-bicycle-modal.component.css',
 })
-export class AddCarModalComponent {
-  car = {
+export class AddBicycleModalComponent {
+  bicycle = {
     uniqueIdentifier: '',
     model: '',
     purchasePrice: null,
     rentPrice: null,
-    purchaseDate: '',
-    description: '',
+    rangePerCharge: '',
     manufacturerId: null,
   };
   manufacturers: BaseManufacturer[] = [];
   selectedImageFile: File | null = null;
 
   constructor(
-    private dialogRef: MatDialogRef<AddCarModalComponent>,
-    private carService: CarService,
+    private dialogRef: MatDialogRef<AddBicycleModalComponent>,
+    private bicycleService: BicycleService,
     private manufacturerService: ManufacturerService
   ) {}
 
@@ -48,19 +47,18 @@ export class AddCarModalComponent {
 
   onAdd(): void {
     const formData = new FormData();
-    formData.append('model', this.car.model);
-    formData.append('purchasePrice', this.car.purchasePrice.toString());
-    formData.append('rentPrice', this.car.rentPrice.toString());
-    formData.append('purchaseDate', this.car.purchaseDate);
-    formData.append('description', this.car.description);
-    formData.append('manufacturerId', this.car.manufacturerId);
-    formData.append('uniqueIdentifier', this.car.uniqueIdentifier);
+    formData.append('model', this.bicycle.model);
+    formData.append('purchasePrice', this.bicycle.purchasePrice.toString());
+    formData.append('rentPrice', this.bicycle.rentPrice.toString());
+    formData.append('rangePerCharge', this.bicycle.rangePerCharge);
+    formData.append('manufacturerId', this.bicycle.manufacturerId);
+    formData.append('uniqueIdentifier', this.bicycle.uniqueIdentifier);
 
     if (this.selectedImageFile) {
       formData.append('image', this.selectedImageFile);
     }
 
-    this.carService.addCar(formData).subscribe(() => {
+    this.bicycleService.addBicycle(formData).subscribe(() => {
       this.dialogRef.close(true);
     });
   }
@@ -70,16 +68,15 @@ export class AddCarModalComponent {
   }
   isFormValid(): boolean {
     return (
-      this.car.uniqueIdentifier.trim() !== '' &&
-      this.car.model.trim() !== '' &&
-      this.car.purchasePrice !== null &&
-      this.car.rentPrice !== null &&
-      this.car.purchaseDate.trim() !== '' &&
-      this.car.description.trim() !== '' &&
-      this.car.manufacturerId !== null
+      this.bicycle.uniqueIdentifier.trim() !== '' &&
+      this.bicycle.model.trim() !== '' &&
+      this.bicycle.purchasePrice !== null &&
+      this.bicycle.rentPrice !== null &&
+      this.bicycle.rangePerCharge.trim() !== '' &&
+      this.bicycle.manufacturerId !== null
     );
   }
   generateUniqueId(): void {
-    this.car.uniqueIdentifier = uuidv4();
+    this.bicycle.uniqueIdentifier = uuidv4();
   }
 }

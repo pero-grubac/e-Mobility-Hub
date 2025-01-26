@@ -37,4 +37,7 @@ export class BicycleService {
   deleteBicycle(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+  addBicycle(bicycleData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}`, bicycleData);
+  }
 }
