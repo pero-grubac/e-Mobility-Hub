@@ -4,4 +4,5 @@ export const environment = {
   parseVehicle: '/parse-vehicle',
   manufacturers: '/manufacturers',
   bicycles: '/electric-bicycles',
+  scooters: '/electric-scooters',
 };
