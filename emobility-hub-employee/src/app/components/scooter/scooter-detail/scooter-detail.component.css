@@ -1,0 +1,105 @@
+.scooter-detail-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 20px auto; 
+  margin-top: 40px; 
+  max-width: 1200px;
+}
+
+.content-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+}
+
+.image-container {
+  flex: 0 0 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scooter-image {
+  width: 100%;
+  height: auto;
+  max-width: 350px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.image-info {
+  text-align: center;
+}
+
+.image-info p {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.custom-file-upload {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 14px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-file-upload:hover {
+  background-color: #0056b3;
+}
+
+.image-info input[type="file"] {
+  display: none;
+}
+
+.info-container {
+  flex: 1;
+}
+
+.info-container h2 {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.actions .btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+.actions .btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.actions .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.actions .btn-success:hover {
+  background-color: #218838;
+}
+
+.actions .btn-danger:hover {
+  background-color: #c82333;
+}
+
+.form-group {
+  margin-bottom: 0.7rem;
+}

@@ -29,6 +29,7 @@ export class BicycleDetailComponent implements OnInit {
     this.loadBicycleDetailes(id);
     this.loadManufacturers();
   }
+
   loadBicycleDetailes(id: number): void {
     this.bicycleService.getById(id).subscribe({
       next: (bicycle) => {
@@ -72,4 +73,5 @@ export class BicycleDetailComponent implements OnInit {
       reader.readAsDataURL(this.selectedImageFile);
     }
   }
+  updateBicycle(): void {}
 }
