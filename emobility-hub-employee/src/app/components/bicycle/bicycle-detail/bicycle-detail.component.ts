@@ -78,7 +78,6 @@ export class BicycleDetailComponent implements OnInit {
 
   updateBicycle(): void {
     const formData = new FormData();
-    console.log('a');
 
     formData.append('id', this.bicycle.id.toString());
     formData.append('uniqueIdentifier', this.bicycle.uniqueIdentifier);
