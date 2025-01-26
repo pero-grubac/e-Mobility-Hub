@@ -19,6 +19,7 @@ import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-
 import { ScooterListComponent } from './components/scooter/scooter-list/scooter-list.component';
 import { ScooterDetailComponent } from './components/scooter/scooter-detail/scooter-detail.component';
 import { AddCarModalComponent } from './components/car/add-car-modal/add-car-modal.component';
+import { AddBicycleModalComponent } from './components/bicycle/add-bicycle-modal/add-bicycle-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { AddCarModalComponent } from './components/car/add-car-modal/add-car-mod
     ScooterListComponent,
     ScooterDetailComponent,
     AddCarModalComponent,
+    AddBicycleModalComponent,
   ],
   imports: [
     BrowserModule,

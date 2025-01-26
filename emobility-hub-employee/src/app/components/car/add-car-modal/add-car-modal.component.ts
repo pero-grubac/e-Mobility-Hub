@@ -70,6 +70,7 @@ export class AddCarModalComponent {
   }
   isFormValid(): boolean {
     return (
+      this.car.uniqueIdentifier.trim() !== '' &&
       this.car.model.trim() !== '' &&
       this.car.purchasePrice !== null &&
       this.car.rentPrice !== null &&

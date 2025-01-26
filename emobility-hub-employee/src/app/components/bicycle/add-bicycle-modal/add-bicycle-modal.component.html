@@ -1,0 +1,116 @@
+<h2 mat-dialog-title>Add New Bicycle</h2>
+<mat-dialog-content>
+  <form>
+    <!-- Model -->
+    <div class="form-group">
+      <label>Model</label>
+      <input
+        type="text"
+        [(ngModel)]="bicycle.model"
+        name="model"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <!-- Purchase Price -->
+    <div class="form-group">
+      <label>Purchase Price</label>
+      <input
+        type="number"
+        [(ngModel)]="bicycle.purchasePrice"
+        name="purchasePrice"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <!-- Rent Price -->
+    <div class="form-group">
+      <label>Rent Price</label>
+      <input
+        type="number"
+        [(ngModel)]="bicycle.rentPrice"
+        name="rentPrice"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Range per charge</label>
+      <input
+        type="number"
+        [(ngModel)]="bicycle.rangePerCharge"
+        name="description"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <!-- Manufacturer -->
+    <div class="form-group">
+      <label>Manufacturer</label>
+      <select
+        [(ngModel)]="bicycle.manufacturerId"
+        name="manufacturer"
+        class="form-control"
+      >
+        <option
+          *ngFor="let manufacturer of manufacturers"
+          [value]="manufacturer.id"
+        >
+          {{ manufacturer.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Unique Identifier -->
+    <div class="form-group unique-id-container">
+      <label>Unique Identifier</label>
+      <div class="input-group">
+        <input
+          type="text"
+          [(ngModel)]="bicycle.uniqueIdentifier"
+          name="uniqueIdentifier"
+          class="form-control"
+          placeholder="Enter or generate ID"
+          required
+        />
+        <button
+          mat-button
+          type="button"
+          class="btn-generate-id"
+          (click)="generateUniqueId()"
+        >
+          Generate
+        </button>
+      </div>
+    </div>
+
+    <!-- Upload Image -->
+    <div class="form-group upload-container">
+      <label>Upload Image</label>
+      <div class="input-group">
+        <input
+          type="file"
+          class="form-control-file"
+          (change)="onImageSelected($event)"
+          accept="image/*"
+        />
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button class="btn-cancel" (click)="onCancel()">Cancel</button>
+  <button
+    mat-button
+    class="btn-add"
+    [disabled]="!isFormValid()"
+    (click)="onAdd()"
+  >
+    Add
+  </button>
+</mat-dialog-actions>

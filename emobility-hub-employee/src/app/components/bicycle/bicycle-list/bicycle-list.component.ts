@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Bicycle } from '../../../models/bicycle.models';
 import { BicycleService } from '../../../services/bicycle.service';
+import { AddBicycleModalComponent } from '../add-bicycle-modal/add-bicycle-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bicycle-list',
@@ -15,13 +17,17 @@ export class BicycleListComponent implements OnInit {
   pageSize: number = 12;
   searchTerm: string = '';
 
-  constructor(private bicycleService: BicycleService, private router: Router) {}
+  constructor(
+    private bicycleService: BicycleService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadBicycles();
   }
   handleVehicleSelected(vehicleId: number): void {
-    console.log(vehicleId)
+    console.log(vehicleId);
     this.router.navigate(['/bicycle', vehicleId]);
   }
   loadBicycles(searchTerm: string = ''): void {
@@ -39,9 +45,16 @@ export class BicycleListComponent implements OnInit {
   }
 
   handleAdd(): void {
-    console.log('Add button clicked');
-  }
+    const dialogRef = this.dialog.open(AddBicycleModalComponent, {
+      width: '600px',
+    });
 
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadBicycles();
+      }
+    });
+  }
 
   handlePageChange(page: number): void {
     this.currentPage = page;
