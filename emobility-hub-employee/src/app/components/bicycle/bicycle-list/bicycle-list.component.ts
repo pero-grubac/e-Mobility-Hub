@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Bicycle } from '../../models/bicycle.models';
-import { BicycleService } from '../../services/bicycle.service';
 import { Router } from '@angular/router';
+import { Bicycle } from '../../../models/bicycle.models';
+import { BicycleService } from '../../../services/bicycle.service';
 
 @Component({
   selector: 'app-bicycle-list',
