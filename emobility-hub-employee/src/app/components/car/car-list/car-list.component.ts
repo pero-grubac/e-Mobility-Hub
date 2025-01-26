@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Car } from '../../../models/car.models';
 import { CarService } from '../../../services/car.service';
+import { AddCarModalComponent } from '../add-car-modal/add-car-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-car-list',
@@ -15,7 +17,11 @@ export class CarListComponent implements OnInit {
   pageSize: number = 12;
   searchTerm: string = '';
 
-  constructor(private carService: CarService, private router: Router) {}
+  constructor(
+    private carService: CarService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadCars();
@@ -39,10 +45,16 @@ export class CarListComponent implements OnInit {
   }
 
   handleAdd(): void {
-    console.log('Add button clicked');
+    const dialogRef = this.dialog.open(AddCarModalComponent, {
+      width: '600px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadCars();
+      }
+    });
   }
-
-
 
   handlePageChange(page: number): void {
     this.currentPage = page;

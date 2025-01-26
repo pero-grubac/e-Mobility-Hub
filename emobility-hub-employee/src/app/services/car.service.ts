@@ -32,4 +32,7 @@ export class CarService {
   deleteCar(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+  addCar(carData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}`, carData);
+  }
 }
