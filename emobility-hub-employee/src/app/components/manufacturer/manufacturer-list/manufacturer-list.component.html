@@ -1,0 +1,47 @@
+<div class="manufacturer-list-container">
+  <div class="manufacturer-list-header">
+    <div class="search-bar-container">
+      <input
+        type="text"
+        placeholder="Search by name"
+        (input)="onSearch($event.target.value)"
+        class="search-input"
+      />
+      <button class="add-button" (click)="onAdd()">Add</button>
+      
+    </div>
+  </div>
+
+  <div class="manufacturer-list">
+    <app-manufacturer-item
+      *ngFor="let manufacturer of manufacturers"
+      [manufacturer]="manufacturer"
+      (manufacturerClick)="onManufacturerSelected($event)"
+    ></app-manufacturer-item>
+  </div>
+
+  <div class="pagination">
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
+      Previous
+    </button>
+
+    <button
+      *ngFor="let page of displayedPages"
+      [disabled]="!isNumber(page)"
+      [class.active]="page === currentPage"
+      (click)="handlePageClick(page)"
+    >
+      {{ page }}
+    </button>
+
+    <button
+      (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage + 1 >= totalPages"
+    >
+      Next
+    </button>
+  </div>
+
+
+  
+</div>
