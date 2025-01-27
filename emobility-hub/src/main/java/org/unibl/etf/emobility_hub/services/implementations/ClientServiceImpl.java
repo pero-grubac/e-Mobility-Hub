@@ -146,6 +146,11 @@ public class ClientServiceImpl implements IClientService {
         repository.saveAndFlush(user);
     }
 
+    @Override
+    public Page<ClientResponse> getAllByUsername(Pageable pageable, String search) {
+        return repository.findAllByUsernameContainingIgnoreCase(search,pageable).map(te -> mapper.map(te, ClientResponse.class));
+    }
+
     private void deleteImageFromFileSystem(String imagePath) {
         Path filePath = Paths.get(imagePath);
         Path folderPath = filePath.getParent();
