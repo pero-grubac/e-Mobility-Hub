@@ -4,7 +4,7 @@
   align-items: center;
   gap: 20px;
   margin: 20px auto; /* Održava horizontalno centriranje */
-  margin-top: 40px; /* Dodavanje razmaka na vrhu */
+  margin-top: 30px; /* Dodavanje razmaka na vrhu */
   max-width: 1200px;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .actions {
-  margin-top: 20px;
+ 
   display: flex;
   justify-content: center;
   gap: 10px;

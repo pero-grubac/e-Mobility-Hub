@@ -46,4 +46,11 @@ public class ClientController {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("/block/{id}")
+    public ResponseEntity<?> block(@PathVariable Long id, @RequestBody boolean isBlocked) {
+        service.block(id, isBlocked);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
 }

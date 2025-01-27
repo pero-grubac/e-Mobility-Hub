@@ -26,6 +26,12 @@ import { ManufacturerListComponent } from './components/manufacturer/manufacture
 import { ManufacturerDetailComponent } from './components/manufacturer/manufacturer-detail/manufacturer-detail.component';
 import { AddManufacturerModalComponent } from './components/manufacturer/add-manufacturer-modal/add-manufacturer-modal.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ClientItemComponent } from './components/client/client-item/client-item.component';
+import { ClientListComponent } from './components/client/client-list/client-list.component';
+import { EmployeeItemComponent } from './components/employee/employee-item/employee-item.component';
+import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
+import { EmployeeDetailComponent } from './components/employee/employee-detail/employee-detail.component';
+import { ClientDetailComponent } from './components/client/client-detail/client-detail.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +52,12 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     ManufacturerListComponent,
     ManufacturerDetailComponent,
     AddManufacturerModalComponent,
+    ClientItemComponent,
+    ClientListComponent,
+    EmployeeItemComponent,
+    EmployeeListComponent,
+    EmployeeDetailComponent,
+    ClientDetailComponent,
   ],
   imports: [
     BrowserModule,
