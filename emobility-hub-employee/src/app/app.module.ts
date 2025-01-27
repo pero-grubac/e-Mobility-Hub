@@ -14,13 +14,16 @@ import { BicycleDetailComponent } from './components/bicycle/bicycle-detail/bicy
 import { BicycleListComponent } from './components/bicycle/bicycle-list/bicycle-list.component';
 import { CarDetailComponent } from './components/car/car-detail/car-detail.component';
 import { CarListComponent } from './components/car/car-list/car-list.component';
-import { VehicleItemComponent } from './components/vehicle/vehicle-list/vehicle-item/vehicle-item.component';
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
 import { ScooterListComponent } from './components/scooter/scooter-list/scooter-list.component';
 import { ScooterDetailComponent } from './components/scooter/scooter-detail/scooter-detail.component';
 import { AddCarModalComponent } from './components/car/add-car-modal/add-car-modal.component';
 import { AddBicycleModalComponent } from './components/bicycle/add-bicycle-modal/add-bicycle-modal.component';
 import { AddScooterModalComponent } from './components/scooter/add-scooter-modal/add-scooter-modal.component';
+import { VehicleItemComponent } from './components/vehicle/vehicle-item/vehicle-item.component';
+import { ManufacturerItemComponent } from './components/manufacturer/manufacturer-item/manufacturer-item.component';
+import { ManufacturerListComponent } from './components/manufacturer/manufacturer-list/manufacturer-list.component';
+import { ManufacturerDetailComponent } from './components/manufacturer/manufacturer-detail/manufacturer-detail.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,9 @@ import { AddScooterModalComponent } from './components/scooter/add-scooter-modal
     AddCarModalComponent,
     AddBicycleModalComponent,
     AddScooterModalComponent,
+    ManufacturerItemComponent,
+    ManufacturerListComponent,
+    ManufacturerDetailComponent,
   ],
   imports: [
     BrowserModule,
