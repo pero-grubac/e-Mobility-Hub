@@ -139,6 +139,13 @@ public class ClientServiceImpl implements IClientService {
         repository.flush();
     }
 
+    @Override
+    public void block(Long id, boolean isBlocked) {
+        ClientEntity user = findById(id);
+        user.setBlocked(isBlocked);
+        repository.saveAndFlush(user);
+    }
+
     private void deleteImageFromFileSystem(String imagePath) {
         Path filePath = Paths.get(imagePath);
         Path folderPath = filePath.getParent();

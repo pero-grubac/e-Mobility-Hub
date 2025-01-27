@@ -5,4 +5,5 @@ export const environment = {
   manufacturers: '/manufacturers',
   bicycles: '/electric-bicycles',
   scooters: '/electric-scooters',
+  clients: '/clients',
 };

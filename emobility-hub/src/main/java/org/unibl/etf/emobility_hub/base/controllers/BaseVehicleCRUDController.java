@@ -84,5 +84,4 @@ public abstract class BaseVehicleCRUDController<TRequest extends TransportVehicl
         service.brake(id);
         return ResponseEntity.ok().build();
     }
-    // TODO create from csv
 }

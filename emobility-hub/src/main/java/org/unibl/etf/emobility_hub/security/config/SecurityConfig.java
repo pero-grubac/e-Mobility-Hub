@@ -97,6 +97,9 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/parse-vehicle").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/clients").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/clients/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/clients/block/{id:[\\d]+}").permitAll()
 
                         .anyRequest().authenticated()
                 )

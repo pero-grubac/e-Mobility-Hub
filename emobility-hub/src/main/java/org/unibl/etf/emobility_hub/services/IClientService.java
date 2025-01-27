@@ -15,4 +15,6 @@ public interface IClientService {
     ClientResponse update(DetailedClientRequest request);
 
     void deleteById(Long id);
+
+    void block(Long id, boolean isBlocked);
 }
