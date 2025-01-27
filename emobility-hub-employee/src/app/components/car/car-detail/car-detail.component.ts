@@ -6,7 +6,6 @@ import { CarService } from '../../../services/car.service';
 import { ManufacturerService } from '../../../services/manufacturer.service';
 import { UtilService } from '../../../services/util.service';
 
-
 @Component({
   selector: 'app-car-detail',
   templateUrl: './car-detail.component.html',
@@ -62,7 +61,7 @@ export class CarDetailComponent implements OnInit {
         (m) => m.id === this.selectedManufacturerId
       );
       if (selectedManufacturer) {
-        this.car.manufacturer.id = selectedManufacturer.id; 
+        this.car.manufacturer.id = selectedManufacturer.id;
       }
     }
   }
@@ -79,10 +78,12 @@ export class CarDetailComponent implements OnInit {
       reader.readAsDataURL(this.selectedImageFile);
     }
   }
-
+  // TODO broken/fix btn
   updateCar(): void {
     const formData = new FormData();
-    const formattedDate = this.utilService.formatDate(new Date(this.car.purchaseDate));
+    const formattedDate = this.utilService.formatDate(
+      new Date(this.car.purchaseDate)
+    );
 
     formData.append('id', this.car.id.toString());
     formData.append('uniqueIdentifier', this.car.uniqueIdentifier);
@@ -119,6 +120,4 @@ export class CarDetailComponent implements OnInit {
       },
     });
   }
-
-
 }

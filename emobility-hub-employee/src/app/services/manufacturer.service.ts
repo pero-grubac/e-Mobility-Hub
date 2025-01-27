@@ -47,8 +47,8 @@ export class ManufacturerService {
     return this.http.get<DetailedManufacturer>(`${this.baseUrl}/${id}`);
   }
 
-  updateManufacturer(manufacturer: DetailedManufacturer) {
-    return this.http.put(`${this.baseUrl}/${manufacturer.id}`, manufacturer);
+  updateManufacturer(manufacturer: Manufacturer) {
+    return this.http.put(`${this.baseUrl}`, manufacturer);
   }
 
   deleteManufacturer(id: number) {
