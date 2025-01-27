@@ -29,6 +29,15 @@ public class ClientController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/getAllByUsername")
+    public ResponseEntity<Page<ClientResponse>> getByUsername(Pageable pageable, @RequestParam(required = false) String search) {
+        if (search != null && !search.isEmpty()) {
+            Page<ClientResponse> responses = service.getAllByUsername(pageable, search);
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        }
+        return getAll(pageable);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<ClientResponse> create(@Valid @ModelAttribute DetailedClientRequest request) {
         ClientResponse response = service.create(request);
