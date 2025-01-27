@@ -1,1 +1,42 @@
-<p>client-list works!</p>
+<div class="client-list-container">
+  <div class="client-list-header">
+    <div class="search-bar-container">
+      <input
+        type="text"
+        placeholder="Search by username"
+        (input)="onSearch($event.target.value)"
+        class="search-input"
+      />
+    </div>
+  </div>
+
+  <div class="client-list">
+    <app-client-item
+      *ngFor="let client of clients"
+      [client]="client"
+      (blockUnblock)="onBlockUnblockClient($event)"
+    ></app-client-item>
+  </div>
+
+  <div class="pagination">
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
+      Previous
+    </button>
+
+    <button
+      *ngFor="let page of displayedPages"
+      [disabled]="!isNumber(page)"
+      [class.active]="page === currentPage"
+      (click)="handlePageClick(page)"
+    >
+      {{ page }}
+    </button>
+
+    <button
+      (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage + 1 >= totalPages"
+    >
+      Next
+    </button>
+  </div>
+</div>

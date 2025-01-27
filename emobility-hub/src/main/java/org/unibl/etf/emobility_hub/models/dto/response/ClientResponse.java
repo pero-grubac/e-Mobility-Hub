@@ -10,4 +10,6 @@ public class ClientResponse extends UserResponse {
     private String image;
     private String email;
     private String phoneNumber;
+    private boolean isDeactivated;
+    private boolean isBlocked;
 }

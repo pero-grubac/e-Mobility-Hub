@@ -1,1 +1,15 @@
-<p>client-item works!</p>
+<div class="client-item" >
+  <img
+    [src]="client.image || 'assets/images/default-avatar.png'"
+    alt="{{ client.username }}"
+    class="client-image"
+  />
+  <p class="client-username">{{ client.username }}</p>
+  <button
+    class="block-unblock-button"
+    [class.blocked]="client.isBlocked"
+    (click)="toggleBlock(client.id)"
+  >
+    {{ client.isBlocked ? 'Unblock' : 'Block' }}
+  </button>
+</div>

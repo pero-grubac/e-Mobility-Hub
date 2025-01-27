@@ -6,6 +6,8 @@ export interface Client extends User {
   image: string;
   email: string;
   phoneNumber: string;
+  isDeactivated: boolean;
+  isBlocked: boolean;
 }
 
 export interface ClientPage {
