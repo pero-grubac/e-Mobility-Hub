@@ -7,6 +7,7 @@ import { CarListComponent } from './components/car/car-list/car-list.component';
 import { ScooterListComponent } from './components/scooter/scooter-list/scooter-list.component';
 import { ScooterDetailComponent } from './components/scooter/scooter-detail/scooter-detail.component';
 import { ManufacturerListComponent } from './components/manufacturer/manufacturer-list/manufacturer-list.component';
+import { ManufacturerDetailComponent } from './components/manufacturer/manufacturer-detail/manufacturer-detail.component';
 
 const routes: Routes = [
   { path: 'cars', component: CarListComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'scooters', component: ScooterListComponent },
   { path: 'scooter/:id', component: ScooterDetailComponent },
   { path: 'manufacturers', component: ManufacturerListComponent },
+  { path: 'manufacturer/:id', component: ManufacturerDetailComponent },
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 package org.unibl.etf.emobility_hub.base.controllers;
 
+import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +31,13 @@ public abstract class BaseCRUDController<TRequest extends BaseRequest<ID>, TResp
     }
 
     @PostMapping
-    public ResponseEntity<TResponse> create(@RequestBody TRequest request) {
+    public ResponseEntity<TResponse> create(@Valid @RequestBody TRequest request) {
         TResponse response = service.create(request);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping
-    public ResponseEntity<TResponse> update(@RequestBody TRequest request) {
+    public ResponseEntity<TResponse> update(@Valid @RequestBody TRequest request) {
         TResponse response = service.update(request);
         return ResponseEntity.ok(response);
     }

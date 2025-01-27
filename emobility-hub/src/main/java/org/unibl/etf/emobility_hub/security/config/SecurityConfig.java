@@ -88,8 +88,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/electric-bicycles/{id:[\\d]+}").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/manufacturers").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/manufacturers/{id:[\\d]+}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/manufacturers/getAll").permitAll()
                         .requestMatchers(HttpMethod.GET, "/manufacturers/getAllByName").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/manufacturers").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/manufacturers").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/manufacturers/{id:[\\d]+}").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/parse-vehicle").permitAll()
 

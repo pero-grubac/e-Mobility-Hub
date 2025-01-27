@@ -24,6 +24,8 @@ import { VehicleItemComponent } from './components/vehicle/vehicle-item/vehicle-
 import { ManufacturerItemComponent } from './components/manufacturer/manufacturer-item/manufacturer-item.component';
 import { ManufacturerListComponent } from './components/manufacturer/manufacturer-list/manufacturer-list.component';
 import { ManufacturerDetailComponent } from './components/manufacturer/manufacturer-detail/manufacturer-detail.component';
+import { AddManufacturerModalComponent } from './components/manufacturer/add-manufacturer-modal/add-manufacturer-modal.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,7 @@ import { ManufacturerDetailComponent } from './components/manufacturer/manufactu
     ManufacturerItemComponent,
     ManufacturerListComponent,
     ManufacturerDetailComponent,
+    AddManufacturerModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ import { ManufacturerDetailComponent } from './components/manufacturer/manufactu
     FormsModule,
     MatToolbarModule,
     MatDialogModule,
+    ScrollingModule,
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],

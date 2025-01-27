@@ -1,1 +1,70 @@
-<p>manufacturer-detail works!</p>
+<div class="manufacturer-detail-container" *ngIf="manufacturer">
+  <h2>Manufacturer Details</h2>
+  <form class="manufacturer-form">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        id="name"
+        [(ngModel)]="manufacturer.name"
+        name="name"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group">
+      <label for="address">Address:</label>
+      <input
+        type="text"
+        id="address"
+        [(ngModel)]="manufacturer.address"
+        name="address"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group">
+      <label for="contactPhone">Contact Phone:</label>
+      <input
+        type="text"
+        id="contactPhone"
+        [(ngModel)]="manufacturer.contactPhone"
+        name="contactPhone"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group">
+      <label for="contactEmail">Contact Email:</label>
+      <input
+        type="email"
+        id="contactEmail"
+        [(ngModel)]="manufacturer.contactEmail"
+        name="contactEmail"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group">
+      <label for="contactFax">Contact Fax:</label>
+      <input
+        type="text"
+        id="contactFax"
+        [(ngModel)]="manufacturer.contactFax"
+        name="contactFax"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group">
+      <label for="country">Country:</label>
+      <input
+        type="text"
+        id="country"
+        [(ngModel)]="manufacturer.country"
+        name="country"
+        class="form-control"
+      />
+    </div>
+  </form>
+
+  <div class="actions">
+    <button class="update-button" (click)="onUpdate()">Update</button>
+    <button class="delete-button" (click)="onDelete()">Delete</button>
+  </div>
+</div>
