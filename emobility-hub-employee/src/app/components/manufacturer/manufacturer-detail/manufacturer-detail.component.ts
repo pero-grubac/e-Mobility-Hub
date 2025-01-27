@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DetailedManufacturer } from '../../../models/manufacturer.model';
 import { ManufacturerService } from '../../../services/manufacturer.service';
 
@@ -13,6 +13,7 @@ export class ManufacturerDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private manufacturerService: ManufacturerService
   ) {}
 
@@ -33,7 +34,8 @@ export class ManufacturerDetailComponent implements OnInit {
   onUpdate(): void {
     this.manufacturerService.updateManufacturer(this.manufacturer).subscribe({
       next: () => {
-        alert('Manufacturer updated successfully!');
+        alert('Manufacturers updated successfully!');
+        this.router.navigate(['/manufacturers']);
       },
       error: (err) => {
         console.error('Error updating manufacturer:', err);
@@ -51,6 +53,7 @@ export class ManufacturerDetailComponent implements OnInit {
         .subscribe({
           next: () => {
             alert('Manufacturer deleted successfully!');
+            this.router.navigate(['/manufacturers']);
           },
           error: (err) => {
             console.error('Error deleting manufacturer:', err);

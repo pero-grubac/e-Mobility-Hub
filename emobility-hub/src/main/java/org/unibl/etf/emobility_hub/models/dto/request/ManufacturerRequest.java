@@ -28,4 +28,9 @@ public class ManufacturerRequest extends BaseRequest<Long> {
     @NotNull(message = "Contact email can not be null")
     @NotEmpty(message = "Contact email can not be empty")
     private String contactEmail;
+
+    @NotNull(message = "Contact fax can not be null")
+    @NotEmpty(message = "Contact fax can not be empty")
+    private String contactFax;
+
 }
