@@ -15,6 +15,7 @@
       *ngFor="let client of clients"
       [client]="client"
       (blockUnblock)="onBlockUnblockClient($event)"
+      (clientClick)="onClientClick($event)"
     ></app-client-item>
   </div>
 

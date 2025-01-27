@@ -1,4 +1,4 @@
-<div class="client-item" >
+<div class="client-item" (click)="onClientClick()">
   <img
     [src]="client.image || 'assets/images/default-avatar.png'"
     alt="{{ client.username }}"
@@ -8,7 +8,7 @@
   <button
     class="block-unblock-button"
     [class.blocked]="client.isBlocked"
-    (click)="toggleBlock(client.id)"
+    (click)="toggleBlock(client.id, $event)"
   >
     {{ client.isBlocked ? 'Unblock' : 'Block' }}
   </button>

@@ -1,1 +1,33 @@
-<p>client-detail works!</p>
+<div class="client-detail-container" *ngIf="client">
+  <div class="content-container">
+    <!-- Slika klijenta -->
+    <div class="image-container">
+      <img
+        [src]="client.image || 'assets/images/default-avatar.png'"
+        alt="{{ client.username }}"
+        class="client-image"
+      />
+    </div>
+
+    <!-- Informacije o klijentu -->
+    <div class="info-container">
+      <h2>Client Details</h2>
+      <div class="details-group">
+        <p><strong>Username:</strong> {{ client.username }}</p>
+        <p><strong>First Name:</strong> {{ client.firstName }}</p>
+        <p><strong>Last Name:</strong> {{ client.lastName }}</p>
+        <p><strong>Email:</strong> {{ client.email }}</p>
+        <p><strong>Phone Number:</strong> {{ client.phoneNumber }}</p>
+        <p><strong>ID Card Number:</strong> {{ client.idCardNumber }}</p>
+        <p>
+          <strong>Is Blocked:</strong>
+          {{ client.isBlocked ? 'Yes' : 'No' }}
+        </p>
+        <p>
+          <strong>Is Deactivated:</strong>
+          {{ client.isDeactivated ? 'Yes' : 'No' }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

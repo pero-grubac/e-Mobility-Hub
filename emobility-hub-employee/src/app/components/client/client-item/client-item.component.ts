@@ -11,10 +11,11 @@ export class ClientItemComponent {
   @Output() blockUnblock = new EventEmitter<number>();
   @Output() clientClick = new EventEmitter<number>();
 
-  toggleBlock(clientId: number): void {
+  toggleBlock(clientId: number, event: MouseEvent): void {
+    event.stopPropagation();
     this.blockUnblock.emit(clientId);
   }
-  onVehicleClick(): void {
+  onClientClick(): void {
     this.clientClick.emit(this.client.id);
   }
 }

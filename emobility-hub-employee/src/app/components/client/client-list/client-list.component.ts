@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Client, ClientPage } from '../../../models/client.models';
 import { ClientService } from '../../../services/client.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-list',
@@ -14,7 +15,7 @@ export class ClientListComponent {
   displayedPages: (number | string)[] = [];
   searchTerm: string = '';
 
-  constructor(private clientService: ClientService) {}
+  constructor(private clientService: ClientService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadClients();
@@ -96,5 +97,8 @@ export class ClientListComponent {
         },
       });
     }
+  }
+  onClientClick(clientId: number): void {
+    this.router.navigate(['/client', clientId]);
   }
 }
