@@ -89,6 +89,7 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/manufacturers").permitAll()
                         .requestMatchers(HttpMethod.GET, "/manufacturers/getAll").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/manufacturers/getAllByName").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/parse-vehicle").permitAll()
 
