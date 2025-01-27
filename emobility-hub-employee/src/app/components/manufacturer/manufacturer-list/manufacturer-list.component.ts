@@ -11,6 +11,9 @@ import {
   ManufacturerPage,
 } from '../../../models/manufacturer.model';
 import { ManufacturerService } from '../../../services/manufacturer.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddManufacturerModalComponent } from '../add-manufacturer-modal/add-manufacturer-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-manufacturer-list',
@@ -26,7 +29,11 @@ export class ManufacturerListComponent implements OnInit {
 
   displayedPages: (number | string)[] = [];
 
-  constructor(private manufacturerService: ManufacturerService) {}
+  constructor(
+    private manufacturerService: ManufacturerService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadManufacturers();
@@ -54,11 +61,18 @@ export class ManufacturerListComponent implements OnInit {
   }
 
   onAdd(): void {
-    console.log('Add button clicked');
+    const dialogRef = this.dialog.open(AddManufacturerModalComponent, {
+      width: '500px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadManufacturers();
+      }
+    });
   }
 
   onManufacturerSelected(manufacturerId: number): void {
-    console.log('Selected manufacturer ID:', manufacturerId);
+    this.router.navigate(['/manufacturer', manufacturerId]);
   }
 
   private updateDisplayedPages(): void {

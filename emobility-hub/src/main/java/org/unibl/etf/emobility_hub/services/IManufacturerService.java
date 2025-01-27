@@ -11,9 +11,10 @@ import org.unibl.etf.emobility_hub.models.dto.response.detailed.DetailedManufact
 import java.util.List;
 
 public interface IManufacturerService
-        extends IBaseCRUDService<ManufacturerRequest,ManufacturerResponse,DetailedManufacturerResponse,Long> {
+        extends IBaseCRUDService<ManufacturerRequest, ManufacturerResponse, DetailedManufacturerResponse, Long> {
+
     List<BaseManufacturerResponse> getAll();
 
-
-    Page<ManufacturerResponse> getAllByName(Pageable pageable,String name);
+    Page<ManufacturerResponse> getAllByName(Pageable pageable, String name);
+    
 }

@@ -4,8 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../config/environment';
 import {
   BaseManufacturer,
+  DetailedManufacturer,
   Manufacturer,
   ManufacturerPage,
+  ManufacturerRequest,
 } from '../models/manufacturer.model';
 
 @Injectable({
@@ -37,5 +39,19 @@ export class ManufacturerService {
     return this.http.get<ManufacturerPage>(`${this.baseUrl}/getAllByName`, {
       params,
     });
+  }
+  addManufacturer(manufacturer: ManufacturerRequest): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}`, manufacturer);
+  }
+  getManufacturerById(id: number): Observable<DetailedManufacturer> {
+    return this.http.get<DetailedManufacturer>(`${this.baseUrl}/${id}`);
+  }
+
+  updateManufacturer(manufacturer: DetailedManufacturer) {
+    return this.http.put(`${this.baseUrl}/${manufacturer.id}`, manufacturer);
+  }
+
+  deleteManufacturer(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
   }
 }
