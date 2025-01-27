@@ -1,3 +1,5 @@
+import { PageMetadata } from './pageMetadata.model';
+
 export interface Manufacturer {
   id: number;
   name: string;
@@ -10,4 +12,9 @@ export interface Manufacturer {
 export interface BaseManufacturer {
   id: number;
   name: string;
+}
+
+export interface ManufacturerPage {
+  content: Manufacturer[];
+  page: PageMetadata;
 }
