@@ -16,7 +16,7 @@
     <app-employee-item
       *ngFor="let employee of employees"
       [employee]="employee"
-      (employeeClick)="onEmployeeClick($event)"
+      (employeeClick)="handleEmployeeSelected($event)"
     ></app-employee-item>
   </div>
 

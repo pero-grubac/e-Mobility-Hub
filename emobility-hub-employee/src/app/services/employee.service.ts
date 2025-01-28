@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../config/environment';
 import { Observable } from 'rxjs';
-import { UserPage } from '../models/user.model';
+import { User, UserPage } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +27,8 @@ export class EmployeeService {
     return this.http.get<UserPage>(`${this.baseUrl}/getAllByUsername`, {
       params,
     });
+  }
+  getById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/${id}`);
   }
 }
