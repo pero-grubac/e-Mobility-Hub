@@ -1,1 +1,9 @@
-<p>employee-item works!</p>
+<div class="employee-item" (click)="onEmployeeClick()">
+  <img
+    [src]="getRoleImage(employee.role)"
+    alt="{{ employee.role }}"
+    class="employee-image"
+  />
+  <p class="employee-username">{{ employee.username }}</p>
+  <p class="employee-role">{{ formatRole(employee.role) }}</p>
+</div>

@@ -1,0 +1,40 @@
+.employee-item {
+  width: 250px; /* Manja širina za employee */
+  height: 200px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.employee-item:hover {
+  background-color: #f5f5f5;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
+}
+
+.employee-image {
+  width: 80px; /* Manja slika */
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%; /* Zaokružena slika */
+  margin-bottom: 8px;
+}
+
+.employee-username {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+
+.employee-role {
+  font-size: 14px;
+  color: #555;
+}
