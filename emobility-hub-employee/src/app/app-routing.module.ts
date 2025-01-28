@@ -10,6 +10,8 @@ import { ManufacturerListComponent } from './components/manufacturer/manufacture
 import { ManufacturerDetailComponent } from './components/manufacturer/manufacturer-detail/manufacturer-detail.component';
 import { ClientListComponent } from './components/client/client-list/client-list.component';
 import { ClientDetailComponent } from './components/client/client-detail/client-detail.component';
+import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
+import { EmployeeDetailComponent } from './components/employee/employee-detail/employee-detail.component';
 
 const routes: Routes = [
   { path: 'cars', component: CarListComponent },
@@ -22,6 +24,8 @@ const routes: Routes = [
   { path: 'manufacturer/:id', component: ManufacturerDetailComponent },
   { path: 'clients', component: ClientListComponent },
   { path: 'client/:id', component: ClientDetailComponent },
+  { path: 'employees', component: EmployeeListComponent },
+  { path: 'employee/:id', component: EmployeeDetailComponent },
 ];
 
 @NgModule({

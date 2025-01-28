@@ -10,7 +10,12 @@
   align-items: center; /* Vertikalno centriranje */
   margin-bottom: 32px;
 }
-
+.client-list-title {
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 16px;
+  color: #333;
+}
 .search-bar-container {
   display: flex;
   justify-content: center; /* Centriranje sadržaja unutar kontejnera */
@@ -26,14 +31,12 @@
   border-radius: 4px;
   font-size: 18px;
   transition: border-color 0.3s ease;
-  text-align: center; /* Tekst centriran unutar input-a */
 }
 
 .search-input:focus {
   border-color: #007bff;
   outline: none;
 }
-
 
 .client-list {
   display: grid;
