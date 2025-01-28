@@ -89,4 +89,9 @@ public class UserServiceImpl implements IUserService {
             throw new BadRequestException("Invalid role: " + role);
         }
     }
+
+    @Override
+    public Page<UserResponse> getAllByUsername(Pageable pageable, String search) {
+        return repository.getAllByUsernameContainingIgnoreCase(search, pageable).map(te -> mapper.map(te, UserResponse.class));
+    }
 }

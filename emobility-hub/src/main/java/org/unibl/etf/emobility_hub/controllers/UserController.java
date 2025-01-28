@@ -23,6 +23,15 @@ public class UserController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+    @GetMapping("/getByUsername")
+    public ResponseEntity<Page<UserResponse>> getAllByUsername(Pageable pageable, @RequestBody(required = false) String search) {
+        if (search != null && !search.isEmpty()) {
+            Page<UserResponse> responses = service.getAllByUsername(pageable,search);
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        }
+        return getAll(pageable);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
         UserResponse response = service.getById(id);
@@ -47,7 +56,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/changeRole/{id}")
     public ResponseEntity<UserResponse> changeRole(@PathVariable Long id, @RequestBody String role) {
         UserResponse response = service.changeRole(id, role);
         return new ResponseEntity<>(response, HttpStatus.OK);
