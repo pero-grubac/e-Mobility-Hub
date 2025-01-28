@@ -9,7 +9,12 @@
   justify-content: center;
   margin-bottom: 32px;
 }
-
+.manufacturer-list-title {
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 16px;
+  color: #333;
+}
 .search-bar-container {
   display: flex;
   align-items: center;

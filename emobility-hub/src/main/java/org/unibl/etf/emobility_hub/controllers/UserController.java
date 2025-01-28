@@ -23,10 +23,10 @@ public class UserController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @GetMapping("/getByUsername")
+    @GetMapping("/getAllByUsername")
     public ResponseEntity<Page<UserResponse>> getAllByUsername(Pageable pageable, @RequestBody(required = false) String search) {
         if (search != null && !search.isEmpty()) {
-            Page<UserResponse> responses = service.getAllByUsername(pageable,search);
+            Page<UserResponse> responses = service.getAllByUsername(pageable, search);
             return new ResponseEntity<>(responses, HttpStatus.OK);
         }
         return getAll(pageable);

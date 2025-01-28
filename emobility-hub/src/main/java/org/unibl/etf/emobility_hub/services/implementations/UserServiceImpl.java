@@ -29,7 +29,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Page<UserResponse> getAll(Pageable pageable) {
-        return repository.findAll(pageable).map(te -> mapper.map(te, UserResponse.class));
+        return repository.findAllByRoleIsNot(RoleEnum.ROLE_CLIENT,pageable).map(te -> mapper.map(te, UserResponse.class));
     }
 
     @Override
@@ -92,6 +92,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Page<UserResponse> getAllByUsername(Pageable pageable, String search) {
-        return repository.getAllByUsernameContainingIgnoreCase(search, pageable).map(te -> mapper.map(te, UserResponse.class));
+        System.out.println(RoleEnum.ROLE_CLIENT);
+        System.out.println("RoleEnum.ROLE_CLIENT");
+
+        return repository.getAllByUsernameContainingIgnoreCaseAndRoleIsNotIgnoreCase(search,RoleEnum.ROLE_CLIENT, pageable)
+                .map(te -> mapper.map(te, UserResponse.class));
     }
 }
