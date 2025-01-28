@@ -101,6 +101,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/clients/{id:[\\d]+}").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/clients/block/{id:[\\d]+}").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/users/getAllByUsername").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/users").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/users/changeRole/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/users/{id:[\\d]+}").permitAll()
+
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())

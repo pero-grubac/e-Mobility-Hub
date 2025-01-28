@@ -17,4 +17,6 @@ public interface IUserService {
     void deleteById(Long id);
 
     UserResponse changeRole(Long id, String role);
+
+    Page<UserResponse> getAllByUsername(Pageable pageable, String search);
 }
