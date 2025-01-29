@@ -43,6 +43,17 @@
         <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
       </select>
     </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        [(ngModel)]="password"
+        name="password"
+        class="form-control"
+        placeholder="Enter new password (optional)"
+      />
+    </div>
   </form>
 
   <div class="actions">

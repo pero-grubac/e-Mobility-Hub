@@ -1,0 +1,33 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <h2>Create New Employee</h2>
+    <form>
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" [(ngModel)]="employee.username" name="username" required />
+      </div>
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" [(ngModel)]="employee.firstName" name="firstName" required />
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" [(ngModel)]="employee.lastName" name="lastName" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" [(ngModel)]="employee.password" name="password" required />
+      </div>
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <select id="role" [(ngModel)]="employee.role" name="role" required>
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+      </div>
+    </form>
+    <div class="actions">
+      <button class="save-button" (click)="onSave()">Save</button>
+      <button class="cancel-button" (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+</div>

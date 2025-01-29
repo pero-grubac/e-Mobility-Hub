@@ -14,7 +14,9 @@ export interface UserRequest {
   lastName: string;
 }
 export interface DetailedUserRequest extends UserRequest {
+  id: number;
   password: string;
+  role: string;
 }
 
 export interface UserPage {

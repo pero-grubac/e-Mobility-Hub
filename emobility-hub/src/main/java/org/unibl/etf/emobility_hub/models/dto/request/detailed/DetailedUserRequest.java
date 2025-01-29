@@ -9,7 +9,9 @@ import org.unibl.etf.emobility_hub.models.dto.request.UserRequest;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DetailedUserRequest extends UserRequest {
-    @NotNull(message = "Password can not be null")
-    @NotEmpty(message = "Password can not be empty")
-    String password;
+    private String password;
+
+    @NotNull(message = "Role can not be null")
+    @NotEmpty(message = "Role can not be empty")
+    private String role;
 }

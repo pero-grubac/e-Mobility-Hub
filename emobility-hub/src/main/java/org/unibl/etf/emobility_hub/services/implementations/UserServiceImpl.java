@@ -45,11 +45,18 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserResponse create(DetailedUserRequest request) {
+        System.out.println(request);
+
         if (repository.existsByUsername(request.getUsername()))
             throw new ConflictException("Username already used");
         UserEntity user = mapper.map(request, UserEntity.class);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(RoleEnum.ROLE_PENDING);
+        try {
+            RoleEnum newRole = RoleEnum.valueOf(request.getRole().toUpperCase());
+            user.setRole(newRole);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid role: " + request.getRole().toUpperCase());
+        }
         repository.saveAndFlush(user);
         return mapper.map(user, UserResponse.class);
     }
@@ -65,6 +72,12 @@ public class UserServiceImpl implements IUserService {
         user.setUsername(request.getUsername());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+        try {
+            RoleEnum newRole = RoleEnum.valueOf(request.getRole().toUpperCase());
+            user.setRole(newRole);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid role: " + request.getRole().toUpperCase());
+        }
         repository.saveAndFlush(user);
         return mapper.map(user, UserResponse.class);
     }

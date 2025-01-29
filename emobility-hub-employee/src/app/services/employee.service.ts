@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../config/environment';
 import { Observable } from 'rxjs';
-import { User, UserPage } from '../models/user.model';
+import { DetailedUserRequest, User, UserPage } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -30,5 +30,19 @@ export class EmployeeService {
   }
   getById(id: number): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/${id}`);
+  }
+  update(user: DetailedUserRequest): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}`, user);
+  }
+  delete(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/${id}`);
+  }
+  changeRole(id: number, role: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/changeRole/${id}`, role, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+  register(user: DetailedUserRequest): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/register`, user);
   }
 }
