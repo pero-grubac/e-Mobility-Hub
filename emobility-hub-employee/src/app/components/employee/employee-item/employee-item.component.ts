@@ -22,8 +22,10 @@ export class EmployeeItemComponent {
         return 'assets/images/operator.png';
       case 'ROLE_MANAGER':
         return 'assets/images/manager.png';
+      case 'ROLE_PENDING':
+        return 'assets/images/pending.png';
       default:
-        return 'assets/images/default-avatar.png'; 
+        return 'assets/images/default-avatar.png';
     }
   }
 
@@ -35,6 +37,8 @@ export class EmployeeItemComponent {
         return 'Operator';
       case 'ROLE_MANAGER':
         return 'Manager';
+      case 'ROLE_PENDING':
+        return 'Pending';
       default:
         return 'Unknown Role';
     }

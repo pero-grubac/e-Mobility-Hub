@@ -32,6 +32,7 @@ import { EmployeeItemComponent } from './components/employee/employee-item/emplo
 import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
 import { EmployeeDetailComponent } from './components/employee/employee-detail/employee-detail.component';
 import { ClientDetailComponent } from './components/client/client-detail/client-detail.component';
+import { AddEmployeeModalComponent } from './components/employee/add-employee-modal/add-employee-modal.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { ClientDetailComponent } from './components/client/client-detail/client-
     EmployeeListComponent,
     EmployeeDetailComponent,
     ClientDetailComponent,
+    AddEmployeeModalComponent,
   ],
   imports: [
     BrowserModule,

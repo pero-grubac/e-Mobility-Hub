@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { EmployeeService } from '../../../services/employee.service';
 import { User } from '../../../models/user.model';
+import { AddEmployeeModalComponent } from '../add-employee-modal/add-employee-modal.component';
 
 @Component({
   selector: 'app-employee-list',
@@ -45,15 +46,15 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onAdd(): void {
-    /* const dialogRef = this.dialog.open(AddEmployeeModalComponent, {
+    const dialogRef = this.dialog.open(AddEmployeeModalComponent, {
       width: '600px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadEmployees();
+        this.loadEmployees(); // Osveži listu zaposlenih nakon kreiranja
       }
-    });*/
+    });
   }
 
   handleEmployeeSelected(employeeId: number): void {
