@@ -45,8 +45,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserResponse create(DetailedUserRequest request) {
-        System.out.println(request);
-
         if (repository.existsByUsername(request.getUsername()))
             throw new ConflictException("Username already used");
         UserEntity user = mapper.map(request, UserEntity.class);
