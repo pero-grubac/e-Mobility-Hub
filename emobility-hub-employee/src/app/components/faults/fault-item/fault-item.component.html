@@ -1,1 +1,5 @@
-<p>fault-item works!</p>
+<div class="fault-item">
+  <img src="assets/images/broken-vehicle.png" alt="Fault Icon" class="fault-icon" />
+  <p class="fault-description" [title]="fault.description">{{ truncatedDescription }}</p>
+  <p class="fault-time">{{ fault.creationDateTime | date:'short' }}</p>
+</div>

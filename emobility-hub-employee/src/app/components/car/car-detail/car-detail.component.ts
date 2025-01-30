@@ -162,7 +162,6 @@ export class CarDetailComponent implements OnInit {
   }
 
   seeAllFaults(): void {
-    console.log(`Viewing all faults for car with ID: ${this.car.id}`);
-    alert('See all faults functionality will be implemented later.');
+      this.router.navigate([`/faults/${this.car.id}`]);
   }
 }

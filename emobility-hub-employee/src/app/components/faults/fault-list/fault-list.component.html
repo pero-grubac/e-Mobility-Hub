@@ -1,1 +1,31 @@
-<p>fault-list works!</p>
+<h1 class="fault-list-title">Faults</h1>
+<div class="fault-list-container">
+  <div class="fault-list">
+    <app-fault-item
+      *ngFor="let fault of faults"
+      [fault]="fault"
+    ></app-fault-item>
+  </div>
+
+  <div class="pagination">
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
+      Previous
+    </button>
+
+    <button
+      *ngFor="let page of displayedPages"
+      [disabled]="!isNumber(page)"
+      [class.active]="page === currentPage"
+      (click)="handlePageClick(page)"
+    >
+      {{ page }}
+    </button>
+
+    <button
+      (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage + 1 >= totalPages"
+    >
+      Next
+    </button>
+  </div>
+</div>

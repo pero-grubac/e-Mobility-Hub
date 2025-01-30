@@ -111,7 +111,7 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/faults").permitAll()
                         .requestMatchers(HttpMethod.GET, "/faults/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/faults/getByVehicleId/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/faults/getAllByVehicleId/{id:[\\d]+}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/faults").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/faults").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/faults/{id:[\\d]+}").permitAll()

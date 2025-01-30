@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.base.services.impl.BaseCRUDServiceImpl;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
@@ -48,12 +50,6 @@ public class FaultServiceImpl
         entity.setVehicle(vehicle);
         getRepository().saveAndFlush(entity);
 
-        FaultResponse response = new FaultResponse();
-        response.setId(entity.getId());
-        response.setCreationDateTime(entity.getCreationDateTime());
-        response.setUpdateDateTime(entity.getUpdateDateTime());
-        response.setDescription(entity.getDescription());
-
         return getMapper().map(entity,FaultResponse.class);
     }
 
@@ -71,5 +67,10 @@ public class FaultServiceImpl
         return getMapper().map(entity, FaultResponse.class);
     }
 
+    @Override
+    public Page<FaultResponse> getAllByVehicleId(Pageable pageable, Long vehicleId) {
+        return ((FaultEntityRepository)getRepository()).findAllByVehicleId(vehicleId,  pageable)
+                .map(fe->getMapper().map(fe, FaultResponse.class));
+    }
 }
 
