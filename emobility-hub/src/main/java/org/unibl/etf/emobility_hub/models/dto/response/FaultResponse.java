@@ -11,5 +11,4 @@ public class FaultResponse {
     private LocalDateTime creationDateTime;
     private LocalDateTime updateDateTime;
     private TransportVehicleResponse vehicle;
-
 }
