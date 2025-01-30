@@ -7,4 +7,5 @@ export const environment = {
   scooters: '/electric-scooters',
   clients: '/clients',
   employees: '/users',
+  faults: '/faults',
 };

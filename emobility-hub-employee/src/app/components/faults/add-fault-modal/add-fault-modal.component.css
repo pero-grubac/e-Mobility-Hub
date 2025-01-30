@@ -1,0 +1,66 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  text-align: center;
+}
+
+.large-input {
+  width: 100%;
+  height: 100px; /* Veća visina input polja */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Omogućava korisnicima da menjaju visinu */
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 16px;
+}
+
+.actions .btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.actions .btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.actions .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.actions .btn-success:hover {
+  background-color: #218838;
+}
+
+.actions .btn-danger:hover {
+  background-color: #c82333;
+}

@@ -74,6 +74,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/electric-cars").permitAll()
                         .requestMatchers(HttpMethod.POST, "/electric-cars").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/electric-cars/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/electric-cars/fix/{id:[\\d]+}").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/electric-scooters/getByModel").permitAll()
                         .requestMatchers(HttpMethod.GET, "/electric-scooters/{id:[\\d]+}").permitAll()

@@ -4,8 +4,8 @@ export interface Vehicle {
   model: string;
   purchasePrice: number;
   image: string;
-  isBroken: boolean;
-  isRented: boolean;
+  broken: boolean;
+  rented: boolean;
   rentPrice: number;
 }
 
