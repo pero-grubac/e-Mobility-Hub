@@ -1,0 +1,40 @@
+.fault-item {
+  width: 250px;
+  height: 120px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+}
+
+.fault-item:hover {
+  background-color: #f1f1f1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
+}
+
+.fault-icon {
+  width: 40px;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.fault-description {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.fault-time {
+  font-size: 14px;
+  color: #555;
+}
