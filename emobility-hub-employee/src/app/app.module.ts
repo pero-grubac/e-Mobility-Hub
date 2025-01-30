@@ -35,8 +35,8 @@ import { ClientDetailComponent } from './components/client/client-detail/client-
 import { AddEmployeeModalComponent } from './components/employee/add-employee-modal/add-employee-modal.component';
 import { AddFaultModalComponent } from './components/faults/add-fault-modal/add-fault-modal.component';
 import { FaultItemComponent } from './components/faults/fault-item/fault-item.component';
-import { FaultDetailComponent } from './components/faults/fault-detail/fault-detail.component';
 import { FaultListComponent } from './components/faults/fault-list/fault-list.component';
+import { FaultDetailModalComponent } from './components/faults/fault-detail-modal/fault-detail-modal.component';
 
 @NgModule({
   declarations: [
@@ -66,8 +66,8 @@ import { FaultListComponent } from './components/faults/fault-list/fault-list.co
     AddEmployeeModalComponent,
     AddFaultModalComponent,
     FaultItemComponent,
-    FaultDetailComponent,
     FaultListComponent,
+    FaultDetailModalComponent,
   ],
   imports: [
     BrowserModule,

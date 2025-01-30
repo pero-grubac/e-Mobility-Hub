@@ -29,6 +29,7 @@ export class AddFaultModalComponent {
     }
 
     const faultRequest: FaultRequest = {
+      id: 0,
       description: this.description,
       vehicleId: this.carId,
     };

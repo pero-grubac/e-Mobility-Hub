@@ -4,6 +4,7 @@
     <app-fault-item
       *ngFor="let fault of faults"
       [fault]="fault"
+      (faultSelected)="openFaultDetails($event)"
     ></app-fault-item>
   </div>
 
