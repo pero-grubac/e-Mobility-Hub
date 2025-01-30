@@ -137,7 +137,6 @@ export class CarDetailComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Fault reported successfully!');
         this.loadCarDetails(this.car.id); 
       }
     });
@@ -145,8 +144,15 @@ export class CarDetailComponent implements OnInit {
 
   fixCar(): void {
     if (this.car.broken) {
-      console.log(`Fixing car with ID: ${this.car.id}`);
-      alert('Fix functionality will be implemented later.');
+      this.carService.fix(this.car.id).subscribe({
+        next: () => {
+          console.log(`Car with ID: ${this.car.id} fixed successfully.`);
+          this.loadCarDetails(this.car.id); // Ponovno učitavanje ažuriranih podataka
+        },
+        error: (err) => {
+          console.error('Error fixing car:', err);
+        },
+      });
     }
   }
 
