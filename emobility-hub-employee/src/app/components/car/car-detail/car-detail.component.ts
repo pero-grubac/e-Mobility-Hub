@@ -5,6 +5,8 @@ import { BaseManufacturer } from '../../../models/manufacturer.model';
 import { CarService } from '../../../services/car.service';
 import { ManufacturerService } from '../../../services/manufacturer.service';
 import { UtilService } from '../../../services/util.service';
+import { AddFaultModalComponent } from '../../faults/add-fault-modal/add-fault-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-car-detail',
@@ -23,7 +25,8 @@ export class CarDetailComponent implements OnInit {
     private router: Router,
     private carService: CarService,
     private manufacturerService: ManufacturerService,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +38,7 @@ export class CarDetailComponent implements OnInit {
   loadCarDetails(id: number): void {
     this.carService.getById(id).subscribe({
       next: (car) => {
+        console.log(car)
         this.car = car;
         this.selectedManufacturerId = car.manufacturer.id;
       },
@@ -119,5 +123,34 @@ export class CarDetailComponent implements OnInit {
         console.error('Error deleting car:', err);
       },
     });
+  }
+  reportCar(): void {
+    const dialogRef = this.dialog.open(AddFaultModalComponent, {
+      width: '400px',
+      data: this.car.id,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Fault reported successfully!');
+      }
+    });
+  }
+
+  fixCar(): void {
+    if (this.car.broken) {
+      console.log(`Fixing car with ID: ${this.car.id}`);
+      alert('Fix functionality will be implemented later.');
+    }
+  }
+
+  seeAllRentals(): void {
+    console.log(`Viewing all rentals for car with ID: ${this.car.id}`);
+    alert('See all rentals functionality will be implemented later.');
+  }
+
+  seeAllFaults(): void {
+    console.log(`Viewing all faults for car with ID: ${this.car.id}`);
+    alert('See all faults functionality will be implemented later.');
   }
 }

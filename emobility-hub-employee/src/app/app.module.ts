@@ -33,6 +33,10 @@ import { EmployeeListComponent } from './components/employee/employee-list/emplo
 import { EmployeeDetailComponent } from './components/employee/employee-detail/employee-detail.component';
 import { ClientDetailComponent } from './components/client/client-detail/client-detail.component';
 import { AddEmployeeModalComponent } from './components/employee/add-employee-modal/add-employee-modal.component';
+import { AddFaultModalComponent } from './components/faults/add-fault-modal/add-fault-modal.component';
+import { FaultItemComponent } from './components/faults/fault-item/fault-item.component';
+import { FaultDetailComponent } from './components/faults/fault-detail/fault-detail.component';
+import { FaultListComponent } from './components/faults/fault-list/fault-list.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +64,10 @@ import { AddEmployeeModalComponent } from './components/employee/add-employee-mo
     EmployeeDetailComponent,
     ClientDetailComponent,
     AddEmployeeModalComponent,
+    AddFaultModalComponent,
+    FaultItemComponent,
+    FaultDetailComponent,
+    FaultListComponent,
   ],
   imports: [
     BrowserModule,

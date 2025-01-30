@@ -1,0 +1,26 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <h2>Report Fault</h2>
+    <form>
+      <div class="form-group">
+        <label for="description">Fault Description:</label>
+        <textarea
+          id="description"
+          [(ngModel)]="description"
+          name="description"
+          class="form-control large-input"
+          (keyup)="validateDescription()"
+          placeholder="Enter fault details..."
+        ></textarea>
+        <p class="error-message" *ngIf="showError">Description is required.</p>
+      </div>
+    </form>
+
+    <div class="actions">
+      <button class="btn btn-success" [disabled]="showError" (click)="onAdd()">
+        Add
+      </button>
+      <button class="btn btn-danger" (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+</div>
