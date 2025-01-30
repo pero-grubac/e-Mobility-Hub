@@ -135,6 +135,12 @@ export class CarDetailComponent implements OnInit {
         console.log('Fault reported successfully!');
       }
     });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Fault reported successfully!');
+        this.loadCarDetails(this.car.id); 
+      }
+    });
   }
 
   fixCar(): void {
