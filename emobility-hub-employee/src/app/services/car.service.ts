@@ -35,4 +35,7 @@ export class CarService {
   addCar(carData: FormData): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}`, carData);
   }
+  fix(id: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/fix/${id}`, {});
+  }
 }

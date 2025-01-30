@@ -1,16 +1,11 @@
 package org.unibl.etf.emobility_hub;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.unibl.etf.emobility_hub.models.domain.entity.ClientEntity;
-import org.unibl.etf.emobility_hub.models.domain.entity.FaultEntity;
-import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.dto.response.ClientResponse;
-import org.unibl.etf.emobility_hub.models.dto.response.FaultResponse;
-import org.unibl.etf.emobility_hub.models.dto.response.TransportVehicleResponse;
 
 @SpringBootApplication
 public class EMobilityHubApplication {

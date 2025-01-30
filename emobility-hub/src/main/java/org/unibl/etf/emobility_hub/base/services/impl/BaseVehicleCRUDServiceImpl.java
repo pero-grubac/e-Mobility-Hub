@@ -80,7 +80,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
 
     @Override
     public Page<TResponse> findAll(Pageable pageable) {
-        return getAll(pageable, false);
+        return repository.findAll(pageable).map(e -> mapper.map(e, getResponseClass()));
     }
 
     @Override
