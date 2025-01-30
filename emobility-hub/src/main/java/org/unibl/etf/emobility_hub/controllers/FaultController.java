@@ -15,4 +15,5 @@ public class FaultController
     public FaultController(IFaultService service) {
         super(service);
     }
+    // get by vehicle id
 }
