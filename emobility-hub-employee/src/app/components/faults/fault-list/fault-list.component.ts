@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Fault, FaultPage } from '../../../models/fault.models';
 import { FaultService } from '../../../services/fault.service';
+import { FaultDetailModalComponent } from '../fault-detail-modal/fault-detail-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-fault-list',
@@ -18,7 +20,8 @@ export class FaultListComponent implements OnInit {
 
   constructor(
     private faultService: FaultService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -80,5 +83,17 @@ export class FaultListComponent implements OnInit {
 
   isNumber(page: number | string): boolean {
     return typeof page === 'number';
+  }
+  openFaultDetails(fault: Fault): void {
+    const dialogRef = this.dialog.open(FaultDetailModalComponent, {
+      width: '400px',
+      data: { fault, vehicleId: this.vehicleId },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadFaults(); // Ponovno učitaj listu nakon ažuriranja ili brisanja
+      }
+    });
   }
 }

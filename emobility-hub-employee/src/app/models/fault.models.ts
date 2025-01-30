@@ -1,6 +1,7 @@
 import { PageMetadata } from './pageMetadata.model';
 
 export interface FaultRequest {
+  id: number;
   description: string;
   vehicleId: number;
 }

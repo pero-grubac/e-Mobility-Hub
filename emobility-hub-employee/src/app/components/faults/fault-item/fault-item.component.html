@@ -1,5 +1,7 @@
-<div class="fault-item">
+<div class="fault-item" (click)="onClick()">
   <img src="assets/images/broken-vehicle.png" alt="Fault Icon" class="fault-icon" />
   <p class="fault-description" [title]="fault.description">{{ truncatedDescription }}</p>
-  <p class="fault-time">{{ fault.creationDateTime | date:'short' }}</p>
+  <p class="fault-time">
+    Update time: {{ fault.updateDateTime | date: 'dd.MM.yyyy. HH:mm' }}
+  </p>
 </div>

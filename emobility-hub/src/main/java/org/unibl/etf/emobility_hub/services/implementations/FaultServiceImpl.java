@@ -58,11 +58,13 @@ public class FaultServiceImpl
         if (!vehicleRepository.existsById(faultRequest.getVehicleId()))
             throw new EntityNotFoundException("Vehicle with ID " + faultRequest.getVehicleId() + " not found");
 
-        if (!getRepository().existsById(faultRequest.getId()))
+
+        FaultEntity entity = getRepository().findById(faultRequest.getId()).orElse(null);
+        if (entity == null)
             throw new EntityNotFoundException("Fault with ID " + faultRequest.getId() + " not found");
 
-        FaultEntity entity = getMapper().map(faultRequest, FaultEntity.class);
         entity.setUpdateDateTime(LocalDateTime.now());
+        entity.setDescription(faultRequest.getDescription());
         getRepository().saveAndFlush(entity);
         return getMapper().map(entity, FaultResponse.class);
     }
