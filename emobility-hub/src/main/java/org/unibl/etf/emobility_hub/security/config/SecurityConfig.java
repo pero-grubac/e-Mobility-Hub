@@ -123,6 +123,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/rentals/getAllByClientId/{id:[\\d]+}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/rentals/{id:[\\d]+}").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/statistics/daily-revenue").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())
