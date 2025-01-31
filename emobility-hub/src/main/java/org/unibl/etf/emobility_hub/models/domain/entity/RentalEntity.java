@@ -42,11 +42,12 @@ public class RentalEntity {
 
     @Column(nullable = true)
     private double price;
+
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private ClientEntity client;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id", nullable = false)
-    private TransportVehicleEntity vehicle;
+        private TransportVehicleEntity vehicle;
 }
