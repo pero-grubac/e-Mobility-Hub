@@ -40,4 +40,7 @@ export class ScooterService {
   addScooter(scooterData: FormData): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}`, scooterData);
   }
+  fix(id: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/fix/${id}`, {});
+  }
 }

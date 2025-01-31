@@ -81,12 +81,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/electric-scooters").permitAll()
                         .requestMatchers(HttpMethod.POST, "/electric-scooters").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/electric-scooters/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/electric-scooters/fix/{id:[\\d]+}").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/electric-bicycles/getByModel").permitAll()
                         .requestMatchers(HttpMethod.GET, "/electric-bicycles/{id:[\\d]+}").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/electric-bicycles").permitAll()
                         .requestMatchers(HttpMethod.POST, "/electric-bicycles").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/electric-bicycles/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/electric-bicycles/fix/{id:[\\d]+}").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/manufacturers").permitAll()
                         .requestMatchers(HttpMethod.GET, "/manufacturers/{id:[\\d]+}").permitAll()
