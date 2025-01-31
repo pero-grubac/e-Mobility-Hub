@@ -119,6 +119,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/faults/{id:[\\d]+}").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/rentals").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/rentals/getAllByVehicleId/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/rentals/getAllByClientId/{id:[\\d]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/rentals/{id:[\\d]+}").permitAll()
 
                         .anyRequest().authenticated()
                 )
