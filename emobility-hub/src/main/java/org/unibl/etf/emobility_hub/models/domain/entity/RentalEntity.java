@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name="rental")
+@Table(name = "rental")
 public class RentalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,5 +49,5 @@ public class RentalEntity {
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id", nullable = false)
-        private TransportVehicleEntity vehicle;
+    private TransportVehicleEntity vehicle;
 }

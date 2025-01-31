@@ -1,6 +1,7 @@
 package org.unibl.etf.emobility_hub.models.dto.response;
 
 import lombok.Data;
+import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.domain.value.Location;
 
 import java.time.LocalDateTime;
@@ -15,5 +16,4 @@ public class RentalResponse {
     private double price;
     private Location startLocation;
     private Location endLocation;
-    private Long vehicleId;
 }

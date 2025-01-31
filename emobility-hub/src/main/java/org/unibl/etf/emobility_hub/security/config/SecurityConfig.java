@@ -118,6 +118,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/faults").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/faults/{id:[\\d]+}").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/rentals").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())

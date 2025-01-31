@@ -9,6 +9,6 @@ import org.unibl.etf.emobility_hub.models.dto.response.TransportVehicleResponse;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DetailedRentalResponse extends RentalResponse {
-    private ClientResponse clientResponse;
-    private TransportVehicleResponse transportVehicleResponse;
+    private ClientResponse client;
+    private TransportVehicleResponse vehicle;
 }
