@@ -123,7 +123,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/rentals/getAllByClientId/{id:[\\d]+}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/rentals/{id:[\\d]+}").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/statistics/daily-revenue").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/statistics/getDailyRevenue").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/statistics/getRevenueByVehicleType").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/statistics/getFaultsPerVehicle").permitAll()
 
                         .anyRequest().authenticated()
                 )
