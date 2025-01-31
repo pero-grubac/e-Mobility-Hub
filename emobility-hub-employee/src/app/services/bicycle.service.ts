@@ -40,4 +40,7 @@ export class BicycleService {
   addBicycle(bicycleData: FormData): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}`, bicycleData);
   }
+  fix(id: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/fix/${id}`, {});
+  }
 }

@@ -124,7 +124,7 @@ export class CarDetailComponent implements OnInit {
       },
     });
   }
-  reportCar(): void {
+  report(): void {
     const dialogRef = this.dialog.open(AddFaultModalComponent, {
       width: '400px',
       data: this.car.id,
@@ -142,7 +142,7 @@ export class CarDetailComponent implements OnInit {
     });
   }
 
-  fixCar(): void {
+  fix(): void {
     if (this.car.broken) {
       this.carService.fix(this.car.id).subscribe({
         next: () => {

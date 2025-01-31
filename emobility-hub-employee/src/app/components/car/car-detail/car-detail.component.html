@@ -124,8 +124,8 @@
   <div class="actions">
     <button class="btn btn-success" (click)="updateCar()">Update</button>
     <button class="btn btn-danger" (click)="deleteCar()">Delete</button>
-    <button class="btn btn-warning" (click)="reportCar()">Report</button>
-    <button class="btn btn-primary" (click)="fixCar()" [disabled]="!car.broken">Fix</button>
+    <button class="btn btn-warning" (click)="report()">Report</button>
+    <button class="btn btn-primary" (click)="fix()" [disabled]="!car.broken">Fix</button>
     <button class="btn btn-secondary" (click)="seeAllRentals()">See all rentals</button>
     <button class="btn btn-info" (click)="seeAllFaults()">See all faults</button>
   </div>

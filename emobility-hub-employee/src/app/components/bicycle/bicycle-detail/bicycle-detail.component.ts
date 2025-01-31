@@ -4,6 +4,8 @@ import { DetailedBicycle } from '../../../models/bicycle.models';
 import { BaseManufacturer } from '../../../models/manufacturer.model';
 import { BicycleService } from '../../../services/bicycle.service';
 import { ManufacturerService } from '../../../services/manufacturer.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddFaultModalComponent } from '../../faults/add-fault-modal/add-fault-modal.component';
 
 @Component({
   selector: 'app-bicycle-detail',
@@ -21,7 +23,8 @@ export class BicycleDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private bicycleService: BicycleService,
-    private manufacturerService: ManufacturerService
+    private manufacturerService: ManufacturerService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -111,5 +114,45 @@ export class BicycleDetailComponent implements OnInit {
         console.error('Error deleting bicycle:', err);
       },
     });
+  }
+  report(): void {
+    const dialogRef = this.dialog.open(AddFaultModalComponent, {
+      width: '400px',
+      data: this.bicycle.id,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Fault reported successfully!');
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadBicycleDetailes(this.bicycle.id);
+      }
+    });
+  }
+
+  fix(): void {
+    if (this.bicycle.broken) {
+      this.bicycleService.fix(this.bicycle.id).subscribe({
+        next: () => {
+          console.log(`Car with ID: ${this.bicycle.id} fixed successfully.`);
+          this.loadBicycleDetailes(this.bicycle.id); // Ponovno učitavanje ažuriranih podataka
+        },
+        error: (err) => {
+          console.error('Error fixing car:', err);
+        },
+      });
+    }
+  }
+
+  seeAllRentals(): void {
+    console.log(`Viewing all rentals for car with ID: ${this.bicycle.id}`);
+    alert('See all rentals functionality will be implemented later.');
+  }
+
+  seeAllFaults(): void {
+    this.router.navigate([`/faults/${this.bicycle.id}`]);
   }
 }
