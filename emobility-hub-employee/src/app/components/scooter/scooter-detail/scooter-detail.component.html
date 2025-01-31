@@ -119,5 +119,15 @@
   <div class="actions">
     <button class="btn btn-success" (click)="updateScooter()">Update</button>
     <button class="btn btn-danger" (click)="deleteScooter()">Delete</button>
+    <button class="btn btn-warning" (click)="report()">Report</button>
+    <button class="btn btn-primary" (click)="fix()" [disabled]="!scooter.broken">
+      Fix
+    </button>
+    <button class="btn btn-secondary" (click)="seeAllRentals()">
+      See all rentals
+    </button>
+    <button class="btn btn-info" (click)="seeAllFaults()">
+      See all faults
+    </button>
   </div>
 </div>
