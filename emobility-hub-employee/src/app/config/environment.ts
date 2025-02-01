@@ -9,4 +9,5 @@ export const environment = {
   employees: '/users',
   faults: '/faults',
   rentals: '/rentals',
+  statistics: '/statistics',
 };
