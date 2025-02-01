@@ -19,7 +19,7 @@ export interface RentalPage {
   page: PageMetadata;
 }
 
-export interface DetiledRental extends Rental {
+export interface DetailedRental extends Rental {
   client: Client;
   vehicle: Vehicle;
 }

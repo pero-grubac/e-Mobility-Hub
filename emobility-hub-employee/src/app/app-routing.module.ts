@@ -13,6 +13,8 @@ import { ClientDetailComponent } from './components/client/client-detail/client-
 import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
 import { EmployeeDetailComponent } from './components/employee/employee-detail/employee-detail.component';
 import { FaultListComponent } from './components/faults/fault-list/fault-list.component';
+import { RentalListComponent } from './components/rental/rental-list/rental-list.component';
+import { RentalDetailComponent } from './components/rental/rental-detail/rental-detail.component';
 
 const routes: Routes = [
   { path: 'cars', component: CarListComponent },
@@ -28,6 +30,8 @@ const routes: Routes = [
   { path: 'employees', component: EmployeeListComponent },
   { path: 'employee/:id', component: EmployeeDetailComponent },
   { path: 'faults/:id', component: FaultListComponent },
+  { path: 'rentals/:id', component: RentalListComponent },
+  { path: 'rental/:id', component: RentalDetailComponent },
 ];
 
 @NgModule({

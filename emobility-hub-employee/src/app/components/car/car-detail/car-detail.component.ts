@@ -38,7 +38,6 @@ export class CarDetailComponent implements OnInit {
   loadCarDetails(id: number): void {
     this.carService.getById(id).subscribe({
       next: (car) => {
-        console.log(car)
         this.car = car;
         this.selectedManufacturerId = car.manufacturer.id;
       },
@@ -157,8 +156,8 @@ export class CarDetailComponent implements OnInit {
   }
 
   seeAllRentals(): void {
-    console.log(`Viewing all rentals for car with ID: ${this.car.id}`);
-    alert('See all rentals functionality will be implemented later.');
+         this.router.navigate([`/rentals/${this.car.id}`]);
+
   }
 
   seeAllFaults(): void {

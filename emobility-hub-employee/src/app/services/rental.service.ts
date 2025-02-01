@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../config/environment';
 import { Observable } from 'rxjs';
-import { DetiledRental, RentalPage } from '../models/rental.model';
+import { DetailedRental, RentalPage } from '../models/rental.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,8 +41,8 @@ export class RentalService {
       params,
     });
   }
-  
-  getById(id: number): Observable<DetiledRental> {
-    return this.http.get<DetiledRental>(`${this.baseUrl}/${id}`);
+
+  getById(id: number): Observable<DetailedRental> {
+    return this.http.get<DetailedRental>(`${this.baseUrl}/${id}`);
   }
 }
