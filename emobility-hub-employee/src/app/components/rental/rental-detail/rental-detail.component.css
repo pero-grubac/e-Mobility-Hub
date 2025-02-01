@@ -1,0 +1,18 @@
+.rental-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rental-info p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.client-info {
+  margin-top: 24px;
+}

@@ -1,1 +1,35 @@
-<p>rental-detail works!</p>
+<div class="rental-detail-container" *ngIf="rental">
+  <h1>Rental Details</h1>
+
+  <div class="rental-info">
+    <p><strong>Rental ID:</strong> {{ rental.id }}</p>
+    <p>
+      <strong>Start:</strong>
+      {{ rental.rentalStart | date : "dd.MM.yyyy, HH:mm" }}
+    </p>
+    <p>
+      <strong>End:</strong> {{ rental.rentalEnd | date : "dd.MM.yyyy, HH:mm" }}
+    </p>
+    <p><strong>Duration:</strong> {{ rental.duration }} hours</p>
+    <p>
+      <strong>Distance:</strong> {{ rental.distance | number : "1.2-2" }} km
+    </p>
+    <p><strong>Price:</strong> ${{ rental.price | number : "1.2-2" }}</p>
+    <p>
+      <strong>Start Location:</strong> ({{ rental.startLocation.latitude }},
+      {{ rental.startLocation.longitude }})
+    </p>
+    <p>
+      <strong>End Location:</strong> ({{ rental.endLocation.latitude }},
+      {{ rental.endLocation.longitude }})
+    </p>
+  </div>
+
+  <div class="client-info">
+    <h2>Client Information</h2>
+    <app-client-item
+      [client]="rental.client"
+      (clientClick)="onClientClick($event)"
+    ></app-client-item>
+  </div>
+</div>

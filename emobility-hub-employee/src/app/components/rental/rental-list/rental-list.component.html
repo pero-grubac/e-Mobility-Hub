@@ -1,1 +1,32 @@
-<p>rental-list works!</p>
+<h1 class="rental-list-title">Rentals</h1>
+<div class="rental-list-container">
+  <div class="rental-list">
+    <app-rental-item
+      *ngFor="let rental of rentals"
+      [rental]="rental"
+      (rentalClick)="onRentalSelected($event)"
+    ></app-rental-item>
+  </div>
+
+  <div class="pagination">
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
+      Previous
+    </button>
+
+    <button
+      *ngFor="let page of displayedPages"
+      [disabled]="!isNumber(page)"
+      [class.active]="page === currentPage"
+      (click)="handlePageClick(page)"
+    >
+      {{ page }}
+    </button>
+
+    <button
+      (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage + 1 >= totalPages"
+    >
+      Next
+    </button>
+  </div>
+</div>
