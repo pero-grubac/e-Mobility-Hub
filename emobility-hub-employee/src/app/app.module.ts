@@ -40,6 +40,13 @@ import { FaultDetailModalComponent } from './components/faults/fault-detail-moda
 import { RentalItemComponent } from './components/rental/rental-item/rental-item.component';
 import { RentalListComponent } from './components/rental/rental-list/rental-list.component';
 import { RentalDetailComponent } from './components/rental/rental-detail/rental-detail.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { StatisticsComponent } from './components/statistics/statistics.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -74,6 +81,7 @@ import { RentalDetailComponent } from './components/rental/rental-detail/rental-
     RentalItemComponent,
     RentalListComponent,
     RentalDetailComponent,
+    StatisticsComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,6 +92,12 @@ import { RentalDetailComponent } from './components/rental/rental-detail/rental-
     MatToolbarModule,
     MatDialogModule,
     ScrollingModule,
+    NgxChartsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
