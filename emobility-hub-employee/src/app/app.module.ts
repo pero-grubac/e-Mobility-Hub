@@ -37,6 +37,9 @@ import { AddFaultModalComponent } from './components/faults/add-fault-modal/add-
 import { FaultItemComponent } from './components/faults/fault-item/fault-item.component';
 import { FaultListComponent } from './components/faults/fault-list/fault-list.component';
 import { FaultDetailModalComponent } from './components/faults/fault-detail-modal/fault-detail-modal.component';
+import { RentalItemComponent } from './components/rental/rental-item/rental-item.component';
+import { RentalListComponent } from './components/rental/rental-list/rental-list.component';
+import { RentalDetailComponent } from './components/rental/rental-detail/rental-detail.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +71,9 @@ import { FaultDetailModalComponent } from './components/faults/fault-detail-moda
     FaultItemComponent,
     FaultListComponent,
     FaultDetailModalComponent,
+    RentalItemComponent,
+    RentalListComponent,
+    RentalDetailComponent,
   ],
   imports: [
     BrowserModule,
