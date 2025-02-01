@@ -113,44 +113,44 @@ export class ScooterDetailComponent implements OnInit {
         console.error('Error deleting scooter:', err);
       },
     });
-  }report(): void {
-      const dialogRef = this.dialog.open(AddFaultModalComponent, {
-        width: '400px',
-        data: this.scooter.id,
-      });
-  
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          console.log('Fault reported successfully!');
-        }
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.loadScooterDetailes(this.scooter.id); 
-        }
-      });
-    }
-  
-    fix(): void {
-      if (this.scooter.broken) {
-        this.scooterService.fix(this.scooter.id).subscribe({
-          next: () => {
-            console.log(`Car with ID: ${this.scooter.id} fixed successfully.`);
-            this.loadScooterDetailes(this.scooter.id); // Ponovno učitavanje ažuriranih podataka
-          },
-          error: (err) => {
-            console.error('Error fixing car:', err);
-          },
-        });
+  }
+  report(): void {
+    const dialogRef = this.dialog.open(AddFaultModalComponent, {
+      width: '400px',
+      data: this.scooter.id,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Fault reported successfully!');
       }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadScooterDetailes(this.scooter.id);
+      }
+    });
+  }
+
+  fix(): void {
+    if (this.scooter.broken) {
+      this.scooterService.fix(this.scooter.id).subscribe({
+        next: () => {
+          console.log(`Car with ID: ${this.scooter.id} fixed successfully.`);
+          this.loadScooterDetailes(this.scooter.id); // Ponovno učitavanje ažuriranih podataka
+        },
+        error: (err) => {
+          console.error('Error fixing car:', err);
+        },
+      });
     }
-  
-    seeAllRentals(): void {
-      console.log(`Viewing all rentals for car with ID: ${this.scooter.id}`);
-      alert('See all rentals functionality will be implemented later.');
-    }
-  
-    seeAllFaults(): void {
-        this.router.navigate([`/faults/${this.scooter.id}`]);
-    }
+  }
+
+  seeAllRentals(): void {
+    this.router.navigate([`/rentals/${this.scooter.id}`]);
+  }
+
+  seeAllFaults(): void {
+    this.router.navigate([`/faults/${this.scooter.id}`]);
+  }
 }

@@ -148,8 +148,7 @@ export class BicycleDetailComponent implements OnInit {
   }
 
   seeAllRentals(): void {
-    console.log(`Viewing all rentals for car with ID: ${this.bicycle.id}`);
-    alert('See all rentals functionality will be implemented later.');
+    this.router.navigate([`/rentals/${this.bicycle.id}`]);
   }
 
   seeAllFaults(): void {
