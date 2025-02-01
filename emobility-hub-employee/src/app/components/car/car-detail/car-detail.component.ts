@@ -136,7 +136,7 @@ export class CarDetailComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadCarDetails(this.car.id); 
+        this.loadCarDetails(this.car.id);
       }
     });
   }
@@ -156,11 +156,10 @@ export class CarDetailComponent implements OnInit {
   }
 
   seeAllRentals(): void {
-         this.router.navigate([`/rentals/${this.car.id}`]);
-
+    this.router.navigate([`/rentals/${this.car.id}`]);
   }
 
   seeAllFaults(): void {
-      this.router.navigate([`/faults/${this.car.id}`]);
+    this.router.navigate([`/faults/${this.car.id}`]);
   }
 }
