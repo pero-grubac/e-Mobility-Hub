@@ -1,5 +1,7 @@
+import { Client } from './client.models';
 import { Location } from './location.model';
 import { PageMetadata } from './pageMetadata.model';
+import { Vehicle } from './vehicle.model';
 
 export interface Rental {
   id: number;
@@ -15,4 +17,9 @@ export interface Rental {
 export interface RentalPage {
   content: Rental[];
   page: PageMetadata;
+}
+
+export interface DetiledRental extends Rental {
+  client: Client;
+  vehicle: Vehicle;
 }
