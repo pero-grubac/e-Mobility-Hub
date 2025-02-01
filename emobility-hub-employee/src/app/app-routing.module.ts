@@ -15,6 +15,7 @@ import { EmployeeDetailComponent } from './components/employee/employee-detail/e
 import { FaultListComponent } from './components/faults/fault-list/fault-list.component';
 import { RentalListComponent } from './components/rental/rental-list/rental-list.component';
 import { RentalDetailComponent } from './components/rental/rental-detail/rental-detail.component';
+import { StatisticsComponent } from './components/statistics/statistics.component';
 
 const routes: Routes = [
   { path: 'cars', component: CarListComponent },
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'faults/:id', component: FaultListComponent },
   { path: 'rentals/:id', component: RentalListComponent },
   { path: 'rental/:id', component: RentalDetailComponent },
+  { path: 'statistics', component: StatisticsComponent },
 ];
 
 @NgModule({

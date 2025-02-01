@@ -1,0 +1,64 @@
+<div class="chart-container">
+  <h2>Daily Revenue</h2>
+  <mat-form-field appearance="outline">
+    <mat-label>Pick a Month</mat-label>
+    <input matInput [matDatepicker]="picker" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker
+      #picker
+      startView="multi-year"
+      (monthSelected)="chooseMonth($event, picker)"
+      panelClass="month-picker"
+    ></mat-datepicker>
+  </mat-form-field>
+
+  <ngx-charts-bar-vertical
+    *ngIf="dailyRevenueData.length > 0"
+    [view]="view"
+    [scheme]="'cool'"
+    [results]="dailyRevenueData"
+    [gradient]="gradient"
+    [legend]="false"
+    [xAxis]="true"
+    [yAxis]="true"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    [animations]="animations"
+    [barPadding]="10"
+    [groupPadding]="5"
+  >
+  </ngx-charts-bar-vertical>
+</div>
+
+<div class="chart-container">
+  <h2>Revenue by Vehicle Type</h2>
+  <ngx-charts-pie-chart
+    [view]="[400, 300]"
+    [scheme]="'vivid'"
+    [results]="revenueByVehicleTypeData"
+    [legend]="true"
+    [labels]="false"
+    [doughnut]="true"
+    [animations]="true"
+    [legendPosition]="'below'"
+  >
+  </ngx-charts-pie-chart>
+  <br /><br />
+</div>
+
+<div class="chart-container">
+  <h2>Faults per Vehicle</h2>
+  <ngx-charts-bar-horizontal
+    [view]="view"
+    [scheme]="'flame'"
+    [results]="faultsPerVehicleData"
+    [legend]="false"
+    [xAxis]="true"
+    [yAxis]="true"
+    [animations]="animations"
+    [xScaleMax]="maxFaultValue + 1"
+  
+  >
+  </ngx-charts-bar-horizontal>
+  <br /><br />
+</div>
