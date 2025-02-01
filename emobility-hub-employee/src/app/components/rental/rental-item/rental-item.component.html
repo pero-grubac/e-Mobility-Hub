@@ -1,1 +1,14 @@
-<p>rental-item works!</p>
+<div class="rental-item" (click)="onRentalClick()">
+  <div class="rental-info">
+    <h3 class="rental-id">Rental ID: {{ rental.id }}</h3>
+    <p class="rental-detail">
+      <strong>Start:</strong> {{ rental.rentalStart | date: 'dd.MM.yyyy HH:mm' }}
+    </p>
+    <p class="rental-detail">
+      <strong>End:</strong> {{ rental.rentalEnd | date: 'dd.MM.yyyy HH:mm' }}
+    </p>
+    <p class="rental-detail"><strong>Duration:</strong> {{ rental.duration }} hours</p>
+    <p class="rental-detail"><strong>Distance:</strong> {{ rental.distance }} km</p>
+    <p class="rental-detail"><strong>Price:</strong> ${{ rental.price | number: '1.2-2' }}</p>
+  </div>
+</div>
