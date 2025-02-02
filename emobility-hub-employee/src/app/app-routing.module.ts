@@ -100,6 +100,12 @@ const routes: Routes = [
     data: { roles: ['ROLE_ADMIN'] },
   },
   {
+    path: 'rentals',
+    component: RentalListComponent,
+    canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
+  {
     path: 'rentals/:id',
     component: RentalListComponent,
     canActivate: [authGuard],

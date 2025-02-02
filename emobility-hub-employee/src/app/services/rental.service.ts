@@ -45,4 +45,13 @@ export class RentalService {
   getById(id: number): Observable<DetailedRental> {
     return this.http.get<DetailedRental>(`${this.baseUrl}/${id}`);
   }
+  getAll(page: number, size: number): Observable<RentalPage> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', 'id,desc');
+    return this.http.get<RentalPage>(`${this.baseUrl}`, {
+      params,
+    });
+  }
 }

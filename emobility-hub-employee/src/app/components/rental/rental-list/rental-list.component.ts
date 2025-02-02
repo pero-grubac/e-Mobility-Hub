@@ -25,13 +25,24 @@ export class RentalListComponent implements OnInit {
   ngOnInit(): void {
     this.vehicleId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.vehicleId) {
-      this.loadRentals();
+      this.loadRentalsByVehicleId();
     } else {
-      console.error('Vehicle ID not found in URL.');
+      this.loadRentals();
     }
   }
-
   loadRentals(): void {
+    this.rentalService.getAll(this.currentPage, this.pageSize).subscribe({
+      next: (data: RentalPage) => {
+        this.rentals = data.content;
+        this.totalPages = data.page.totalPages;
+        this.updateDisplayedPages();
+      },
+      error: (err) => {
+        console.error('Error fetching rentals:', err);
+      },
+    });
+  }
+  loadRentalsByVehicleId(): void {
     this.rentalService
       .getAllByVehicleId(this.currentPage, this.pageSize, this.vehicleId)
       .subscribe({
@@ -49,7 +60,7 @@ export class RentalListComponent implements OnInit {
   goToPage(page: number): void {
     if (page >= 0 && page < this.totalPages) {
       this.currentPage = page;
-      this.loadRentals();
+      this.loadRentalsByVehicleId();
     }
   }
 
