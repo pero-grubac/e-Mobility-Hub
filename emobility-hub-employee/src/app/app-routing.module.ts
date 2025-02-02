@@ -73,13 +73,13 @@ const routes: Routes = [
     path: 'clients',
     component: ClientListComponent,
     canActivate: [authGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] },
+    data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'] },
   },
   {
     path: 'client/:id',
     component: ClientDetailComponent,
     canActivate: [authGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] },
+    data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'] },
   },
   {
     path: 'employees',
@@ -115,7 +115,7 @@ const routes: Routes = [
     path: 'rental/:id',
     component: RentalDetailComponent,
     canActivate: [authGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] },
+    data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'] },
   },
   {
     path: 'statistics',

@@ -6,6 +6,7 @@ import { ManufacturerService } from '../../../services/manufacturer.service';
 import { ScooterService } from '../../../services/scooter.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddFaultModalComponent } from '../../faults/add-fault-modal/add-fault-modal.component';
+import { JWTService } from '../../../services/jwt.service';
 
 @Component({
   selector: 'app-scooter-detail',
@@ -18,13 +19,15 @@ export class ScooterDetailComponent implements OnInit {
   selectedManufacturerId: number | null = null;
   selectedImageFile: File | null = null;
   selectedImagePreview: string | null = null;
+  userRole: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private scooterService: ScooterService,
     private manufacturerService: ManufacturerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private jwtService: JWTService
   ) {}
 
   ngOnInit(): void {
@@ -152,5 +155,8 @@ export class ScooterDetailComponent implements OnInit {
 
   seeAllFaults(): void {
     this.router.navigate([`/faults/${this.scooter.id}`]);
+  }
+  hasRole(requiredRoles: string[]): boolean {
+    return this.jwtService.hasRole(requiredRoles);
   }
 }

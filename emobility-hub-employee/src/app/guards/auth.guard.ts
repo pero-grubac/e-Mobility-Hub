@@ -11,7 +11,6 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     try {
       const decodedToken = jwtDecode<CustomJwtPayload>(token);
       const userRole = decodedToken.role;
-
       const requiredRoles: string[] = route.data['roles'] || [];
 
       if (requiredRoles.length === 0 || requiredRoles.includes(userRole)) {
