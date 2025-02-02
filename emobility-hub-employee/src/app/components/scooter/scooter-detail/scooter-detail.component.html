@@ -11,7 +11,7 @@
         alt="{{ scooter.model }}"
         class="scooter-image"
       />
-      <div class="image-info">
+      <div class="image-info" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])">
         <p><strong>Upload Image</strong></p>
         <label for="imageUpload" class="custom-file-upload">
           Choose File
@@ -62,6 +62,7 @@
             name="rentPrice"
             class="form-control"
             required
+            [disabled]="!hasRole(['ROLE_MANAGER'])"
           />
         </div>
 
@@ -76,7 +77,7 @@
         </div>
 
         <!-- Izbor proizvođača -->
-        <div class="form-group">
+        <div class="form-group" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])">
           <label>Manufacturer</label>
           <select
             [(ngModel)]="selectedManufacturerId"
@@ -117,16 +118,47 @@
 
   <!-- Akcije -->
   <div class="actions">
-    <button class="btn btn-success" (click)="updateScooter()">Update</button>
-    <button class="btn btn-danger" (click)="deleteScooter()">Delete</button>
-    <button class="btn btn-warning" (click)="report()">Report</button>
-    <button class="btn btn-primary" (click)="fix()" [disabled]="!scooter.broken">
+    <button
+      class="btn btn-success"
+      (click)="updateScooter()"
+      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    >
+      Update
+    </button>
+    <button
+      class="btn btn-danger"
+      (click)="deleteScooter()"
+      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    >
+      Delete
+    </button>
+    <button
+      class="btn btn-warning"
+      (click)="report()"
+      *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
+    >
+      Report
+    </button>
+    <button
+      class="btn btn-primary"
+      (click)="fix()"
+      [disabled]="!scooter.broken"
+      *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
+    >
       Fix
     </button>
-    <button class="btn btn-secondary" (click)="seeAllRentals()">
+    <button
+      class="btn btn-secondary"
+      (click)="seeAllRentals()"
+      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    >
       See all rentals
     </button>
-    <button class="btn btn-info" (click)="seeAllFaults()">
+    <button
+      class="btn btn-info"
+      (click)="seeAllFaults()"
+      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    >
       See all faults
     </button>
   </div>

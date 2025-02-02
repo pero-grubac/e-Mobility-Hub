@@ -7,7 +7,7 @@
     mat-button
     routerLink="/cars"
     class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
   >
     Car
   </button>
@@ -15,7 +15,7 @@
     mat-button
     routerLink="/bicycles"
     class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
   >
     Bicycle
   </button>
@@ -23,7 +23,7 @@
     mat-button
     routerLink="/scooters"
     class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
   >
     Scooter
   </button>
@@ -39,7 +39,7 @@
     mat-button
     routerLink="/clients"
     class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
   >
     Client
   </button>
@@ -66,14 +66,6 @@
     *ngIf="hasRole(['ROLE_MANAGER'])"
   >
     Statistic
-  </button>
-  <button
-    mat-button
-    routerLink="/prices"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_MANAGER'])"
-  >
-    Price
   </button>
   <button mat-button color="warn" (click)="onLogout()" class="logout-button">
     Logout

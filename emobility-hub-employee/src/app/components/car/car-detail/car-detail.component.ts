@@ -7,6 +7,7 @@ import { ManufacturerService } from '../../../services/manufacturer.service';
 import { UtilService } from '../../../services/util.service';
 import { AddFaultModalComponent } from '../../faults/add-fault-modal/add-fault-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { JWTService } from '../../../services/jwt.service';
 
 @Component({
   selector: 'app-car-detail',
@@ -19,6 +20,7 @@ export class CarDetailComponent implements OnInit {
   selectedManufacturerId: number | null = null; // Selektovani proizvođač
   selectedImageFile: File | null = null;
   selectedImagePreview: string | null = null;
+  userRole: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,13 +28,15 @@ export class CarDetailComponent implements OnInit {
     private carService: CarService,
     private manufacturerService: ManufacturerService,
     private utilService: UtilService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private jwtService: JWTService
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadCarDetails(id);
     this.loadManufacturers();
+    this.userRole = this.jwtService.getRole();
   }
 
   loadCarDetails(id: number): void {
@@ -161,5 +165,10 @@ export class CarDetailComponent implements OnInit {
 
   seeAllFaults(): void {
     this.router.navigate([`/faults/${this.car.id}`]);
+  }
+  hasRole(requiredRoles: string[]): boolean {
+    return this.jwtService.hasRole(requiredRoles);
+    // TODO
+    // for input [disabled]="!hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
   }
 }
