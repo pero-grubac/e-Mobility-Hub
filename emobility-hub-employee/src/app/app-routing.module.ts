@@ -21,68 +21,95 @@ import { authGuard } from './guards/auth.guard';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 
 const routes: Routes = [
-  { path: 'cars', component: CarListComponent, canActivate: [authGuard] },
-  { path: 'car/:id', component: CarDetailComponent, canActivate: [authGuard] },
+  {
+    path: 'cars',
+    component: CarListComponent,
+    canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
+  {
+    path: 'car/:id',
+    component: CarDetailComponent,
+    canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
   {
     path: 'bicycles',
     component: BicycleListComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'bicycle/:id',
     component: BicycleDetailComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'scooters',
     component: ScooterListComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'scooter/:id',
     component: ScooterDetailComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'manufacturers',
     component: ManufacturerListComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'manufacturer/:id',
     component: ManufacturerDetailComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
-  { path: 'clients', component: ClientListComponent, canActivate: [authGuard] },
+  {
+    path: 'clients',
+    component: ClientListComponent,
+    canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
+  },
   {
     path: 'client/:id',
     component: ClientDetailComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'employees',
     component: EmployeeListComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'employee/:id',
     component: EmployeeDetailComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'faults/:id',
     component: FaultListComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'rentals/:id',
     component: RentalListComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'rental/:id',
     component: RentalDetailComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_ADMIN'] },
   },
   {
     path: 'statistics',
@@ -94,6 +121,7 @@ const routes: Routes = [
     path: '',
     component: WelcomeComponent,
     canActivate: [authGuard],
+    data: { roles: [] },
   },
   { path: '**', redirectTo: '/' },
 ];

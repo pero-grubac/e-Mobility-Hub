@@ -3,20 +3,20 @@
     <span class="logo">eMobilityHub</span>
   </a>
   <span class="spacer"></span>
-  <button mat-button routerLink="/cars" class="menu-button">Car</button>
-  <button mat-button routerLink="/bicycles" class="menu-button">Bicycle</button>
-  <button mat-button routerLink="/scooters" class="menu-button">Scooter</button>
-  <button mat-button routerLink="/manufacturers" class="menu-button">
+  <button mat-button routerLink="/cars" class="menu-button" *ngIf="hasRole(['ROLE_ADMIN'])">Car</button>
+  <button mat-button routerLink="/bicycles" class="menu-button" *ngIf="hasRole(['ROLE_ADMIN'])">Bicycle</button>
+  <button mat-button routerLink="/scooters" class="menu-button" *ngIf="hasRole(['ROLE_ADMIN'])">Scooter</button>
+  <button mat-button routerLink="/manufacturers" class="menu-button" *ngIf="hasRole(['ROLE_ADMIN'])">
     Manufacturer
   </button>
-  <button mat-button routerLink="/clients" class="menu-button">Client</button>
-  <button mat-button routerLink="/employees" class="menu-button">
+  <button mat-button routerLink="/clients" class="menu-button" *ngIf="hasRole(['ROLE_ADMIN'])">Client</button>
+  <button mat-button routerLink="/employees" class="menu-button" *ngIf="hasRole(['ROLE_ADMIN'])">
     Employee
   </button>
-  <button mat-button routerLink="/statistics" class="menu-button">
+  <button mat-button routerLink="/statistics" class="menu-button" *ngIf="hasRole(['ROLE_MANAGER'])">
     Statistic
   </button>
-  <button mat-button routerLink="/prices" class="menu-button">Price</button>
+  <button mat-button routerLink="/prices" class="menu-button" *ngIf="hasRole(['ROLE_MANAGER'])">Price</button>
   <button mat-button color="warn"  (click)="onLogout()" class="logout-button">
     Logout
   </button>
