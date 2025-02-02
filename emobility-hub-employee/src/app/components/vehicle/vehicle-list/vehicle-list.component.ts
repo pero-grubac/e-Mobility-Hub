@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { Vehicle } from '../../../models/vehicle.model';
 import { ParseVehicle } from '../../../services/parseVehicle.service';
+import { JWTService } from '../../../services/jwt.service';
 
 @Component({
   selector: 'app-vehicle-list',
@@ -15,7 +16,12 @@ import { ParseVehicle } from '../../../services/parseVehicle.service';
   styleUrls: ['./vehicle-list.component.css'],
 })
 export class VehicleListComponent implements OnInit, OnChanges {
-  constructor(private parseVehicle: ParseVehicle) {}
+  userRole: string | null = null;
+
+  constructor(
+    private parseVehicle: ParseVehicle,
+    private jwtService: JWTService
+  ) {}
   @Input() vehicles: Vehicle[] = [];
   @Input() entityType: string = '';
 
@@ -88,9 +94,12 @@ export class VehicleListComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.userRole = this.jwtService.getRole();
     this.updateDisplayedPages();
   }
-
+  hasRole(requiredRoles: string[]): boolean {
+    return this.jwtService.hasRole(requiredRoles);
+  }
   ngOnChanges(): void {
     this.updateDisplayedPages();
   }
