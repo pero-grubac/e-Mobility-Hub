@@ -12,13 +12,22 @@ public class RentalBean implements Serializable {
 	private static final Logger logger = Logger.getLogger(RentalBean.class.getName());
 	private static PaginatedResponse<RentalEntity> rentals = new PaginatedResponse<RentalEntity>();
 
-	public boolean makeRent(RentalEntity entity) {
+	public RentalEntity makeRent(RentalEntity entity) {
 		try {
 			return RentalDAO.createRental(entity);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
 		}
-		return false;
+		return null;
+	}
+
+	public RentalEntity getById(Long id) {
+		try {
+			return RentalDAO.getById(id);
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+		}
+		return null;
 	}
 
 	public boolean getRentals(int page, int size, Long clientId) {

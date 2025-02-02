@@ -60,6 +60,14 @@
 
 							<button class="btn btn-warning"
 								onclick="openBrokenModal('<%=car.getId()%>')">Broken</button>
+							<form method="get" action="clients">
+								<input type="hidden" name="action" value="downloadPdf">
+								<input type="hidden" name="rentalId"
+									id="rentalId_<%=car.getId()%>">
+								<button type="submit" class="btn btn-primary mt-2"
+									id="downloadPdfButton_<%=car.getId()%>" style="display: none;">
+									Download Rental PDF</button>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -81,7 +89,7 @@
 				<%
 				int totalPages = cars.getPage().getTotalPages();
 				int currentPage = (session.getAttribute("currentPage") != null) ? (Integer) session.getAttribute("currentPage") : 1;
-				int visiblePages = 3; 
+				int visiblePages = 3;
 
 				if (currentPage > visiblePages + 1) {
 				%>
@@ -234,21 +242,25 @@
 			modal.show();
 		}
 		function submitRentForm() {
-		    const rentalStart = document.getElementById("rentalStart").value;
-		    const rentalEnd = document.getElementById("rentalEnd").value;
-		    const startLatitude = document.getElementById("startLatitude").value;
-		    const startLongitude = document.getElementById("startLongitude").value;
-		    const endLatitude = document.getElementById("endLatitude").value;
-		    const endLongitude = document.getElementById("endLongitude").value;
+			const rentalStart = document.getElementById("rentalStart").value;
+			const rentalEnd = document.getElementById("rentalEnd").value;
+			const startLatitude = document.getElementById("startLatitude").value;
+			const startLongitude = document.getElementById("startLongitude").value;
+			const endLatitude = document.getElementById("endLatitude").value;
+			const endLongitude = document.getElementById("endLongitude").value;
 
-		    if (!rentalStart || !rentalEnd || !startLatitude || !startLongitude || !endLatitude || !endLongitude) {
-		        alert("All fields are required!");
-		        return;
-		    }
+			if (!rentalStart || !rentalEnd || !startLatitude || !startLongitude
+					|| !endLatitude || !endLongitude) {
+				alert("All fields are required!");
+				return;
+			}
 
-		    document.getElementById("rentForm").submit();
+			document.getElementById("rentForm").submit();
 		}
-
+		function showDownloadPdfButton(rentalId, vehicleId) {
+			document.getElementById("rentalId_" + vehicleId).value = rentalId;
+			document.getElementById("downloadPdfButton_" + vehicleId).style.display = "inline-block";
+		}
 	</script>
 
 	<script

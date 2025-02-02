@@ -3,6 +3,7 @@ package org.unibl.etf.emobility_hub_user.controller;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -26,6 +27,13 @@ import org.unibl.etf.emobility_hub_user.beans.TransportVehicleBean;
 import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
 import org.unibl.etf.emobility_hub_user.models.entity.RentalEntity;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+
 @MultipartConfig
 @WebServlet("/clients")
 public class ClientController extends HttpServlet {
@@ -39,7 +47,12 @@ public class ClientController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		String action = request.getParameter("action");
+		if ("downloadPdf".equals(action)) {
+			generateRentalPdf(request, response);
+			return;
+		}
 		String address = handleAction(request, response, action);
 		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 		dispatcher.forward(request, response);
@@ -120,17 +133,59 @@ public class ClientController extends HttpServlet {
 				return;
 			}
 			rental.setClientId(clientBean.getEntity().getId());
-			if (rentalBean.makeRent(rental)) {
-				session.setAttribute("successMessage", "Rental created successfully!");
+			RentalEntity createdRental = rentalBean.makeRent(rental);
+			if (createdRental != null) {
+				response.sendRedirect("clients?action=downloadPdf&vehicleId=" + createdRental.getVehicleId()
+						+ "&rentalId=" + createdRental.getId());
 			} else {
 				session.setAttribute("errorMessage", "Failed to create rental.");
+				response.sendRedirect("clients?action=welcome");
+				return;
+			}
+
+		} catch (Exception e) {
+	        session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+	        e.printStackTrace();
+	        response.sendRedirect("clients?action=welcome");
+	        return; 
+	    }
+	}
+
+	private void generateRentalPdf(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			long rentalId = Long.parseLong(request.getParameter("rentalId"));
+			RentalBean rentalBean = new RentalBean();
+			RentalEntity rental = rentalBean.getById(rentalId);
+			if (rental == null) {
+				response.sendRedirect("clients?action=welcome");
+				return;
+			}
+
+			response.setContentType("application/pdf");
+			response.setHeader("Content-Disposition", "attachment; filename=rental_" + rentalId + ".pdf");
+
+			try (OutputStream out = response.getOutputStream()) {
+				Document document = new Document();
+				PdfWriter.getInstance(document, out);
+				document.open();
+
+				Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
+				Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK);
+
+				document.add(new Paragraph("Rental Details", titleFont));
+				document.add(new Paragraph("Rental ID: " + rental.getId(), normalFont));
+				document.add(new Paragraph("Vehicle ID: " + rental.getVehicleId(), normalFont));
+				document.add(new Paragraph("Client ID: " + rental.getClientId(), normalFont));
+				document.add(new Paragraph("Rental Start: " + rental.getRentalStart(), normalFont));
+				document.add(new Paragraph("Rental End: " + rental.getRentalEnd(), normalFont));
+				document.add(new Paragraph("Distance Traveled: " + rental.getDistance() + " km", normalFont));
+				document.add(new Paragraph("Total Price: $" + rental.getPrice(), normalFont));
+
+				document.close();
 			}
 		} catch (Exception e) {
-			session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
 			e.printStackTrace();
 		}
-
-		response.sendRedirect("clients?action=welcome");
 	}
 
 	private double calculateDistance(double startLat, double startLon, double endLat, double endLon) {
@@ -381,10 +436,8 @@ public class ClientController extends HttpServlet {
 						is.read(data);
 						fos.write(data);
 					}
-					String baseUrl = request.getScheme() + "://" + 
-							request.getServerName() + 
-							":" + request.getServerPort() +
-							request.getContextPath() + "/"; 
+					String baseUrl = request.getScheme() + "://" + request.getServerName() + ":"
+							+ request.getServerPort() + request.getContextPath() + "/";
 
 					String dbPath = baseUrl + relativePath + "/" + fileName;
 					dbPath = dbPath.replace("\\", "/");
