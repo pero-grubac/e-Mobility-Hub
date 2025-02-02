@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
-import { CustomJwtPayload } from '../../models/jwt.models';
+import { JWTService } from '../../services/jwt.service';
 
 @Component({
   selector: 'app-header',
@@ -11,27 +10,17 @@ import { CustomJwtPayload } from '../../models/jwt.models';
 export class HeaderComponent implements OnInit {
   userRole: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private jwtService: JWTService) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      try {
-        const decodedToken = jwtDecode<CustomJwtPayload>(token);
-        this.userRole = decodedToken.role;
-      } catch (error) {
-        console.error('Invalid token:', error);
-        this.userRole = null;
-      }
-    }
+    this.userRole = this.jwtService.getRole();
   }
 
   onLogout(): void {
-    localStorage.removeItem('jwt');
-
+    this.jwtService.removeJWT();
     this.router.navigate(['/login']);
   }
   hasRole(requiredRoles: string[]): boolean {
-    return this.userRole ? requiredRoles.includes(this.userRole) : false;
+    return this.jwtService.hasRole(requiredRoles);
   }
 }
