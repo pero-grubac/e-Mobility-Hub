@@ -18,7 +18,7 @@ export class LoginComponent {
     this.authService.login(this.authRequest).subscribe({
       next: (response) => {
         const token = response.token;
-        localStorage.setItem('jwt', token);
+        sessionStorage.setItem('jwt', token);
         this.router.navigate(['/']);
       },
       error: (error) => {

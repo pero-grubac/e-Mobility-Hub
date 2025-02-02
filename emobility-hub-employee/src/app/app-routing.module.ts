@@ -18,6 +18,7 @@ import { RentalDetailComponent } from './components/rental/rental-detail/rental-
 import { StatisticsComponent } from './components/statistics/statistics.component';
 import { LoginComponent } from './components/login/login.component';
 import { authGuard } from './guards/auth.guard';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 
 const routes: Routes = [
   { path: 'cars', component: CarListComponent, canActivate: [authGuard] },
@@ -89,6 +90,12 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   { path: 'login', component: LoginComponent },
+  {
+    path: '',
+    component: WelcomeComponent,
+    canActivate: [authGuard],
+  },
+  { path: '**', redirectTo: '/' },
 ];
 
 @NgModule({
