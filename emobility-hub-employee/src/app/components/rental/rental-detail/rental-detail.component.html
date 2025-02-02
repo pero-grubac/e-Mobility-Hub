@@ -25,11 +25,21 @@
     </p>
   </div>
 
-  <div class="client-info">
-    <h2>Client Information</h2>
-    <app-client-item
-      [client]="rental.client"
-      (clientClick)="onClientClick($event)"
-    ></app-client-item>
+  <div class="details-row">
+    <div class="client-info">
+      <h2>Client Information</h2>
+      <app-client-item
+        [client]="rental.client"
+        (clientClick)="onClientClick($event)"
+      ></app-client-item>
+    </div>
+
+    <div class="vehicle-info">
+      <h2>Vehicle Information</h2>
+      <app-vehicle-item
+        [vehicle]="rental.vehicle"
+        (vehicleClick)="onVehicleSelected($event)"
+      ></app-vehicle-item>
+    </div>
   </div>
 </div>
