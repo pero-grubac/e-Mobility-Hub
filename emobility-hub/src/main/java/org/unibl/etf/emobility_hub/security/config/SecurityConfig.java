@@ -127,6 +127,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/statistics/getRevenueByVehicleType").permitAll()
                         .requestMatchers(HttpMethod.GET, "/statistics/getFaultsPerVehicle").permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())

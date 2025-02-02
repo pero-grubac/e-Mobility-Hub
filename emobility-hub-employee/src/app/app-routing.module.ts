@@ -16,24 +16,79 @@ import { FaultListComponent } from './components/faults/fault-list/fault-list.co
 import { RentalListComponent } from './components/rental/rental-list/rental-list.component';
 import { RentalDetailComponent } from './components/rental/rental-detail/rental-detail.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
+import { LoginComponent } from './components/login/login.component';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: 'cars', component: CarListComponent },
-  { path: 'car/:id', component: CarDetailComponent },
-  { path: 'bicycles', component: BicycleListComponent },
-  { path: 'bicycle/:id', component: BicycleDetailComponent },
-  { path: 'scooters', component: ScooterListComponent },
-  { path: 'scooter/:id', component: ScooterDetailComponent },
-  { path: 'manufacturers', component: ManufacturerListComponent },
-  { path: 'manufacturer/:id', component: ManufacturerDetailComponent },
-  { path: 'clients', component: ClientListComponent },
-  { path: 'client/:id', component: ClientDetailComponent },
-  { path: 'employees', component: EmployeeListComponent },
-  { path: 'employee/:id', component: EmployeeDetailComponent },
-  { path: 'faults/:id', component: FaultListComponent },
-  { path: 'rentals/:id', component: RentalListComponent },
-  { path: 'rental/:id', component: RentalDetailComponent },
-  { path: 'statistics', component: StatisticsComponent },
+  { path: 'cars', component: CarListComponent, canActivate: [authGuard] },
+  { path: 'car/:id', component: CarDetailComponent, canActivate: [authGuard] },
+  {
+    path: 'bicycles',
+    component: BicycleListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'bicycle/:id',
+    component: BicycleDetailComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'scooters',
+    component: ScooterListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'scooter/:id',
+    component: ScooterDetailComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'manufacturers',
+    component: ManufacturerListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'manufacturer/:id',
+    component: ManufacturerDetailComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'clients', component: ClientListComponent, canActivate: [authGuard] },
+  {
+    path: 'client/:id',
+    component: ClientDetailComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'employees',
+    component: EmployeeListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'employee/:id',
+    component: EmployeeDetailComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'faults/:id',
+    component: FaultListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'rentals/:id',
+    component: RentalListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'rental/:id',
+    component: RentalDetailComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'statistics',
+    component: StatisticsComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({
