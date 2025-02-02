@@ -47,6 +47,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { MatInputModule } from '@angular/material/input';
     RentalListComponent,
     RentalDetailComponent,
     StatisticsComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
