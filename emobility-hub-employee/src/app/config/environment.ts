@@ -10,4 +10,5 @@ export const environment = {
   faults: '/faults',
   rentals: '/rentals',
   statistics: '/statistics',
+  auth: '/auth',
 };
