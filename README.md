@@ -5,17 +5,7 @@
     
   <h2>📌 Project Overview</h2>
     <p>The <strong>eMobilityHub</strong> is a web-based platform designed for a fictional company specializing in renting electric vehicles such as <strong>cars, bikes, and scooters</strong>. The system is composed of multiple applications and functionalities, ensuring seamless rental management, vehicle tracking, and user administration.</p>
-    
-  <h2>🏗️ Technologies Used</h2>
-    <ul>
-        <li><strong>Backend:</strong> Spring Boot 🚀, Spring Security 🔐, RESTful API 🌐, JWT Authentication 🔑</li>
-        <li><strong>Frontend:</strong> Angular ⚡, Angular Material 🎨, Bootstrap 🎭, HTML 🖥️, CSS 🎨</li>
-        <li><strong>Database:</strong> MySQL 🗄️</li>
-        <li><strong>Additional Services:</strong> RSS Generator 📢, RSS Feeds 🔄, JSP M2 📄, Mockaroo 📊</li>
-        <li><strong>Architecture:</strong> MVC 🏛️</li>
-    </ul>
-    
-  <h2>✨ Features</h2>
+    <h2>✨ Features</h2>
     <h3>🚘 Vehicle Management</h3>
     <ul>
         <li>Electric Cars, Bikes, and Scooters with detailed specifications</li>
