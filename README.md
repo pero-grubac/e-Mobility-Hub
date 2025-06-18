@@ -1,8 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-    <h1>🚗🛵🚴 eMobilityHub</h1>
-    
+  <h1 align="center">🚗🛵🚴 eMobilityHub</h1>
+    <p align="center">
+    <img src="https://img.shields.io/badge/MySQL-Database-blue?logo=mysql&logoColor=white" />
+    <img src="https://img.shields.io/badge/Angular-Frontend-red?logo=angular&logoColor=white" />
+    <img src="https://img.shields.io/badge/Spring-Framework-6DB33F?logo=spring&logoColor=white" />
+    <img src="https://img.shields.io/badge/Spring%20Security-Enabled-green?logo=springsecurity&logoColor=white" />
+    <img src="https://img.shields.io/badge/JSP-Views-orange?logo=java&logoColor=white" />
+    <img src="https://img.shields.io/badge/JSPM2-Module_Loader-yellow?logo=javascript&logoColor=black" />
+    <img src="https://img.shields.io/badge/Bootstrap-UI-blueviolet?logo=bootstrap&logoColor=white" />
+  </p>
   <h2>📌 Project Overview</h2>
     <p>The <strong>eMobilityHub</strong> is a web-based platform designed for a fictional company specializing in renting electric vehicles such as <strong>cars, bikes, and scooters</strong>. The system is composed of multiple applications and functionalities, ensuring seamless rental management, vehicle tracking, and user administration.</p>
     <h2>✨ Features</h2>
