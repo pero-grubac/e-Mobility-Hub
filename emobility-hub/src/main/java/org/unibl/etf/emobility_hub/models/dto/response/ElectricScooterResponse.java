@@ -5,6 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ElectricScooterResponse extends TransportVehicleResponse{
+public class ElectricScooterResponse extends TransportVehicleResponse {
     private double maxSpeed;
 }

@@ -8,10 +8,9 @@ describe('CarListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CarListComponent]
-    })
-    .compileComponents();
-    
+      declarations: [CarListComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(CarListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -8,10 +8,9 @@ describe('FaultListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FaultListComponent]
-    })
-    .compileComponents();
-    
+      declarations: [FaultListComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(FaultListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

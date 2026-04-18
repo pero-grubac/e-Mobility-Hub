@@ -3,7 +3,7 @@ package org.unibl.etf.emobility_hub_user.models.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ClientEntity implements Serializable{
+public class ClientEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String username;

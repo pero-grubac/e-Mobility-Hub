@@ -8,13 +8,14 @@ import { DetailedRental, RentalPage } from '../models/rental.model';
   providedIn: 'root',
 })
 export class RentalService {
+  baseUrl: string = `${environment.baseUrl}${environment.rentals}`;
+
   constructor(private http: HttpClient) {}
 
-  baseUrl: string = `${environment.baseUrl}${environment.rentals}`;
   getAllByVehicleId(
     page: number,
     size: number,
-    id: number
+    id: number,
   ): Observable<RentalPage> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -24,14 +25,14 @@ export class RentalService {
       `${this.baseUrl}/getAllByVehicleId/${id}`,
       {
         params,
-      }
+      },
     );
   }
 
   getAllByClientId(
     page: number,
     size: number,
-    id: number
+    id: number,
   ): Observable<RentalPage> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -45,6 +46,7 @@ export class RentalService {
   getById(id: number): Observable<DetailedRental> {
     return this.http.get<DetailedRental>(`${this.baseUrl}/${id}`);
   }
+
   getAll(page: number, size: number): Observable<RentalPage> {
     let params = new HttpParams()
       .set('page', page.toString())

@@ -15,7 +15,7 @@ export interface VehicleRequest {
   model: string;
   purchasePrice: number;
   image: File;
-  manufacturerId:string;
+  manufacturerId: string;
   isBroken: boolean;
   isRented: boolean;
   rentPrice: number;

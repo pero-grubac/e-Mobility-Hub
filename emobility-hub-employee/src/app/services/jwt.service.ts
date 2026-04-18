@@ -6,9 +6,7 @@ import { CustomJwtPayload } from '../models/jwt.models';
   providedIn: 'root',
 })
 export class JWTService {
-  private getToken(): string | null {
-    return localStorage.getItem('jwt');
-  }
+  userRole: string | null = null;
 
   decodeToken(): CustomJwtPayload | null {
     const token = this.getToken();
@@ -21,7 +19,6 @@ export class JWTService {
       return null;
     }
   }
-  userRole: string | null = null;
 
   getRole(): string | null {
     const decodedToken = this.decodeToken();
@@ -36,7 +33,12 @@ export class JWTService {
   removeJWT(): void {
     localStorage.removeItem('jwt');
   }
+
   setJWT(token: string): void {
     localStorage.setItem('jwt', token);
+  }
+
+  private getToken(): string | null {
+    return localStorage.getItem('jwt');
   }
 }

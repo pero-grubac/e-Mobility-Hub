@@ -23,8 +23,8 @@ public class FaultController
     }
 
     @GetMapping("/getAllByVehicleId/{id}")
-    public ResponseEntity<Page<FaultResponse>> getAllByVehicleId(@PathVariable Long id, Pageable pageable){
-        Page<FaultResponse> responses = ((IFaultService)getService()).getAllByVehicleId(pageable,id);
+    public ResponseEntity<Page<FaultResponse>> getAllByVehicleId(@PathVariable Long id, Pageable pageable) {
+        Page<FaultResponse> responses = ((IFaultService) getService()).getAllByVehicleId(pageable, id);
         return ResponseEntity.ok(responses);
     }
 }

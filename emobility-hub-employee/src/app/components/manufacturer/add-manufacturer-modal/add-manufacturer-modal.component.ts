@@ -19,7 +19,7 @@ export class AddManufacturerModalComponent {
 
   constructor(
     private dialogRef: MatDialogRef<AddManufacturerModalComponent>,
-    private manufacturerService: ManufacturerService
+    private manufacturerService: ManufacturerService,
   ) {}
 
   onCreate(): void {

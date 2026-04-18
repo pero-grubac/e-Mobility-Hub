@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   Manufacturer,
   ManufacturerPage,
@@ -32,7 +25,7 @@ export class ManufacturerListComponent implements OnInit {
   constructor(
     private manufacturerService: ManufacturerService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +68,21 @@ export class ManufacturerListComponent implements OnInit {
     this.router.navigate(['/manufacturer', manufacturerId]);
   }
 
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadManufacturers();
+    }
+  }
+
+  handlePageClick(page: number | string): void {
+    if (typeof page === 'number') this.goToPage(page);
+  }
+
+  isNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
   private updateDisplayedPages(): void {
     const delta = 2;
     const range: (number | string)[] = [];
@@ -94,20 +102,5 @@ export class ManufacturerListComponent implements OnInit {
     }
 
     this.displayedPages = range;
-  }
-
-  goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.loadManufacturers();
-    }
-  }
-
-  handlePageClick(page: number | string): void {
-    if (typeof page === 'number') this.goToPage(page);
-  }
-
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
   }
 }

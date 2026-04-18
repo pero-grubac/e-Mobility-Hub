@@ -14,7 +14,7 @@ export class RentalDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private rentalService: RentalService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -34,8 +34,10 @@ export class RentalDetailComponent implements OnInit {
       },
     });
   }
+
   onClientClick(clientId: number): void {
     this.router.navigate(['/client', clientId]);
   }
+
   onVehicleSelected(vehicleId: number): void {}
 }

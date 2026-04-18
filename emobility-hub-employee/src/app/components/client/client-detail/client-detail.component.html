@@ -1,4 +1,4 @@
-<div class="client-detail-container" *ngIf="client">
+<div *ngIf="client" class="client-detail-container">
   <div class="content-container">
     <div class="image-container">
       <img
@@ -19,11 +19,11 @@
         <p><strong>ID Card Number:</strong> {{ client.idCardNumber }}</p>
         <p>
           <strong>Is Blocked:</strong>
-          {{ client.isBlocked ? 'Yes' : 'No' }}
+          {{ client.isBlocked ? "Yes" : "No" }}
         </p>
         <p>
           <strong>Is Deactivated:</strong>
-          {{ client.isDeactivated ? 'Yes' : 'No' }}
+          {{ client.isDeactivated ? "Yes" : "No" }}
         </p>
       </div>
     </div>

@@ -18,15 +18,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class AnnouncementService {
-	private static final String ANNOUCEMENT_URL = "http://localhost:8080/announcements";
+	private static final String ANNOUCEMENT_URL = new AppConfig().getAnnouncementsUrl();
 	private ObjectMapper objectMapper;
 
 	public AnnouncementService() {
 		objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 	}
-	
-	public PaginatedResponse<AnnouncementResponseBean> getAnnoucements(String token, int page, int size, String search)throws Exception{
+
+	public PaginatedResponse<AnnouncementResponseBean> getAnnoucements(String token, int page, int size, String search)
+			throws Exception {
 		String urlWithParams = ANNOUCEMENT_URL + "/getAll" + "?page=" + page + "&size=" + size + "&sort=id,desc";
 		if (search != null && !search.trim().isEmpty()) {
 			urlWithParams += "&search=" + URLEncoder.encode(search, "UTF-8");
@@ -49,6 +50,7 @@ public class AnnouncementService {
 			});
 		}
 	}
+
 	public void create(String token, AnnouncementRequest announcementRequest) throws Exception {
 		URL url = new URL(ANNOUCEMENT_URL);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -67,6 +69,7 @@ public class AnnouncementService {
 			throw new RuntimeException("Failed to create promotion. HTTP error code: " + connection.getResponseCode());
 		}
 	}
+
 	public AnnouncementResponseBean update(String token, Long id, AnnouncementRequest announcementRequest)
 			throws Exception {
 		URL url = new URL(ANNOUCEMENT_URL);
@@ -89,6 +92,7 @@ public class AnnouncementService {
 			throw new RuntimeException("Failed to update promotion. HTTP error code: " + connection.getResponseCode());
 		}
 	}
+
 	public void delete(String token, Long id) throws Exception {
 		URL url = new URL(ANNOUCEMENT_URL + "/" + id);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -99,6 +103,7 @@ public class AnnouncementService {
 			throw new RuntimeException("Failed to delete promotion. HTTP error code: " + connection.getResponseCode());
 		}
 	}
+
 	public AnnouncementResponseBean getById(String token, Long id) throws Exception {
 		URL url = new URL(ANNOUCEMENT_URL + "/" + id);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();

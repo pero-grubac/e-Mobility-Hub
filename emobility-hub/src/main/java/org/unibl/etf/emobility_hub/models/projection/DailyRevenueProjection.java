@@ -4,5 +4,6 @@ import java.time.LocalDate;
 
 public interface DailyRevenueProjection {
     LocalDate getRentalDay();
+
     Double getTotalRevenue();
 }

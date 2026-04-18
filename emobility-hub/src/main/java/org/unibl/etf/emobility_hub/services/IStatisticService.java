@@ -11,5 +11,6 @@ public interface IStatisticService {
     List<DailyRevenueProjection> getDailyRevenue(LocalDateTime start, LocalDateTime end);
 
     List<RevenueByVehicleTypeProjection> getRevenueByVehicleType();
+
     List<FaultCountProjection> countFaultsPerVehicle();
 }

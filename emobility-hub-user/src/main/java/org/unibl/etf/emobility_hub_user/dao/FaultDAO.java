@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 public class FaultDAO {
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
-	private static final String INSERT_FAULT = "INSERT INTO fault (dateTime, description, vehicle_id, creationDateTime, updateDateTime) "
-			+ "VALUES (NOW(), ?, ?, NOW(), NOW())";
+	private static final String INSERT_FAULT = "INSERT INTO fault (description, vehicle_id, creationDateTime, updateDateTime) "
+			+ "VALUES (?, ?, NOW(), NOW())";
 	private static final String UPDATE_VEHICLE = "UPDATE transport_vehicle SET isBroken = 1 WHERE id = ?";
 
 	public static boolean reportFault(long vehicleId, String description) {
@@ -16,7 +16,7 @@ public class FaultDAO {
 
 		try {
 			connection = connectionPool.checkOut();
-			connection.setAutoCommit(false); 
+			connection.setAutoCommit(false);
 
 			PreparedStatement faultStmt = connection.prepareStatement(INSERT_FAULT);
 			faultStmt.setString(1, description);
@@ -31,20 +31,20 @@ public class FaultDAO {
 				vehicleStmt.close();
 
 				if (rowsUpdated > 0) {
-					connection.commit(); 
+					connection.commit();
 					success = true;
 				} else {
-					connection.rollback(); 
+					connection.rollback();
 				}
 			} else {
-				connection.rollback(); 
+				connection.rollback();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
 				if (connection != null) {
-					connection.rollback(); 
+					connection.rollback();
 				}
 			} catch (Exception rollbackEx) {
 				rollbackEx.printStackTrace();

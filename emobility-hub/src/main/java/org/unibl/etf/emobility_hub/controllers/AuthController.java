@@ -17,7 +17,7 @@ public class AuthController {
     private IAuthenticationService service;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody  AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
         AuthResponse authResponse = service.login(authRequest);
         return ResponseEntity.ok(authResponse);
     }

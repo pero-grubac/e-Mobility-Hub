@@ -2,9 +2,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
-  OnChanges,
 } from '@angular/core';
 import { Vehicle } from '../../../models/vehicle.model';
 import { ParseVehicle } from '../../../services/parseVehicle.service';
@@ -17,30 +17,25 @@ import { JWTService } from '../../../services/jwt.service';
 })
 export class VehicleListComponent implements OnInit, OnChanges {
   userRole: string | null = null;
-
-  constructor(
-    private parseVehicle: ParseVehicle,
-    private jwtService: JWTService
-  ) {}
   @Input() vehicles: Vehicle[] = [];
   @Input() entityType: string = '';
-
   @Input() totalPages: number = 0;
   @Input() currentPage: number = 0;
   @Input() onPageChange!: (page: number) => void;
-
   @Output() searchEvent = new EventEmitter<string>();
   @Output() addEvent = new EventEmitter<void>();
   @Output() uploadEvent = new EventEmitter<void>();
-
   displayedPages: (number | string)[] = [];
-
   isModalOpen: boolean = false;
   selectedFile: File | null = null;
   uploadStatus: string | null = null;
   isUploading: boolean = false;
-
   @Output() vehicleSelected = new EventEmitter<number>();
+
+  constructor(
+    private parseVehicle: ParseVehicle,
+    private jwtService: JWTService,
+  ) {}
 
   onVehicleSelected(vehicleId: number): void {
     this.vehicleSelected.emit(vehicleId);
@@ -54,6 +49,7 @@ export class VehicleListComponent implements OnInit, OnChanges {
     this.isModalOpen = false;
     this.selectedFile = null;
   }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -97,9 +93,11 @@ export class VehicleListComponent implements OnInit, OnChanges {
     this.userRole = this.jwtService.getRole();
     this.updateDisplayedPages();
   }
+
   hasRole(requiredRoles: string[]): boolean {
     return this.jwtService.hasRole(requiredRoles);
   }
+
   ngOnChanges(): void {
     this.updateDisplayedPages();
   }
@@ -114,6 +112,24 @@ export class VehicleListComponent implements OnInit, OnChanges {
 
   onUpload(): void {
     this.uploadEvent.emit();
+  }
+
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.onPageChange(page);
+      this.updateDisplayedPages();
+    }
+  }
+
+  isNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
+  handlePageClick(page: number | string): void {
+    if (this.isNumber(page)) {
+      this.goToPage(page as number);
+    }
   }
 
   private updateDisplayedPages(): void {
@@ -141,23 +157,5 @@ export class VehicleListComponent implements OnInit, OnChanges {
     }
 
     this.displayedPages = range;
-  }
-
-  goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.onPageChange(page);
-      this.updateDisplayedPages();
-    }
-  }
-
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
-  }
-
-  handlePageClick(page: number | string): void {
-    if (this.isNumber(page)) {
-      this.goToPage(page as number);
-    }
   }
 }

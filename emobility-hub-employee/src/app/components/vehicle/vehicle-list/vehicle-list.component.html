@@ -2,23 +2,23 @@
   <div class="vehicle-list-header">
     <div class="search-bar-container">
       <input
-        type="text"
-        placeholder="Search by model"
         (input)="onSearch($event.target.value)"
         class="search-input"
+        placeholder="Search by model"
+        type="text"
       />
       <button
-        class="add-button"
         (click)="onAdd()"
         *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+        class="add-button"
       >
         Add
       </button>
       <button
         (click)="openModal()"
+        *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
         [disabled]="isUploading"
         class="upload-button"
-        *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
       >
         Upload
       </button>
@@ -27,9 +27,9 @@
 
   <div class="vehicle-list">
     <app-vehicle-item
+      (vehicleClick)="onVehicleSelected($event)"
       *ngFor="let vehicle of vehicles"
       [vehicle]="vehicle"
-      (vehicleClick)="onVehicleSelected($event)"
     ></app-vehicle-item>
   </div>
 
@@ -39,10 +39,10 @@
     </button>
 
     <button
-      *ngFor="let page of displayedPages"
-      [disabled]="!isNumber(page)"
-      [class.active]="page === currentPage"
       (click)="handlePageClick(page)"
+      *ngFor="let page of displayedPages"
+      [class.active]="page === currentPage"
+      [disabled]="!isNumber(page)"
     >
       {{ page }}
     </button>
@@ -56,14 +56,14 @@
   </div>
   <p *ngIf="uploadStatus" class="upload-status">{{ uploadStatus }}</p>
 
-  <div class="modal" *ngIf="isModalOpen" (click)="closeModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
+  <div (click)="closeModal()" *ngIf="isModalOpen" class="modal">
+    <div (click)="$event.stopPropagation()" class="modal-content">
       <h2>Upload CSV File</h2>
       <input
-        type="file"
         (change)="onFileSelected($event)"
         accept=".csv"
         class="file-input"
+        type="file"
       />
       <div class="modal-actions">
         <button (click)="uploadFile()" [disabled]="!selectedFile">

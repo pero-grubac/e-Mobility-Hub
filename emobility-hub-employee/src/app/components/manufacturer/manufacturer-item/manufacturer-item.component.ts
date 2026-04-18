@@ -12,11 +12,13 @@ export class ManufacturerItemComponent implements OnInit {
   @Output() manufacturerClick = new EventEmitter<number>();
 
   flagUrl: string | null = null;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.fetchFlagUrl();
   }
+
   fetchFlagUrl(): void {
     const countryName = this.manufacturer.country;
     this.http
@@ -35,6 +37,7 @@ export class ManufacturerItemComponent implements OnInit {
         },
       });
   }
+
   onManufacturerClick(): void {
     this.manufacturerClick.emit(this.manufacturer.id);
   }

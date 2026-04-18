@@ -7,7 +7,7 @@ import org.unibl.etf.emobility_hub.models.dto.request.PromotionRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.PromotionResponse;
 
 public interface IPromotionService
-        extends IBaseCRUDService<PromotionRequest,PromotionResponse,PromotionResponse,Long> {
+        extends IBaseCRUDService<PromotionRequest, PromotionResponse, PromotionResponse, Long> {
 
-    Page<PromotionResponse> findAllByContent(String content,Pageable pageable);
+    Page<PromotionResponse> findAllByContent(String content, Pageable pageable);
 }

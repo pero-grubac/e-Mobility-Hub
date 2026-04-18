@@ -8,10 +8,9 @@ describe('AddCarModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AddCarModalComponent]
-    })
-    .compileComponents();
-    
+      declarations: [AddCarModalComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(AddCarModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

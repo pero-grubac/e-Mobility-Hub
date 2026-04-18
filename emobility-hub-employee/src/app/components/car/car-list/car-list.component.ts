@@ -20,15 +20,17 @@ export class CarListComponent implements OnInit {
   constructor(
     private carService: CarService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.loadCars();
   }
+
   handleVehicleSelected(vehicleId: number): void {
     this.router.navigate(['/car', vehicleId]);
   }
+
   loadCars(searchTerm: string = ''): void {
     this.carService
       .getCars(this.currentPage, this.pageSize, searchTerm)

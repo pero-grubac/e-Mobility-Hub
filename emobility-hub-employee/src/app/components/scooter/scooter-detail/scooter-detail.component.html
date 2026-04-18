@@ -1,4 +1,4 @@
-<div class="scooter-detail-container" *ngIf="scooter">
+<div *ngIf="scooter" class="scooter-detail-container">
   <div class="content-container">
     <!-- Slika vozila -->
     <div class="image-container">
@@ -11,16 +11,16 @@
         alt="{{ scooter.model }}"
         class="scooter-image"
       />
-      <div class="image-info" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])">
+      <div *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="image-info">
         <p><strong>Upload Image</strong></p>
-        <label for="imageUpload" class="custom-file-upload">
+        <label class="custom-file-upload" for="imageUpload">
           Choose File
         </label>
         <input
-          type="file"
-          id="imageUpload"
           (change)="onImageSelected($event)"
           accept="image/*"
+          id="imageUpload"
+          type="file"
         />
       </div>
     </div>
@@ -37,32 +37,32 @@
         <div class="form-group">
           <label>Model</label>
           <input
-            type="text"
             [(ngModel)]="scooter.model"
-            name="model"
             class="form-control"
+            name="model"
             required
+            type="text"
           />
         </div>
         <div class="form-group">
           <label>Purchase Price</label>
           <input
-            type="number"
             [(ngModel)]="scooter.purchasePrice"
-            name="purchasePrice"
             class="form-control"
+            name="purchasePrice"
             required
+            type="number"
           />
         </div>
         <div class="form-group">
           <label>Rent Price</label>
           <input
-            type="number"
             [(ngModel)]="scooter.rentPrice"
-            name="rentPrice"
-            class="form-control"
-            required
             [disabled]="!hasRole(['ROLE_MANAGER'])"
+            class="form-control"
+            name="rentPrice"
+            required
+            type="number"
           />
         </div>
 
@@ -70,20 +70,20 @@
           <label>Max speed</label>
           <input
             [(ngModel)]="scooter.maxSpeed"
-            name="maxSpeed"
             class="form-control"
+            name="maxSpeed"
             required
           />
         </div>
 
         <!-- Izbor proizvođača -->
-        <div class="form-group" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])">
+        <div *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="form-group">
           <label>Manufacturer</label>
           <select
-            [(ngModel)]="selectedManufacturerId"
             (change)="onManufacturerChange()"
-            name="manufacturer"
+            [(ngModel)]="selectedManufacturerId"
             class="form-control"
+            name="manufacturer"
           >
             <option
               *ngFor="let manufacturer of manufacturers"
@@ -95,7 +95,7 @@
         </div>
 
         <!-- Prikaz trenutnog proizvođača -->
-        <div class="form-group" *ngIf="scooter.manufacturer">
+        <div *ngIf="scooter.manufacturer" class="form-group">
           <p><strong>Manufacturer Details:</strong></p>
           <p><strong>Name:</strong> {{ scooter.manufacturer.name }}</p>
           <p><strong>Country:</strong> {{ scooter.manufacturer.country }}</p>
@@ -119,45 +119,45 @@
   <!-- Akcije -->
   <div class="actions">
     <button
-      class="btn btn-success"
       (click)="updateScooter()"
       *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+      class="btn btn-success"
     >
       Update
     </button>
     <button
-      class="btn btn-danger"
       (click)="deleteScooter()"
       *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+      class="btn btn-danger"
     >
       Delete
     </button>
     <button
-      class="btn btn-warning"
       (click)="report()"
       *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
+      class="btn btn-warning"
     >
       Report
     </button>
     <button
-      class="btn btn-primary"
       (click)="fix()"
-      [disabled]="!scooter.broken"
       *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
+      [disabled]="!scooter.broken"
+      class="btn btn-primary"
     >
       Fix
     </button>
     <button
-      class="btn btn-secondary"
       (click)="seeAllRentals()"
       *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+      class="btn btn-secondary"
     >
       See all rentals
     </button>
     <button
-      class="btn btn-info"
       (click)="seeAllFaults()"
       *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+      class="btn btn-info"
     >
       See all faults
     </button>

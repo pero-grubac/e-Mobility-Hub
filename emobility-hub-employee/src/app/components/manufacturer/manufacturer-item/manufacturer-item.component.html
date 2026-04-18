@@ -1,8 +1,8 @@
-<div class="manufacturer-item" (click)="onManufacturerClick()">
+<div (click)="onManufacturerClick()" class="manufacturer-item">
   <img
     *ngIf="flagUrl"
-    [src]="flagUrl"
     [alt]="manufacturer.country"
+    [src]="flagUrl"
     class="manufacturer-flag"
   />
   <p class="manufacturer-name">{{ manufacturer.name }}</p>

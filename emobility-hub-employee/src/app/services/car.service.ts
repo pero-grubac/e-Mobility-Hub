@@ -8,9 +8,9 @@ import { environment } from '../config/environment';
   providedIn: 'root',
 })
 export class CarService {
-  constructor(private http: HttpClient) {}
-
   baseUrl: string = `${environment.baseUrl}${environment.cars}`;
+
+  constructor(private http: HttpClient) {}
 
   getCars(page: number, size: number, search?: string): Observable<CarPage> {
     let params = new HttpParams()
@@ -23,18 +23,23 @@ export class CarService {
 
     return this.http.get<CarPage>(`${this.baseUrl}/getByModel`, { params });
   }
+
   getById(id: number): Observable<DetailedCar> {
     return this.http.get<DetailedCar>(`${this.baseUrl}/${id}`);
   }
+
   updateCar(carData: FormData): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}`, carData);
   }
+
   deleteCar(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+
   addCar(carData: FormData): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}`, carData);
   }
+
   fix(id: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/fix/${id}`, {});
   }

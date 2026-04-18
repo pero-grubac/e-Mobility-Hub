@@ -1,12 +1,6 @@
 <div class="bicycle-list-page">
   <h1>Bicycles</h1>
-  <app-vehicle-list
-    [vehicles]="bicycles"
-    [totalPages]="totalPages"
-    [currentPage]="currentPage"
-    [onPageChange]="handlePageChange.bind(this)"
-    (searchEvent)="handleSearch($event)"
-    (addEvent)="handleAdd()"
-    (vehicleSelected)="handleVehicleSelected($event)"
-  ></app-vehicle-list>
+  <app-vehicle-list (addEvent)="handleAdd()" (searchEvent)="handleSearch($event)"
+    (vehicleSelected)="handleVehicleSelected($event)" [currentPage]="currentPage"
+    [onPageChange]="handlePageChange.bind(this)" [totalPages]="totalPages" [vehicles]="bicycles"></app-vehicle-list>
 </div>

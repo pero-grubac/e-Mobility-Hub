@@ -27,7 +27,7 @@ export class BicycleDetailComponent implements OnInit {
     private bicycleService: BicycleService,
     private manufacturerService: ManufacturerService,
     private dialog: MatDialog,
-    private jwtService: JWTService
+    private jwtService: JWTService,
   ) {}
 
   ngOnInit(): void {
@@ -58,10 +58,11 @@ export class BicycleDetailComponent implements OnInit {
       },
     });
   }
+
   onManufacturerChange(): void {
     if (this.selectedManufacturerId) {
       const selectedManufacturer = this.manufacturers.find(
-        (m) => m.id === this.selectedManufacturerId
+        (m) => m.id === this.selectedManufacturerId,
       );
       if (selectedManufacturer) {
         this.bicycle.manufacturer.id = selectedManufacturer.id;
@@ -118,6 +119,7 @@ export class BicycleDetailComponent implements OnInit {
       },
     });
   }
+
   report(): void {
     const dialogRef = this.dialog.open(AddFaultModalComponent, {
       width: '400px',
@@ -157,6 +159,7 @@ export class BicycleDetailComponent implements OnInit {
   seeAllFaults(): void {
     this.router.navigate([`/faults/${this.bicycle.id}`]);
   }
+
   hasRole(requiredRoles: string[]): boolean {
     return this.jwtService.hasRole(requiredRoles);
   }

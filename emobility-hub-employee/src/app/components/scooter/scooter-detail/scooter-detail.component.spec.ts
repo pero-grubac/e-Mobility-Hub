@@ -8,10 +8,9 @@ describe('ScooterDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ScooterDetailComponent]
-    })
-    .compileComponents();
-    
+      declarations: [ScooterDetailComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ScooterDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

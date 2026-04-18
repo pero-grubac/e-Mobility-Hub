@@ -15,6 +15,7 @@ export class ClientItemComponent {
     event.stopPropagation();
     this.blockUnblock.emit(clientId);
   }
+
   onClientClick(): void {
     this.clientClick.emit(this.client.id);
   }

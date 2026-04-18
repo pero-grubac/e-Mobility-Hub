@@ -8,14 +8,14 @@ import { BicyclePage, DetailedBicycle } from '../models/bicycle.models';
   providedIn: 'root',
 })
 export class BicycleService {
-  constructor(private http: HttpClient) {}
-
   baseUrl: string = `${environment.baseUrl}${environment.bicycles}`;
+
+  constructor(private http: HttpClient) {}
 
   getBicycles(
     page: number,
     size: number,
-    search?: string
+    search?: string,
   ): Observable<BicyclePage> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -28,18 +28,23 @@ export class BicycleService {
       params,
     });
   }
+
   getById(id: number): Observable<DetailedBicycle> {
     return this.http.get<DetailedBicycle>(`${this.baseUrl}/${id}`);
   }
+
   updateBicycle(bicycleData: FormData): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}`, bicycleData);
   }
+
   deleteBicycle(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+
   addBicycle(bicycleData: FormData): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}`, bicycleData);
   }
+
   fix(id: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/fix/${id}`, {});
   }

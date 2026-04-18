@@ -14,7 +14,6 @@ import org.unibl.etf.emobility_hub.models.domain.entity.TransportVehicleEntity;
 import org.unibl.etf.emobility_hub.models.dto.request.FaultRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.FaultResponse;
 import org.unibl.etf.emobility_hub.models.dto.response.detailed.DetailedFaultResponse;
-import org.unibl.etf.emobility_hub.models.dto.response.TransportVehicleResponse;
 import org.unibl.etf.emobility_hub.repositories.FaultEntityRepository;
 import org.unibl.etf.emobility_hub.repositories.TransportVehicleRepository;
 import org.unibl.etf.emobility_hub.services.IFaultService;
@@ -50,7 +49,7 @@ public class FaultServiceImpl
         entity.setVehicle(vehicle);
         getRepository().saveAndFlush(entity);
 
-        return getMapper().map(entity,FaultResponse.class);
+        return getMapper().map(entity, FaultResponse.class);
     }
 
     @Override
@@ -71,8 +70,8 @@ public class FaultServiceImpl
 
     @Override
     public Page<FaultResponse> getAllByVehicleId(Pageable pageable, Long vehicleId) {
-        return ((FaultEntityRepository)getRepository()).findAllByVehicleId(vehicleId,  pageable)
-                .map(fe->getMapper().map(fe, FaultResponse.class));
+        return ((FaultEntityRepository) getRepository()).findAllByVehicleId(vehicleId, pageable)
+                .map(fe -> getMapper().map(fe, FaultResponse.class));
     }
 }
 

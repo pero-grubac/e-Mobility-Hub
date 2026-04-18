@@ -21,7 +21,7 @@ export class EmployeeListComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +68,23 @@ export class EmployeeListComponent implements OnInit {
     }
   }
 
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadEmployees();
+    }
+  }
+
+  onSearch(term: string): void {
+    this.searchTerm = term;
+    this.currentPage = 0;
+    this.loadEmployees();
+  }
+
+  isNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
   private updateDisplayedPages(): void {
     const delta = 2;
     const range: number[] = [];
@@ -79,19 +96,5 @@ export class EmployeeListComponent implements OnInit {
       range.push(i);
     }
     this.displayedPages = range;
-  }
-  goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.loadEmployees();
-    }
-  }
-  onSearch(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 0;
-    this.loadEmployees();
-  }
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
   }
 }

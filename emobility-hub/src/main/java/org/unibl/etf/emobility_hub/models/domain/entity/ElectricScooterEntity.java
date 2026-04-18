@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name="electric_scooter")
-public class ElectricScooterEntity extends TransportVehicleEntity{
+@Table(name = "electric_scooter")
+public class ElectricScooterEntity extends TransportVehicleEntity {
     private double maxSpeed;
 }

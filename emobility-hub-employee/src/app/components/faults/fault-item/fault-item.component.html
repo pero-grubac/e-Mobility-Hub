@@ -1,7 +1,13 @@
-<div class="fault-item" (click)="onClick()">
-  <img src="assets/images/broken-vehicle.png" alt="Fault Icon" class="fault-icon" />
-  <p class="fault-description" [title]="fault.description">{{ truncatedDescription }}</p>
+<div (click)="onClick()" class="fault-item">
+  <img
+    alt="Fault Icon"
+    class="fault-icon"
+    src="assets/images/broken-vehicle.png"
+  />
+  <p [title]="fault.description" class="fault-description">
+    {{ truncatedDescription }}
+  </p>
   <p class="fault-time">
-    Update time: {{ fault.updateDateTime | date: 'dd.MM.yyyy. HH:mm' }}
+    Update time: {{ fault.updateDateTime | date: "dd.MM.yyyy. HH:mm" }}
   </p>
 </div>

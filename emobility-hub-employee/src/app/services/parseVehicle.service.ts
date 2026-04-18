@@ -15,7 +15,7 @@ export class ParseVehicle {
 
     return this.http.post(
       `${environment.baseUrl}${environment.parseVehicle}`,
-      formData
+      formData,
     );
   }
 }

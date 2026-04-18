@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FaultService } from '../../../services/fault.service';
 import { FaultRequest } from '../../../models/fault.models';
 
@@ -15,7 +15,7 @@ export class AddFaultModalComponent {
   constructor(
     public dialogRef: MatDialogRef<AddFaultModalComponent>,
     @Inject(MAT_DIALOG_DATA) public carId: number,
-    private faultService: FaultService
+    private faultService: FaultService,
   ) {}
 
   validateDescription(): void {

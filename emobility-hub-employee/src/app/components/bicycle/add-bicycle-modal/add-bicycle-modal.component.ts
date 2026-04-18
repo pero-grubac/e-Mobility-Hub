@@ -25,7 +25,7 @@ export class AddBicycleModalComponent {
   constructor(
     private dialogRef: MatDialogRef<AddBicycleModalComponent>,
     private bicycleService: BicycleService,
-    private manufacturerService: ManufacturerService
+    private manufacturerService: ManufacturerService,
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +66,7 @@ export class AddBicycleModalComponent {
   onCancel(): void {
     this.dialogRef.close();
   }
+
   isFormValid(): boolean {
     return (
       this.bicycle.uniqueIdentifier.trim() !== '' &&
@@ -76,6 +77,7 @@ export class AddBicycleModalComponent {
       this.bicycle.manufacturerId !== null
     );
   }
+
   generateUniqueId(): void {
     this.bicycle.uniqueIdentifier = uuidv4();
   }

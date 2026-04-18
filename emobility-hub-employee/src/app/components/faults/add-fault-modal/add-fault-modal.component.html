@@ -5,22 +5,22 @@
       <div class="form-group">
         <label for="description">Fault Description:</label>
         <textarea
-          id="description"
-          [(ngModel)]="description"
-          name="description"
-          class="form-control large-input"
           (keyup)="validateDescription()"
+          [(ngModel)]="description"
+          class="form-control large-input"
+          id="description"
+          name="description"
           placeholder="Enter fault details..."
         ></textarea>
-        <p class="error-message" *ngIf="showError">Description is required.</p>
+        <p *ngIf="showError" class="error-message">Description is required.</p>
       </div>
     </form>
 
     <div class="actions">
-      <button class="btn btn-success" [disabled]="showError" (click)="onAdd()">
+      <button (click)="onAdd()" [disabled]="showError" class="btn btn-success">
         Add
       </button>
-      <button class="btn btn-danger" (click)="onCancel()">Cancel</button>
+      <button (click)="onCancel()" class="btn btn-danger">Cancel</button>
     </div>
   </div>
 </div>

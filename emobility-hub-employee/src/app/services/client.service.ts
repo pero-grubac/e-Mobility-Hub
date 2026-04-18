@@ -8,13 +8,14 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root',
 })
 export class ClientService {
-  constructor(private http: HttpClient) {}
   baseUrl: string = `${environment.baseUrl}${environment.clients}`;
+
+  constructor(private http: HttpClient) {}
 
   getClients(
     page: number,
     size: number,
-    search?: string
+    search?: string,
   ): Observable<ClientPage> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -27,9 +28,11 @@ export class ClientService {
       params,
     });
   }
+
   getById(id: number): Observable<Client> {
     return this.http.get<Client>(`${this.baseUrl}/${id}`);
   }
+
   block(id: number, isBlocked: boolean): Observable<any> {
     const body = { isBlocked };
     return this.http.put<any>(`${this.baseUrl}/block/${id}`, isBlocked, {

@@ -8,14 +8,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ScooterService {
-  constructor(private http: HttpClient) {}
-
   baseUrl: string = `${environment.baseUrl}${environment.scooters}`;
+
+  constructor(private http: HttpClient) {}
 
   getScooters(
     page: number,
     size: number,
-    search?: string
+    search?: string,
   ): Observable<ScooterPage> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -28,18 +28,23 @@ export class ScooterService {
       params,
     });
   }
+
   getById(id: number): Observable<DetailedScooter> {
     return this.http.get<DetailedScooter>(`${this.baseUrl}/${id}`);
   }
+
   updateScooter(scooterData: FormData): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}`, scooterData);
   }
+
   deleteScooter(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+
   addScooter(scooterData: FormData): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}`, scooterData);
   }
+
   fix(id: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/fix/${id}`, {});
   }

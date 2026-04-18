@@ -17,7 +17,7 @@ export class EmployeeDetailComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +63,7 @@ export class EmployeeDetailComponent implements OnInit {
   onDelete(): void {
     if (this.employee) {
       const confirmed = confirm(
-        'Are you sure you want to delete this employee?'
+        'Are you sure you want to delete this employee?',
       );
       if (confirmed) {
         this.employeeService.delete(this.employee.id).subscribe({

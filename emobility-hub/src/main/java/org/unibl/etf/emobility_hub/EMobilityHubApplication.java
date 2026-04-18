@@ -1,5 +1,6 @@
 package org.unibl.etf.emobility_hub;
 
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +20,7 @@ public class EMobilityHubApplication {
         ModelMapper mapper = new ModelMapper();
         // Ako ne zna da mapira neka preskoči
         mapper.getConfiguration().setAmbiguityIgnored(true);
+        mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
         // Specifično mapiranje za ClientEntity -> ClientResponse
         mapper.typeMap(ClientEntity.class, ClientResponse.class)

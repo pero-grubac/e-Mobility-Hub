@@ -44,7 +44,6 @@ public class ClientServiceImpl implements IClientService {
     private String baseDir;
 
 
-
     @Override
     public Page<ClientResponse> getAll(Pageable pageable) {
         return repository.findAll(pageable).map(te -> mapper.map(te, ClientResponse.class));
@@ -100,7 +99,7 @@ public class ClientServiceImpl implements IClientService {
             } catch (IOException e) {
                 throw new RuntimeException("Failed to copy file: " + filePath, e);
             }
-            return baseDir+ File.separator + ClientEntity.class.getSimpleName().toLowerCase() +
+            return baseDir + File.separator + ClientEntity.class.getSimpleName().toLowerCase() +
                     File.separator + client.getUsername() + File.separator
                     + fileName;
         } catch (IOException e) {
@@ -148,7 +147,7 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     public Page<ClientResponse> getAllByUsername(Pageable pageable, String search) {
-        return repository.findAllByUsernameContainingIgnoreCase(search,pageable).map(te -> mapper.map(te, ClientResponse.class));
+        return repository.findAllByUsernameContainingIgnoreCase(search, pageable).map(te -> mapper.map(te, ClientResponse.class));
     }
 
     private void deleteImageFromFileSystem(String imagePath) {

@@ -8,10 +8,9 @@ describe('AddBicycleModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AddBicycleModalComponent]
-    })
-    .compileComponents();
-    
+      declarations: [AddBicycleModalComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(AddBicycleModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

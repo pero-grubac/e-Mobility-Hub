@@ -20,7 +20,7 @@ export class ScooterListComponent implements OnInit {
   constructor(
     private scooterService: ScooterService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -31,6 +31,7 @@ export class ScooterListComponent implements OnInit {
     console.log(vehicleId);
     this.router.navigate(['/scooter', vehicleId]);
   }
+
   loadScooters(searchTerm: string = ''): void {
     this.scooterService
       .getScooters(this.currentPage, this.pageSize, searchTerm)
@@ -40,6 +41,7 @@ export class ScooterListComponent implements OnInit {
         this.currentPage = data.page.number;
       });
   }
+
   handleSearch(term: string): void {
     this.currentPage = 0;
     this.loadScooters(term);

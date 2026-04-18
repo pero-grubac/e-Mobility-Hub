@@ -16,6 +16,7 @@ public class FaultBean implements Serializable {
 			logger.severe(e.getMessage());
 		}
 		return false;
+
 	}
 
 }

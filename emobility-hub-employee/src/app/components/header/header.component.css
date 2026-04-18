@@ -41,13 +41,14 @@
     }
   }
 }
+
 .custom-toolbar .logo-link {
-  text-decoration: none; 
-  color: inherit; 
+  text-decoration: none;
+  color: inherit;
 }
 
 .custom-toolbar .logo {
   font-weight: bold;
-  font-size: 1.5rem; 
-  cursor: pointer; 
+  font-size: 1.5rem;
+  cursor: pointer;
 }

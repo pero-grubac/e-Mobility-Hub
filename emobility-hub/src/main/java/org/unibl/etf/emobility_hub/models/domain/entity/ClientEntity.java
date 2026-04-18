@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name="client")
-public class ClientEntity extends UserEntity{
+@Table(name = "client")
+public class ClientEntity extends UserEntity {
     @Column(unique = true, nullable = false)
     private String email;
 

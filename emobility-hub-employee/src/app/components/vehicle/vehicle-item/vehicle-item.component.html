@@ -1,4 +1,4 @@
-<div class="vehicle-item" (click)="onVehicleClick()">
+<div (click)="onVehicleClick()" class="vehicle-item">
   <img
     [src]="vehicle.image || 'assets/images/default-avatar.png'"
     alt="{{ vehicle.model }}"

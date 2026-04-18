@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.emobility_hub.base.services.impl.BaseCRUDServiceImpl;
-import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.domain.entity.AnnouncementEntity;
+import org.unibl.etf.emobility_hub.models.dto.request.AnnouncementRequest;
 import org.unibl.etf.emobility_hub.models.dto.response.AnnouncementResponse;
 import org.unibl.etf.emobility_hub.repositories.AnnouncementEntityRepository;
 import org.unibl.etf.emobility_hub.services.IAnnouncementService;
@@ -51,5 +51,6 @@ public class AnnouncementServiceImpl
     @Override
     public Page<AnnouncementResponse> findAllByContent(String content, Pageable pageable) {
         return ((AnnouncementEntityRepository) getRepository()).findByContentContainingIgnoreCase(content, pageable)
-                .map(te -> getMapper().map(te, AnnouncementResponse.class));    }
+                .map(te -> getMapper().map(te, AnnouncementResponse.class));
+    }
 }

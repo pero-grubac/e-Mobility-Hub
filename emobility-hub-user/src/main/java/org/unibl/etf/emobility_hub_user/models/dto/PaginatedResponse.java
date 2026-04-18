@@ -3,9 +3,8 @@ package org.unibl.etf.emobility_hub_user.models.dto;
 import java.io.Serializable;
 import java.util.List;
 
-
-public class PaginatedResponse<T> implements Serializable{
-    private static final long serialVersionUID = 1L;
+public class PaginatedResponse<T> implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private List<T> content;
 	private PageMetadata page;

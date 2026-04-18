@@ -28,13 +28,15 @@ public class StatisticController {
         List<DailyRevenueProjection> response = statisticService.getDailyRevenue(startDateTime, endDateTime);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @GetMapping("/getRevenueByVehicleType")
-    public ResponseEntity<List<RevenueByVehicleTypeProjection>> getRevenueByVehicleType(){
+    public ResponseEntity<List<RevenueByVehicleTypeProjection>> getRevenueByVehicleType() {
         List<RevenueByVehicleTypeProjection> response = statisticService.getRevenueByVehicleType();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @GetMapping("/getFaultsPerVehicle")
-    public ResponseEntity<List<FaultCountProjection>> countFaultsPerVehicle(){
+    public ResponseEntity<List<FaultCountProjection>> countFaultsPerVehicle() {
         List<FaultCountProjection> response = statisticService.countFaultsPerVehicle();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

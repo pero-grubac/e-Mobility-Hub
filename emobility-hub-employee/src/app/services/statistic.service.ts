@@ -12,9 +12,9 @@ import {
   providedIn: 'root',
 })
 export class StatisticService {
-  constructor(private http: HttpClient) {}
-
   baseUrl: string = `${environment.baseUrl}${environment.statistics}`;
+
+  constructor(private http: HttpClient) {}
 
   getDailyRevenue(start: string, end: string): Observable<DailyRevenue[]> {
     let params = new HttpParams()
@@ -24,14 +24,16 @@ export class StatisticService {
       params,
     });
   }
+
   getRevenueByVehicleType(): Observable<RevenueByVehicleType[]> {
     return this.http.get<RevenueByVehicleType[]>(
-      `${this.baseUrl}/getRevenueByVehicleType`
+      `${this.baseUrl}/getRevenueByVehicleType`,
     );
   }
+
   getFaultsPerVehicle(): Observable<FaultsPerVehicle[]> {
     return this.http.get<FaultsPerVehicle[]>(
-      `${this.baseUrl}/getFaultsPerVehicle`
+      `${this.baseUrl}/getFaultsPerVehicle`,
     );
   }
 }

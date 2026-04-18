@@ -19,7 +19,7 @@ export class RentalListComponent implements OnInit {
   constructor(
     private rentalService: RentalService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +30,7 @@ export class RentalListComponent implements OnInit {
       this.loadRentals();
     }
   }
+
   loadRentals(): void {
     this.rentalService.getAll(this.currentPage, this.pageSize).subscribe({
       next: (data: RentalPage) => {
@@ -42,6 +43,7 @@ export class RentalListComponent implements OnInit {
       },
     });
   }
+
   loadRentalsByVehicleId(): void {
     this.rentalService
       .getAllByVehicleId(this.currentPage, this.pageSize, this.vehicleId)
@@ -68,6 +70,14 @@ export class RentalListComponent implements OnInit {
     if (typeof page === 'number') this.goToPage(page);
   }
 
+  isNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
+  onRentalSelected(rentalId: number): void {
+    this.router.navigate([`/rental/${rentalId}`]);
+  }
+
   private updateDisplayedPages(): void {
     const delta = 2;
     const range: (number | string)[] = [];
@@ -87,13 +97,5 @@ export class RentalListComponent implements OnInit {
     }
 
     this.displayedPages = range;
-  }
-
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
-  }
-
-  onRentalSelected(rentalId: number): void {
-    this.router.navigate([`/rental/${rentalId}`]);
   }
 }

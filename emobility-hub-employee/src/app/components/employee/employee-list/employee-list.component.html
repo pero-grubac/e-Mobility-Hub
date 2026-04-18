@@ -3,20 +3,20 @@
   <div class="employee-list-header">
     <div class="search-bar-container">
       <input
-        type="text"
-        placeholder="Search by username"
         (input)="onSearch($event.target.value)"
         class="search-input"
+        placeholder="Search by username"
+        type="text"
       />
-      <button class="add-button" (click)="onAdd()">Add</button>
+      <button (click)="onAdd()" class="add-button">Add</button>
     </div>
   </div>
 
   <div class="employee-list">
     <app-employee-item
+      (employeeClick)="handleEmployeeSelected($event)"
       *ngFor="let employee of employees"
       [employee]="employee"
-      (employeeClick)="handleEmployeeSelected($event)"
     ></app-employee-item>
   </div>
 
@@ -26,10 +26,10 @@
     </button>
 
     <button
-      *ngFor="let page of displayedPages"
-      [disabled]="!isNumber(page)"
-      [class.active]="page === currentPage"
       (click)="handlePageClick(page)"
+      *ngFor="let page of displayedPages"
+      [class.active]="page === currentPage"
+      [disabled]="!isNumber(page)"
     >
       {{ page }}
     </button>

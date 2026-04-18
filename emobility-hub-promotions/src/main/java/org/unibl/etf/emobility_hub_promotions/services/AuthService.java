@@ -40,7 +40,7 @@ public class AuthService implements Serializable {
 				throw new RuntimeException("Login failed with HTTP code: " + responseCode);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Login error: " + e.getMessage());
 			return null;
 		}
 	}

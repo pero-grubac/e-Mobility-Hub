@@ -13,11 +13,11 @@ export class ClientDetailComponent {
 
   constructor(
     private clientService: ClientService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
-    const clientId = this.route.snapshot.params['id']; 
+    const clientId = this.route.snapshot.params['id'];
     this.loadClient(clientId);
   }
 

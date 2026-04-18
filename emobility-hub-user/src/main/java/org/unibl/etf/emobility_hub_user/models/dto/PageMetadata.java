@@ -2,8 +2,8 @@ package org.unibl.etf.emobility_hub_user.models.dto;
 
 import java.io.Serializable;
 
-public class PageMetadata implements Serializable{
-    private static final long serialVersionUID = 1L;
+public class PageMetadata implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private int size;
 	private int number;

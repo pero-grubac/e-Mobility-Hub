@@ -29,7 +29,7 @@ export class CarDetailComponent implements OnInit {
     private manufacturerService: ManufacturerService,
     private utilService: UtilService,
     private dialog: MatDialog,
-    private jwtService: JWTService
+    private jwtService: JWTService,
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +65,7 @@ export class CarDetailComponent implements OnInit {
   onManufacturerChange(): void {
     if (this.selectedManufacturerId) {
       const selectedManufacturer = this.manufacturers.find(
-        (m) => m.id === this.selectedManufacturerId
+        (m) => m.id === this.selectedManufacturerId,
       );
       if (selectedManufacturer) {
         this.car.manufacturer.id = selectedManufacturer.id;
@@ -85,11 +85,12 @@ export class CarDetailComponent implements OnInit {
       reader.readAsDataURL(this.selectedImageFile);
     }
   }
+
   // TODO broken/fix btn
   updateCar(): void {
     const formData = new FormData();
     const formattedDate = this.utilService.formatDate(
-      new Date(this.car.purchaseDate)
+      new Date(this.car.purchaseDate),
     );
 
     formData.append('id', this.car.id.toString());
@@ -127,6 +128,7 @@ export class CarDetailComponent implements OnInit {
       },
     });
   }
+
   report(): void {
     const dialogRef = this.dialog.open(AddFaultModalComponent, {
       width: '400px',
@@ -166,6 +168,7 @@ export class CarDetailComponent implements OnInit {
   seeAllFaults(): void {
     this.router.navigate([`/faults/${this.car.id}`]);
   }
+
   hasRole(requiredRoles: string[]): boolean {
     return this.jwtService.hasRole(requiredRoles);
     // TODO

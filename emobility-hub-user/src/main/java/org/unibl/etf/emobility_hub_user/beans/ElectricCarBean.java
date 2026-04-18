@@ -32,6 +32,4 @@ public class ElectricCarBean implements Serializable {
 		this.electricCars = electricCars;
 	}
 
-	
-
 }

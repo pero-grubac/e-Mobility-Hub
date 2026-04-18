@@ -21,7 +21,7 @@ export class FaultListComponent implements OnInit {
   constructor(
     private faultService: FaultService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +60,23 @@ export class FaultListComponent implements OnInit {
     if (typeof page === 'number') this.goToPage(page);
   }
 
+  isNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
+  openFaultDetails(fault: Fault): void {
+    const dialogRef = this.dialog.open(FaultDetailModalComponent, {
+      width: '400px',
+      data: { fault, vehicleId: this.vehicleId },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadFaults(); // Ponovno učitaj listu nakon ažuriranja ili brisanja
+      }
+    });
+  }
+
   private updateDisplayedPages(): void {
     const delta = 2;
     const range: (number | string)[] = [];
@@ -79,21 +96,5 @@ export class FaultListComponent implements OnInit {
     }
 
     this.displayedPages = range;
-  }
-
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
-  }
-  openFaultDetails(fault: Fault): void {
-    const dialogRef = this.dialog.open(FaultDetailModalComponent, {
-      width: '400px',
-      data: { fault, vehicleId: this.vehicleId },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadFaults(); // Ponovno učitaj listu nakon ažuriranja ili brisanja
-      }
-    });
   }
 }

@@ -10,6 +10,7 @@ export interface Manufacturer {
   contactFax: string;
   country: string;
 }
+
 export interface BaseManufacturer {
   id: number;
   name: string;

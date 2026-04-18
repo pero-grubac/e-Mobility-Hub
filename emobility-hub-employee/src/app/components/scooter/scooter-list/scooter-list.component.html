@@ -1,12 +1,12 @@
 <div class="scooter-list-page">
   <h1>Scooters</h1>
   <app-vehicle-list
-    [vehicles]="scooters"
-    [totalPages]="totalPages"
+    (addEvent)="handleAdd()"
+    (searchEvent)="handleSearch($event)"
+    (vehicleSelected)="handleVehicleSelected($event)"
     [currentPage]="currentPage"
     [onPageChange]="handlePageChange.bind(this)"
-    (searchEvent)="handleSearch($event)"
-    (addEvent)="handleAdd()"
-    (vehicleSelected)="handleVehicleSelected($event)"
+    [totalPages]="totalPages"
+    [vehicles]="scooters"
   ></app-vehicle-list>
 </div>

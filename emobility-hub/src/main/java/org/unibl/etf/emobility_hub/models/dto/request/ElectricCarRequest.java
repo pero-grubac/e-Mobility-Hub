@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ElectricCarRequest extends TransportVehicleRequest{
+public class ElectricCarRequest extends TransportVehicleRequest {
     @NotNull(message = "Purchase date can not be null")
     @NotEmpty(message = "Purchase date can not be empty")
     private String purchaseDate;

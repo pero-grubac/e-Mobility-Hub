@@ -16,9 +16,8 @@ import java.util.List;
 @Repository
 public interface RentalEntityRepository extends JpaRepository<RentalEntity, Long> {
     Page<RentalEntity> findAllByVehicle_Id(Long vehicleId, Pageable pageable);
+
     Page<RentalEntity> findAllByClient_Id(Long clientId, Pageable pageable);
-
-
 
 
     // STATISTIC
@@ -28,7 +27,6 @@ public interface RentalEntityRepository extends JpaRepository<RentalEntity, Long
             "WHERE r.rentalStart BETWEEN :start AND :end " +
             "GROUP BY FUNCTION('DATE', r.rentalStart)")
     List<DailyRevenueProjection> findDailyRevenue(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
-
 
 
     @Query("SELECT " +

@@ -25,7 +25,7 @@ export class AddScooterModalComponent {
   constructor(
     private dialogRef: MatDialogRef<AddScooterModalComponent>,
     private scooterService: ScooterService,
-    private manufacturerService: ManufacturerService
+    private manufacturerService: ManufacturerService,
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +66,7 @@ export class AddScooterModalComponent {
   onCancel(): void {
     this.dialogRef.close();
   }
+
   isFormValid(): boolean {
     return (
       this.scooter.uniqueIdentifier.trim() !== '' &&
@@ -76,6 +77,7 @@ export class AddScooterModalComponent {
       this.scooter.manufacturerId !== null
     );
   }
+
   generateUniqueId(): void {
     this.scooter.uniqueIdentifier = uuidv4();
   }

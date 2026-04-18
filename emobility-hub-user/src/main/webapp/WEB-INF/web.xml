@@ -20,11 +20,19 @@
         <servlet-class>org.unibl.etf.emobility_hub_user.controller.ClientController</servlet-class>
         <multipart-config>
             <location>/tmp</location>
-            <max-file-size>5242880</max-file-size> <!-- 5 MB -->
-            <max-request-size>10485760</max-request-size> <!-- 10 MB -->
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>10485760</max-request-size>
             <file-size-threshold>512000</file-size-threshold>
         </multipart-config>
     </servlet>
 
-   
+    <servlet>
+        <servlet-name>ImageServlet</servlet-name>
+        <servlet-class>org.unibl.etf.emobility_hub_user.servlet.ImageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ImageServlet</servlet-name>
+        <url-pattern>/images/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

@@ -1,0 +1,15 @@
+{
+  "java.format.settings.profile": "GoogleStyle",
+  "java.saveActions.organizeImports": true,
+  "[java]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "redhat.java",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[jsp]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": null
+  }
+}

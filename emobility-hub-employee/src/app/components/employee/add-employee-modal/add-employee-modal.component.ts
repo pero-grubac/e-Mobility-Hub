@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { DetailedUserRequest } from '../../../models/user.model';
 import { EmployeeService } from '../../../services/employee.service';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -23,7 +23,7 @@ export class AddEmployeeModalComponent {
 
   constructor(
     private dialogRef: MatDialogRef<AddEmployeeModalComponent>,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
   ) {}
 
   onSave(): void {

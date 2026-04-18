@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name="electric_car")
+@Table(name = "electric_car")
 public class ElectricCarEntity extends TransportVehicleEntity {
     @Column(nullable = false)
     private LocalDateTime purchaseDate;

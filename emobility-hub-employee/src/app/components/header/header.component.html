@@ -1,73 +1,73 @@
-<mat-toolbar color="primary" class="custom-toolbar">
-  <a routerLink="/" class="logo-link">
+<mat-toolbar class="custom-toolbar" color="primary">
+  <a class="logo-link" routerLink="/">
     <span class="logo">eMobilityHub</span>
   </a>
   <span class="spacer"></span>
   <button
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
+    class="menu-button"
     mat-button
     routerLink="/cars"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
   >
     Car
   </button>
   <button
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
+    class="menu-button"
     mat-button
     routerLink="/bicycles"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
   >
     Bicycle
   </button>
   <button
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
+    class="menu-button"
     mat-button
     routerLink="/scooters"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
   >
     Scooter
   </button>
   <button
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    class="menu-button"
     mat-button
     routerLink="/manufacturers"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
   >
     Manufacturer
   </button>
   <button
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
+    class="menu-button"
     mat-button
     routerLink="/clients"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'])"
   >
     Client
   </button>
   <button
+    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    class="menu-button"
     mat-button
     routerLink="/employees"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
   >
     Employee
   </button>
   <button
+    *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
+    class="menu-button"
     mat-button
     routerLink="/rentals"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
   >
     Rentals
   </button>
   <button
+    *ngIf="hasRole(['ROLE_MANAGER'])"
+    class="menu-button"
     mat-button
     routerLink="/statistics"
-    class="menu-button"
-    *ngIf="hasRole(['ROLE_MANAGER'])"
   >
     Statistic
   </button>
-  <button mat-button color="warn" (click)="onLogout()" class="logout-button">
+  <button (click)="onLogout()" class="logout-button" color="warn" mat-button>
     Logout
   </button>
 </mat-toolbar>

@@ -6,6 +6,7 @@ export interface Car extends Vehicle {
   purchaseDate: string;
   description: string;
 }
+
 export interface CarPage {
   content: Car[];
   page: PageMetadata;

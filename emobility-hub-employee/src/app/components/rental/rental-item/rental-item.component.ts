@@ -13,6 +13,6 @@ export class RentalItemComponent implements OnInit {
   ngOnInit(): void {}
 
   onRentalClick(): void {
-    this.rentalClick.emit(this.rental.id); 
+    this.rentalClick.emit(this.rental.id);
   }
 }

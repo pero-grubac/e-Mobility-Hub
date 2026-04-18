@@ -8,10 +8,9 @@ describe('AddManufacturerModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AddManufacturerModalComponent]
-    })
-    .compileComponents();
-    
+      declarations: [AddManufacturerModalComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(AddManufacturerModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

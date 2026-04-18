@@ -26,6 +26,7 @@ public class AppConfig {
 			ex.printStackTrace();
 		}
 	}
+
 	private String getProperty(String key) {
 		return properties.getProperty(key);
 	}
@@ -37,7 +38,16 @@ public class AppConfig {
 	private Integer getIntegerProperty(String key) {
 		return Integer.parseInt(properties.getProperty(key));
 	}
+
 	public String getLoginUrl() {
 		return getProperty("LOGIN_URL");
+	}
+
+	public String getPromotionsUrl() {
+		return getProperty("PROMOTIONS_URL");
+	}
+
+	public String getAnnouncementsUrl() {
+		return getProperty("ANNOUNCEMENTS_URL");
 	}
 }

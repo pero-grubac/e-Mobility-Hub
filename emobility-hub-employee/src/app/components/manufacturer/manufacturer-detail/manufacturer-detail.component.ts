@@ -14,7 +14,7 @@ export class ManufacturerDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private manufacturerService: ManufacturerService
+    private manufacturerService: ManufacturerService,
   ) {}
 
   ngOnInit(): void {
@@ -45,7 +45,7 @@ export class ManufacturerDetailComponent implements OnInit {
 
   onDelete(): void {
     const confirmed = confirm(
-      `Are you sure you want to delete ${this.manufacturer.name}?`
+      `Are you sure you want to delete ${this.manufacturer.name}?`,
     );
     if (confirmed) {
       this.manufacturerService

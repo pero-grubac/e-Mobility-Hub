@@ -31,6 +31,4 @@ public class ElectricScooterBean implements Serializable {
 	public void setElectricScooters(PaginatedResponse<ElectricScooterEntity> electricScooters) {
 		this.electricScooters = electricScooters;
 	}
-
-
 }

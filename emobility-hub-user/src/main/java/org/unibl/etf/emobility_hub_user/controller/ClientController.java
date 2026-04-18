@@ -76,8 +76,12 @@ public class ClientController extends HttpServlet {
 			String address = handleRegister(request, session);
 			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
 			dispatcher.forward(request, response);
+		} else if ("updateAvatar".equals(action)) {
+			String address = handleUpdateAvatar(request, session);
+			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+			dispatcher.forward(request, response);
 		} else {
-			response.sendRedirect("clients?action=bicycle");
+			response.sendRedirect("clients?action=wellcome");
 		}
 	}
 
@@ -144,11 +148,11 @@ public class ClientController extends HttpServlet {
 			}
 
 		} catch (Exception e) {
-	        session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-	        e.printStackTrace();
-	        response.sendRedirect("clients?action=welcome");
-	        return; 
-	    }
+			session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+			e.printStackTrace();
+			response.sendRedirect("clients?action=welcome");
+			return;
+		}
 	}
 
 	private void generateRentalPdf(HttpServletRequest request, HttpServletResponse response) {
@@ -271,32 +275,32 @@ public class ClientController extends HttpServlet {
 
 		try {
 			switch (action) {
-			case "login":
-				return handleLogin(request, session);
-			case "register":
-				return handleRegister(request, session);
-			case "welcome":
-				return handleWelcome(session);
-			case "logout":
-				return handleLogout(session);
-			case "profile":
-				return hadnleProfile(session);
-			case "changePassword":
-				return handleChangePassword(request, session);
-			case "deactivate":
-				return handleDeactivate(session);
-			case "updateAvatar":
-				return handleUpdateAvatar(request, session);
-			case "bicycle":
-				return handlebicycle(request, session);
-			case "rentals":
-				return hendleRentals(request, session);
-			case "car":
-				return handleCar(request, session);
-			case "scooter":
-				return handleScooter(request, session);
-			default:
-				return "/WEB-INF/pages/404.jsp";
+				case "login":
+					return handleLogin(request, session);
+				case "register":
+					return handleRegister(request, session);
+				case "welcome":
+					return handleWelcome(session);
+				case "logout":
+					return handleLogout(session);
+				case "profile":
+					return hadnleProfile(session);
+				case "changePassword":
+					return handleChangePassword(request, session);
+				case "deactivate":
+					return handleDeactivate(session);
+				case "updateAvatar":
+					return handleUpdateAvatar(request, session);
+				case "bicycle":
+					return handlebicycle(request, session);
+				case "rentals":
+					return hendleRentals(request, session);
+				case "car":
+					return handleCar(request, session);
+				case "scooter":
+					return handleScooter(request, session);
+				default:
+					return "/WEB-INF/pages/404.jsp";
 			}
 
 		} catch (Exception e) {
@@ -419,16 +423,13 @@ public class ClientController extends HttpServlet {
 
 					String fileName = UUID.randomUUID().toString() + extension;
 
-					String relativePath = "images" + java.io.File.separator + clientBean.getEntity().getUsername();
-					String uploadDir = getServletContext().getRealPath("/") + relativePath;
-
+					String uploadDir = "/tmp/uploads/images/" + clientBean.getEntity().getUsername();
 					java.io.File dir = new java.io.File(uploadDir);
 					if (!dir.exists()) {
 						dir.mkdirs();
 					}
 
 					String uploadPath = uploadDir + java.io.File.separator + fileName;
-					System.out.println("Saving file to: " + uploadPath);
 
 					try (FileOutputStream fos = new FileOutputStream(uploadPath);
 							InputStream is = file.getInputStream()) {
@@ -436,11 +437,10 @@ public class ClientController extends HttpServlet {
 						is.read(data);
 						fos.write(data);
 					}
-					String baseUrl = request.getScheme() + "://" + request.getServerName() + ":"
-							+ request.getServerPort() + request.getContextPath() + "/";
 
-					String dbPath = baseUrl + relativePath + "/" + fileName;
-					dbPath = dbPath.replace("\\", "/");
+					// URL koji je dostupan browseru
+					String dbPath = "http://localhost:8081/user/images/"
+							+ clientBean.getEntity().getUsername() + "/" + fileName;
 
 					if (clientBean.updateAvater(dbPath)) {
 						session.setAttribute("notification", "Avatar updated successfully.");

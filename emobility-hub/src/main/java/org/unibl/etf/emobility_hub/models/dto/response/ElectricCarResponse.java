@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ElectricCarResponse extends TransportVehicleResponse{
+public class ElectricCarResponse extends TransportVehicleResponse {
     private LocalDateTime purchaseDate;
     private String description;
 }

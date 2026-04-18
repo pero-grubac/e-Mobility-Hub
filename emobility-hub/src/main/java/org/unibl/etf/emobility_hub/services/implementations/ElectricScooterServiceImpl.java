@@ -42,6 +42,7 @@ public class ElectricScooterServiceImpl
 
         return getMapper().map(entity, getResponseClass());
     }
+
     @Override
     public ElectricScooterResponse update(ElectricScooterRequest request) {
         ManufacturerEntity manufacturerEntity = findManufacturerById(request.getManufacturerId());

@@ -16,7 +16,7 @@ import org.unibl.etf.emobility_hub_promotions.models.dto.request.PromotionReques
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class PromotionService {
-	private static final String PROMOTIONS_URL = "http://localhost:8080/promotions";
+	private static final String PROMOTIONS_URL = new AppConfig().getPromotionsUrl();
 	private ObjectMapper objectMapper;
 
 	public PromotionService() {

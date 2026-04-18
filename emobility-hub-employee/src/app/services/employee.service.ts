@@ -8,14 +8,14 @@ import { DetailedUserRequest, User, UserPage } from '../models/user.model';
   providedIn: 'root',
 })
 export class EmployeeService {
-  constructor(private http: HttpClient) {}
-
   baseUrl: string = `${environment.baseUrl}${environment.employees}`;
+
+  constructor(private http: HttpClient) {}
 
   getEmployees(
     page: number,
     size: number,
-    search?: string
+    search?: string,
   ): Observable<UserPage> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -28,20 +28,25 @@ export class EmployeeService {
       params,
     });
   }
+
   getById(id: number): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/${id}`);
   }
+
   update(user: DetailedUserRequest): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}`, user);
   }
+
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${id}`);
   }
+
   changeRole(id: number, role: string): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/changeRole/${id}`, role, {
       headers: { 'Content-Type': 'application/json' },
     });
   }
+
   register(user: DetailedUserRequest): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/register`, user);
   }

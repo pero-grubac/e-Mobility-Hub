@@ -1,20 +1,18 @@
-<div class="rental-detail-container" *ngIf="rental">
+<div *ngIf="rental" class="rental-detail-container">
   <h1>Rental Details</h1>
 
   <div class="rental-info">
     <p><strong>Rental ID:</strong> {{ rental.id }}</p>
     <p>
       <strong>Start:</strong>
-      {{ rental.rentalStart | date : "dd.MM.yyyy, HH:mm" }}
+      {{ rental.rentalStart | date: "dd.MM.yyyy, HH:mm" }}
     </p>
     <p>
-      <strong>End:</strong> {{ rental.rentalEnd | date : "dd.MM.yyyy, HH:mm" }}
+      <strong>End:</strong> {{ rental.rentalEnd | date: "dd.MM.yyyy, HH:mm" }}
     </p>
     <p><strong>Duration:</strong> {{ rental.duration }} hours</p>
-    <p>
-      <strong>Distance:</strong> {{ rental.distance | number : "1.2-2" }} km
-    </p>
-    <p><strong>Price:</strong> ${{ rental.price | number : "1.2-2" }}</p>
+    <p><strong>Distance:</strong> {{ rental.distance | number: "1.2-2" }} km</p>
+    <p><strong>Price:</strong> ${{ rental.price | number: "1.2-2" }}</p>
     <p>
       <strong>Start Location:</strong> ({{ rental.startLocation.latitude }},
       {{ rental.startLocation.longitude }})
@@ -29,16 +27,16 @@
     <div class="client-info">
       <h2>Client Information</h2>
       <app-client-item
-        [client]="rental.client"
         (clientClick)="onClientClick($event)"
+        [client]="rental.client"
       ></app-client-item>
     </div>
 
     <div class="vehicle-info">
       <h2>Vehicle Information</h2>
       <app-vehicle-item
-        [vehicle]="rental.vehicle"
         (vehicleClick)="onVehicleSelected($event)"
+        [vehicle]="rental.vehicle"
       ></app-vehicle-item>
     </div>
   </div>

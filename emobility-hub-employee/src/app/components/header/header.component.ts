@@ -10,7 +10,10 @@ import { JWTService } from '../../services/jwt.service';
 export class HeaderComponent implements OnInit {
   userRole: string | null = null;
 
-  constructor(private router: Router, private jwtService: JWTService) {}
+  constructor(
+    private router: Router,
+    private jwtService: JWTService,
+  ) {}
 
   ngOnInit(): void {
     this.userRole = this.jwtService.getRole();
@@ -20,6 +23,7 @@ export class HeaderComponent implements OnInit {
     this.jwtService.removeJWT();
     this.router.navigate(['/login']);
   }
+
   hasRole(requiredRoles: string[]): boolean {
     return this.jwtService.hasRole(requiredRoles);
   }

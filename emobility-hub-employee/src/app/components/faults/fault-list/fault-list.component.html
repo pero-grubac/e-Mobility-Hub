@@ -2,9 +2,9 @@
 <div class="fault-list-container">
   <div class="fault-list">
     <app-fault-item
+      (faultSelected)="openFaultDetails($event)"
       *ngFor="let fault of faults"
       [fault]="fault"
-      (faultSelected)="openFaultDetails($event)"
     ></app-fault-item>
   </div>
 
@@ -14,10 +14,10 @@
     </button>
 
     <button
-      *ngFor="let page of displayedPages"
-      [disabled]="!isNumber(page)"
-      [class.active]="page === currentPage"
       (click)="handlePageClick(page)"
+      *ngFor="let page of displayedPages"
+      [class.active]="page === currentPage"
+      [disabled]="!isNumber(page)"
     >
       {{ page }}
     </button>

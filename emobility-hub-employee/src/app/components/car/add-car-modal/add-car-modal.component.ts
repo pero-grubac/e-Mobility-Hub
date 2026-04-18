@@ -26,7 +26,7 @@ export class AddCarModalComponent {
   constructor(
     private dialogRef: MatDialogRef<AddCarModalComponent>,
     private carService: CarService,
-    private manufacturerService: ManufacturerService
+    private manufacturerService: ManufacturerService,
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +68,7 @@ export class AddCarModalComponent {
   onCancel(): void {
     this.dialogRef.close();
   }
+
   isFormValid(): boolean {
     return (
       this.car.uniqueIdentifier.trim() !== '' &&
@@ -79,6 +80,7 @@ export class AddCarModalComponent {
       this.car.manufacturerId !== null
     );
   }
+
   generateUniqueId(): void {
     this.car.uniqueIdentifier = uuidv4();
   }

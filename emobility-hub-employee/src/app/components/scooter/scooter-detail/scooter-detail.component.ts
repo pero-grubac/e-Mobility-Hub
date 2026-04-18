@@ -27,7 +27,7 @@ export class ScooterDetailComponent implements OnInit {
     private scooterService: ScooterService,
     private manufacturerService: ManufacturerService,
     private dialog: MatDialog,
-    private jwtService: JWTService
+    private jwtService: JWTService,
   ) {}
 
   ngOnInit(): void {
@@ -58,10 +58,11 @@ export class ScooterDetailComponent implements OnInit {
       },
     });
   }
+
   onManufacturerChange(): void {
     if (this.selectedManufacturerId) {
       const selectedManufacturer = this.manufacturers.find(
-        (m) => m.id === this.selectedManufacturerId
+        (m) => m.id === this.selectedManufacturerId,
       );
       if (selectedManufacturer) {
         this.scooter.manufacturer.id = selectedManufacturer.id;
@@ -81,6 +82,7 @@ export class ScooterDetailComponent implements OnInit {
       reader.readAsDataURL(this.selectedImageFile);
     }
   }
+
   updateScooter(): void {
     const formData = new FormData();
 
@@ -117,6 +119,7 @@ export class ScooterDetailComponent implements OnInit {
       },
     });
   }
+
   report(): void {
     const dialogRef = this.dialog.open(AddFaultModalComponent, {
       width: '400px',
@@ -156,6 +159,7 @@ export class ScooterDetailComponent implements OnInit {
   seeAllFaults(): void {
     this.router.navigate([`/faults/${this.scooter.id}`]);
   }
+
   hasRole(requiredRoles: string[]): boolean {
     return this.jwtService.hasRole(requiredRoles);
   }

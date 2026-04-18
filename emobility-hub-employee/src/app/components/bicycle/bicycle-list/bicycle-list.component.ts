@@ -20,16 +20,18 @@ export class BicycleListComponent implements OnInit {
   constructor(
     private bicycleService: BicycleService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.loadBicycles();
   }
+
   handleVehicleSelected(vehicleId: number): void {
     console.log(vehicleId);
     this.router.navigate(['/bicycle', vehicleId]);
   }
+
   loadBicycles(searchTerm: string = ''): void {
     this.bicycleService
       .getBicycles(this.currentPage, this.pageSize, searchTerm)
@@ -39,6 +41,7 @@ export class BicycleListComponent implements OnInit {
         this.currentPage = data.page.number;
       });
   }
+
   handleSearch(term: string): void {
     this.currentPage = 0;
     this.loadBicycles(term);

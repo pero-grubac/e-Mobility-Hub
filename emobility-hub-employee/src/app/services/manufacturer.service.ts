@@ -14,20 +14,22 @@ import {
   providedIn: 'root',
 })
 export class ManufacturerService {
-  constructor(private http: HttpClient) {}
-
   baseUrl: string = `${environment.baseUrl}${environment.manufacturers}`;
+
+  constructor(private http: HttpClient) {}
 
   getAll(): Observable<BaseManufacturer[]> {
     return this.http.get<BaseManufacturer[]>(`${this.baseUrl}/getAll`);
   }
+
   getById(id: number): Observable<Manufacturer> {
     return this.http.get<Manufacturer>(`${this.baseUrl}/${id}`);
   }
+
   getManufacturers(
     page: number,
     size: number,
-    search?: string
+    search?: string,
   ): Observable<ManufacturerPage> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -40,9 +42,11 @@ export class ManufacturerService {
       params,
     });
   }
+
   addManufacturer(manufacturer: ManufacturerRequest): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}`, manufacturer);
   }
+
   getManufacturerById(id: number): Observable<DetailedManufacturer> {
     return this.http.get<DetailedManufacturer>(`${this.baseUrl}/${id}`);
   }

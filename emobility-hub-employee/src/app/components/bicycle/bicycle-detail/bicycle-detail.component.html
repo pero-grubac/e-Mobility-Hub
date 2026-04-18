@@ -1,27 +1,18 @@
-<div class="bicycle-detail-container" *ngIf="bicycle">
+<div *ngIf="bicycle" class="bicycle-detail-container">
   <div class="content-container">
     <!-- Slika vozila -->
     <div class="image-container">
-      <img
-        [src]="
+      <img [src]="
           selectedImagePreview ||
           bicycle.image ||
           'assets/images/default-avatar.png'
-        "
-        alt="{{ bicycle.model }}"
-        class="bicycle-image"
-      />
-      <div class="image-info" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])">
+        " alt="{{ bicycle.model }}" class="bicycle-image" />
+      <div *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="image-info">
         <p><strong>Upload Image</strong></p>
-        <label for="imageUpload" class="custom-file-upload">
+        <label class="custom-file-upload" for="imageUpload">
           Choose File
         </label>
-        <input
-          type="file"
-          id="imageUpload"
-          (change)="onImageSelected($event)"
-          accept="image/*"
-        />
+        <input (change)="onImageSelected($event)" accept="image/*" id="imageUpload" type="file" />
       </div>
     </div>
 
@@ -36,66 +27,36 @@
 
         <div class="form-group">
           <label>Model</label>
-          <input
-            type="text"
-            [(ngModel)]="bicycle.model"
-            name="model"
-            class="form-control"
-            required
-          />
+          <input [(ngModel)]="bicycle.model" class="form-control" name="model" required type="text" />
         </div>
         <div class="form-group">
           <label>Purchase Price</label>
-          <input
-            type="number"
-            [(ngModel)]="bicycle.purchasePrice"
-            name="purchasePrice"
-            class="form-control"
-            required
-          />
+          <input [(ngModel)]="bicycle.purchasePrice" class="form-control" name="purchasePrice" required type="number" />
         </div>
         <div class="form-group">
           <label>Rent Price</label>
-          <input
-            type="number"
-            [(ngModel)]="bicycle.rentPrice"
-            name="rentPrice"
-            class="form-control"
-            required
-            [disabled]="!hasRole(['ROLE_MANAGER'])"
-          />
+          <input [(ngModel)]="bicycle.rentPrice" [disabled]="!hasRole(['ROLE_MANAGER'])" class="form-control"
+            name="rentPrice" required type="number" />
         </div>
 
         <div class="form-group">
           <label>Range per charge</label>
-          <input
-            [(ngModel)]="bicycle.rangePerCharge"
-            name="rangePerCharge"
-            class="form-control"
-            required
-          />
+          <input [(ngModel)]="bicycle.rangePerCharge" class="form-control" name="rangePerCharge" required />
         </div>
 
         <!-- Izbor proizvođača -->
-        <div class="form-group" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])">
+        <div *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="form-group">
           <label>Manufacturer</label>
-          <select
-            [(ngModel)]="selectedManufacturerId"
-            (change)="onManufacturerChange()"
-            name="manufacturer"
-            class="form-control"
-          >
-            <option
-              *ngFor="let manufacturer of manufacturers"
-              [value]="manufacturer.id"
-            >
+          <select (change)="onManufacturerChange()" [(ngModel)]="selectedManufacturerId" class="form-control"
+            name="manufacturer">
+            <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">
               {{ manufacturer.name }}
             </option>
           </select>
         </div>
 
         <!-- Prikaz trenutnog proizvođača -->
-        <div class="form-group" *ngIf="bicycle.manufacturer">
+        <div *ngIf="bicycle.manufacturer" class="form-group">
           <p><strong>Manufacturer Details:</strong></p>
           <p><strong>Name:</strong> {{ bicycle.manufacturer.name }}</p>
           <p><strong>Country:</strong> {{ bicycle.manufacturer.country }}</p>
@@ -119,47 +80,23 @@
 
   <!-- Akcije -->
   <div class="actions">
-    <button
-      class="btn btn-success"
-      (click)="updateBicycle()"
-      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
-    >
+    <button (click)="updateBicycle()" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="btn btn-success">
       Update
     </button>
-    <button
-      class="btn btn-danger"
-      (click)="deleteBicycle()"
-      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
-    >
+    <button (click)="deleteBicycle()" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="btn btn-danger">
       Delete
     </button>
-    <button
-      class="btn btn-warning"
-      (click)="report()"
-      *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
-    >
+    <button (click)="report()" *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])" class="btn btn-warning">
       Report
     </button>
-    <button
-      class="btn btn-primary"
-      (click)="fix()"
-      [disabled]="!bicycle.broken"
-      *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
-    >
+    <button (click)="fix()" *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])" [disabled]="!bicycle.broken"
+      class="btn btn-primary">
       Fix
     </button>
-    <button
-      class="btn btn-secondary"
-      (click)="seeAllRentals()"
-      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
-    >
+    <button (click)="seeAllRentals()" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="btn btn-secondary">
       See all rentals
     </button>
-    <button
-      class="btn btn-info"
-      (click)="seeAllFaults()"
-      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
-    >
+    <button (click)="seeAllFaults()" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="btn btn-info">
       See all faults
     </button>
   </div>

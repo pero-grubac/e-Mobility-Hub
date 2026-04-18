@@ -15,7 +15,10 @@ export class ClientListComponent {
   displayedPages: (number | string)[] = [];
   searchTerm: string = '';
 
-  constructor(private clientService: ClientService, private router: Router) {}
+  constructor(
+    private clientService: ClientService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.loadClients();
@@ -53,6 +56,35 @@ export class ClientListComponent {
     }
   }
 
+  isNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
+  onBlockUnblockClient(clientId: number): void {
+    const client = this.clients.find((c) => c.id === clientId);
+    if (client) {
+      const newBlockStatus = !client.isBlocked; // Nova vrednost za isBlocked
+
+      this.clientService.block(clientId, newBlockStatus).subscribe({
+        next: () => {
+          client.isBlocked = newBlockStatus;
+          console.log(
+            `Client ${clientId} is now ${
+              newBlockStatus ? 'blocked' : 'unblocked'
+            }.`,
+          );
+        },
+        error: (err) => {
+          console.error('Error blocking/unblocking client:', err);
+        },
+      });
+    }
+  }
+
+  onClientClick(clientId: number): void {
+    this.router.navigate(['/client', clientId]);
+  }
+
   private updateDisplayedPages(): void {
     const delta = 2;
     const range: (number | string)[] = [];
@@ -72,33 +104,5 @@ export class ClientListComponent {
     }
 
     this.displayedPages = range;
-  }
-
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
-  }
-
-  onBlockUnblockClient(clientId: number): void {
-    const client = this.clients.find((c) => c.id === clientId);
-    if (client) {
-      const newBlockStatus = !client.isBlocked; // Nova vrednost za isBlocked
-
-      this.clientService.block(clientId, newBlockStatus).subscribe({
-        next: () => {
-          client.isBlocked = newBlockStatus;
-          console.log(
-            `Client ${clientId} is now ${
-              newBlockStatus ? 'blocked' : 'unblocked'
-            }.`
-          );
-        },
-        error: (err) => {
-          console.error('Error blocking/unblocking client:', err);
-        },
-      });
-    }
-  }
-  onClientClick(clientId: number): void {
-    this.router.navigate(['/client', clientId]);
   }
 }

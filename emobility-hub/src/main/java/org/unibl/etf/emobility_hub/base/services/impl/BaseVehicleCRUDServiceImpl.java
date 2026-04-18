@@ -1,14 +1,11 @@
 package org.unibl.etf.emobility_hub.base.services.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.unibl.etf.emobility_hub.base.services.IBaseVehicleCRUDService;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
@@ -42,6 +39,9 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
 
     @Value("${file.upload-dir}")
     private String baseDir;
+
+    @Value("${backend.url}")
+    private String backendUrl;
 
     public BaseVehicleCRUDServiceImpl(ModelMapper mapper, TRepository repository, Class<TEntity> entityClass, Class<TRequest> requestClass, Class<TResponse> responseClass, Class<TDetailedResponse> detailedResponseClass, ManufacturerEntityRepository manufacturerEntityRepository) {
         this.mapper = mapper;
@@ -85,7 +85,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
 
     @Override
     public Page<TResponse> getAllByModel(String model, Pageable pageable) {
-        return repository.findAllByModelIgnoreCaseContaining(model,pageable).map(te->mapper.map(te,responseClass));
+        return repository.findAllByModelIgnoreCaseContaining(model, pageable).map(te -> mapper.map(te, responseClass));
     }
 
     @Override
@@ -107,7 +107,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
 
         if (request.getImage() != null && !request.getImage().isEmpty()) {
             MultipartFile imageFile = request.getImage();
-           repository.saveAndFlush(te);
+            repository.saveAndFlush(te);
             String imagePath = saveImageToFileSystem(imageFile, te);
             te.setImage(imagePath);
         }
@@ -116,17 +116,6 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
         return getMapper().map(te, responseClass);
     }
 
-    private String getBaseUrl() {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes == null) {
-            throw new IllegalStateException("No request attributes found. Ensure this method is called in the context of an HTTP request.");
-        }
-        HttpServletRequest request = attributes.getRequest();
-        return request.getScheme() + "://" +
-                request.getServerName() +
-                ":" + request.getServerPort() +
-                request.getContextPath() + "/";
-    }
 
     protected String saveImageToFileSystem(MultipartFile imageFile, TEntity te) {
         String uploadDir = baseDir + File.separator + TransportVehicleEntity.class.getSimpleName().toLowerCase()
@@ -151,9 +140,11 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
         } catch (IOException e) {
             throw new RuntimeException("Failed to save file to: " + filePath, e);
         }
-        String baseUrl = getBaseUrl();
 
-        return baseUrl + uploadDir + fileName;
+        return backendUrl + "/uploads/" +
+                TransportVehicleEntity.class.getSimpleName().toLowerCase() + "/" +
+                te.getClass().getSimpleName().toLowerCase() + "/" +
+                te.getId() + "/" + fileName;
     }
 
     @Override
@@ -169,7 +160,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
             String imagePath = saveImageToFileSystem(imageFile, te);
             te.setImage(imagePath);
         }
-       repository.saveAndFlush(te);
+        repository.saveAndFlush(te);
 
         return getMapper().map(te, responseClass);
     }
@@ -195,7 +186,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
             return;
         }
 
-        String baseUrl = getBaseUrl();
+        String baseUrl = backendUrl + "/uploads/";
         if (!imagePath.startsWith(baseUrl)) {
             System.err.println("Invalid image path: " + imagePath);
             return;
@@ -229,7 +220,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
     protected void setIsBroken(Long id, Boolean isBroken) {
         TEntity te = findById(id);
         te.setBroken(isBroken);
-       repository.saveAndFlush(te);
+        repository.saveAndFlush(te);
     }
 
     protected Page<TResponse> getAll(Pageable pageable, Boolean isBroken) {

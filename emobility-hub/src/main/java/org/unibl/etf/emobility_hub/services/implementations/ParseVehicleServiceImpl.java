@@ -29,7 +29,10 @@ import java.io.Reader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -55,7 +58,7 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
         ParsedVehicleResponse response = new ParsedVehicleResponse();
         List<ParseError> errors = new ArrayList<>();
         List<TransportVehicleResponse> parsedVehicles = new ArrayList<>();
-        int rowNumber =0;
+        int rowNumber = 0;
 
         try (Reader reader = new FileReader(file);
              CSVReader csvReader = new CSVReader(reader)) {
@@ -121,7 +124,7 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
             throw new IllegalArgumentException("Value cannot be empty.");
         }
         try {
-            return  Long.parseLong(value);
+            return Long.parseLong(value);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid number format: " + value);
         }
@@ -162,7 +165,7 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
         } else if (isCar) {
             ElectricCarRequest carRequest = new ElectricCarRequest();
             carRequest.setPurchaseDate(parseDateTime(rowData.get("purchaseDate")));
-            if(rowData.get("description") == null || rowData.get("description").isEmpty())
+            if (rowData.get("description") == null || rowData.get("description").isEmpty())
                 throw new IllegalArgumentException("Description is required.");
             carRequest.setDescription(rowData.get("description"));
             request = carRequest;
@@ -203,6 +206,7 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
             case ElectricBicycleRequest bicycleRequest -> {
                 ElectricBicycleEntity entity = mapper.map(bicycleRequest, ElectricBicycleEntity.class);
                 entity.setManufacturer(manufacturerEntity);
+                entity.setImage("");
                 electricBicycleEntityRepository.saveAndFlush(entity);
                 return mapper.map(entity, ElectricBicycleResponse.class);
             }
@@ -210,12 +214,14 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
                 ElectricCarEntity entity = mapper.map(carRequest, ElectricCarEntity.class);
                 entity.setManufacturer(manufacturerEntity);
                 entity.setPurchaseDate(LocalDateTime.parse(carRequest.getPurchaseDate()));
+                entity.setImage("");
                 electricCarEntityRepository.saveAndFlush(entity);
                 return mapper.map(entity, ElectricCarResponse.class);
             }
             case ElectricScooterRequest scooterRequest -> {
                 ElectricScooterEntity entity = mapper.map(scooterRequest, ElectricScooterEntity.class);
                 entity.setManufacturer(manufacturerEntity);
+                entity.setImage("");
                 electricScooterEntityRepository.save(entity);
                 return mapper.map(entity, ElectricScooterResponse.class);
             }
@@ -224,6 +230,7 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
             }
         }
     }
+
     private ManufacturerEntity findManufacturerById(Long id) {
         ManufacturerEntity entity = manufacturerEntityRepository.findById(id).orElse(null);
         if (entity == null)

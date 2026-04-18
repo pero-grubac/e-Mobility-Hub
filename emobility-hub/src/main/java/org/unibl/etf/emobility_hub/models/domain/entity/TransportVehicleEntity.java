@@ -24,7 +24,7 @@ public abstract class TransportVehicleEntity {
 
     private double purchasePrice;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(255) default ''")
     private String image;
 
     private boolean isBroken;

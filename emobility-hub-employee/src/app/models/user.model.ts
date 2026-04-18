@@ -13,6 +13,7 @@ export interface UserRequest {
   firstName: string;
   lastName: string;
 }
+
 export interface DetailedUserRequest extends UserRequest {
   id: number;
   password: string;

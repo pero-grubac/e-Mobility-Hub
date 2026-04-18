@@ -1,6 +1,9 @@
 package org.unibl.etf.emobility_hub_user.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public final class DAOUtil {
 

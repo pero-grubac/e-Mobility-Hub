@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  height:  calc(100vh - 104px);
+  height: calc(100vh - 104px);
   background: linear-gradient(to right, #4caf50, #2196f3);
   color: white;
   border-radius: 10px;

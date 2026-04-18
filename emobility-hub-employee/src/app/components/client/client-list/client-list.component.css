@@ -10,12 +10,14 @@
   align-items: center; /* Vertikalno centriranje */
   margin-bottom: 32px;
 }
+
 .client-list-title {
   text-align: center;
   margin-bottom: 24px;
   margin-top: 16px;
   color: #333;
 }
+
 .search-bar-container {
   display: flex;
   justify-content: center; /* Centriranje sadržaja unutar kontejnera */

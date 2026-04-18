@@ -1,4 +1,4 @@
-<div class="employee-item" (click)="onEmployeeClick()">
+<div (click)="onEmployeeClick()" class="employee-item">
   <img
     [src]="getRoleImage(employee.role)"
     alt="{{ employee.role }}"

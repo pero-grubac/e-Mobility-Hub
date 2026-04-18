@@ -5,5 +5,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.unibl.etf.emobility_hub.models.domain.entity.UserEntity;
 
 @NoRepositoryBean
-public interface JpaUserEntityRepository<T extends UserEntity> extends JpaRepository<T,Long> {
+public interface JpaUserEntityRepository<T extends UserEntity> extends JpaRepository<T, Long> {
 }

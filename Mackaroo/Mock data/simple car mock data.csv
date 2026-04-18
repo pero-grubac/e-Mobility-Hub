@@ -1,101 +1,101 @@
-uniqueIdentifier,manufacturerId,model,purchasePrice,rentPrice,image,purchaseDate,description
-b025c76c-a48e-45c1-94a3-378648545352,8,Wrangler,5125.0,75.71,,2024-09-20T20:45:45Z,interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus
-e5e5de92-4247-4c56-91c7-316e44c2a09a,7,Liberty,4631.89,58.56,,2024-05-19T18:18:12Z,vehicula condimentum curabitur in libero ut massa volutpat convallis morbi odio
-036ee86f-c0f1-40d6-b6d8-1f6274f68a54,38,G-Series G20,9233.54,22.92,,2024-04-14T04:15:53Z,tempus vivamus in felis eu sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod
-0f7b0726-f311-48bb-a375-5a82ff981411,13,9-3,2580.81,63.33,,2024-04-11T06:27:54Z,mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in
-2383c149-f076-4a19-9685-1fd84bb129ec,11,Dakota Club,7943.28,31.38,,2024-08-08T06:54:43Z,nisi nam ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla
-618232ca-f93e-41b9-8881-58243f45d211,38,Ram 1500,3137.69,66.92,,2024-08-28T10:54:03Z,vulputate elementum nullam varius nulla facilisi cras non velit nec nisi vulputate nonummy maecenas tincidunt lacus at velit vivamus vel
-6d73398f-e962-4260-a21f-3ae89063ac5e,44,Mazdaspeed6,4124.3,47.87,,2024-02-26T13:04:26Z,nisi at nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem
-dc6b6568-2b8e-4a0c-a672-0ecdeac69ec9,35,Dakota,4027.88,32.28,,2024-07-06T09:19:52Z,mi sit amet lobortis sapien sapien non mi integer ac neque duis bibendum morbi non quam nec dui luctus
-3ac9be10-3f16-4a88-bdde-02a378144381,4,Freelander,8166.53,94.63,,2024-02-06T14:38:32Z,eget tincidunt eget tempus vel pede morbi porttitor lorem id ligula suspendisse ornare consequat lectus in est risus auctor
-8c6ba4e4-b390-48af-a941-51df3defe313,39,3500,7328.88,54.81,,2024-06-29T17:32:15Z,semper interdum mauris ullamcorper purus sit amet nulla quisque arcu libero rutrum ac lobortis vel dapibus at diam nam
-676f896c-f640-44f7-b101-365a8a20a656,1,Summit,3943.98,77.96,,2025-01-02T20:57:02Z,vel nisl duis ac nibh fusce lacus purus aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam
-530fffff-4ce6-4db0-ad8c-1651d201de60,25,Sienna,8607.48,17.24,,2024-04-21T01:20:23Z,platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida nisi
-13e54b8a-ca86-4b48-bbd5-914618a1c687,15,Sierra 2500,6717.59,28.82,,2024-01-21T06:33:42Z,cursus urna ut tellus nulla ut erat id mauris vulputate elementum nullam varius
-d8c38f82-9d17-4377-ae78-6e4c885481c1,40,Fiero,8502.61,76.61,,2024-10-16T00:21:12Z,condimentum id luctus nec molestie sed justo pellentesque viverra pede ac
-288cb6e2-1a8b-4e71-bce2-49457ce61d05,19,Sprinter 3500,3692.25,11.17,,2024-06-20T04:36:49Z,interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-0ec1ddce-3cfd-4b60-aaa2-ea4017281c3d,15,Electra,5347.39,7.69,,2024-04-14T01:05:02Z,vivamus vestibulum sagittis sapien cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus etiam vel
-f778ee76-2775-414b-ba74-e2b3ddacf2da,3,S2000,5600.16,36.33,,2024-10-14T14:42:58Z,amet sem fusce consequat nulla nisl nunc nisl duis bibendum felis sed interdum venenatis turpis enim
-42bb11f9-9516-4ec7-828d-f458eda6df01,3,Aspen,9101.28,37.6,,2024-08-16T18:05:02Z,nec dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce
-4bdd7eec-3bf0-4c45-b7b7-c517bce57b22,15,Forenza,9708.8,36.8,,2024-10-06T18:46:23Z,est phasellus sit amet erat nulla tempus vivamus in felis eu sapien
-baea8c8b-c030-48ff-92ad-3923e9777ddc,6,Millenia,1627.26,2.81,,2024-07-11T09:53:17Z,nisl ut volutpat sapien arcu sed augue aliquam erat volutpat
-dd3da55e-c2f6-452a-aaf3-c45d18b0f895,30,Accord,6216.79,25.61,,2024-07-29T12:17:26Z,leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at
-e0cdfeaf-cc5e-41ef-9da1-9c6aa83ba678,43,Probe,7190.12,99.46,,2024-03-30T21:04:12Z,sapien varius ut blandit non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-70d1f902-f85f-4634-9728-e3da65302a36,2,Ascender,9193.86,49.07,,2024-10-21T05:52:37Z,eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit
-78ce2a0e-3778-43d2-9d51-9bf809417db5,13,CLS-Class,8379.28,9.13,,2024-05-07T11:41:43Z,velit donec diam neque vestibulum eget vulputate ut ultrices vel augue
-a2d82fe0-83c7-4a7c-86db-df424e66fc32,13,Econoline E150,8853.62,95.78,,2024-11-06T00:49:22Z,proin risus praesent lectus vestibulum quam sapien varius ut blandit non interdum in ante
-ada12a8c-929b-4612-8cf1-b05658570b87,2,G-Class,5805.85,99.56,,2024-02-23T01:14:46Z,parturient montes nascetur ridiculus mus etiam vel augue vestibulum rutrum rutrum neque aenean
-3707f4bd-543b-4457-aa4d-d9932f435be2,19,S40,2391.25,21.15,,2024-08-20T21:18:48Z,tempus semper est quam pharetra magna ac consequat metus sapien ut nunc vestibulum ante ipsum primis in
-6e2764e0-8dbf-4b75-85a0-ffb2ff5ec904,26,Cooper Countryman,5599.88,41.7,,2024-06-20T04:34:19Z,cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis sapien cum sociis natoque
-5b5383e4-b680-4e68-8bdf-f49b364f7668,41,C30,4294.06,14.21,,2024-02-12T12:44:36Z,pellentesque quisque porta volutpat erat quisque erat eros viverra eget congue eget semper rutrum nulla nunc
-cf3d6446-2762-494e-b0d6-091e6b77906b,23,Discovery,6878.28,96.61,,2024-05-07T20:02:59Z,in faucibus orci luctus et ultrices posuere cubilia curae nulla dapibus dolor vel est donec
-71e490ff-4c95-4d70-b4c6-2e9a79090eea,19,Pacifica,1926.86,64.52,,2024-09-01T13:31:13Z,neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac
-937c4524-f4c9-4fc1-a6a6-24cf36bb4e13,42,TSX,2935.12,48.64,,2024-06-27T22:15:31Z,pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet
-e77f8fab-8eb1-4d4c-badd-3b11b6092849,44,Laser,7176.23,65.71,,2024-02-14T12:00:05Z,erat fermentum justo nec condimentum neque sapien placerat ante nulla justo aliquam quis turpis
-9059c6de-97ee-40af-8b4d-cc065fcf0d5c,19,Phantom,5050.38,48.32,,2024-09-15T14:37:04Z,morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed
-dc37887d-9701-48d1-9940-8daac7ca0c01,9,i-Series,5920.27,30.97,,2024-07-09T02:50:26Z,in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis
-2a619256-fbe0-4341-b7a0-fa450268cd79,37,Escalade,9449.18,29.95,,2024-10-08T19:42:06Z,ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia
-88fc9fc4-4069-4807-ba18-4ed5f1cd5943,7,Prizm,8560.05,83.05,,2025-01-05T16:15:21Z,tristique fusce congue diam id ornare imperdiet sapien urna pretium nisl ut volutpat sapien
-5fce3af0-5bd5-4fca-bad7-56d9642a1339,5,GX,6420.13,89.44,,2024-03-22T14:48:40Z,at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula condimentum curabitur in libero
-fb51f364-7951-44c0-88ce-05c40376b16f,36,Sonata,1029.42,19.31,,2024-07-23T17:18:21Z,velit vivamus vel nulla eget eros elementum pellentesque quisque porta volutpat erat quisque erat eros viverra eget congue
-aa65d75d-5a0a-44e2-bea9-5553cd182c7b,39,SL-Class,5815.55,36.07,,2024-08-03T03:30:53Z,proin leo odio porttitor id consequat in consequat ut nulla sed accumsan felis
-d7aa0d62-6739-4abf-b9b2-1c8ddcb74191,29,Envoy,3862.13,13.19,,2024-10-20T04:47:44Z,vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere
-28e72fc5-b3d1-47f4-9bfd-2dda27527497,38,Ram,4008.45,32.63,,2024-02-16T16:23:21Z,cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis sapien
-73f3f68a-411c-4524-87d9-ecf2edb4ceda,7,Phaeton,7359.32,31.06,,2024-02-03T03:44:50Z,id nisl venenatis lacinia aenean sit amet justo morbi ut odio
-044dc87b-521a-451c-9ffa-c36d5c4cea6a,14,X5,4917.22,82.29,,2024-03-26T21:44:24Z,sapien ut nunc vestibulum ante ipsum primis in faucibus orci
-29adadf0-ed64-49ba-98b2-bc1272c516f2,17,Mystique,8094.19,86.31,,2024-11-20T11:13:30Z,a suscipit nulla elit ac nulla sed vel enim sit amet nunc viverra dapibus nulla suscipit ligula in lacus curabitur
-0825ccdc-74e1-4bf9-a031-b0ffcd754993,12,Celica,9081.15,5.2,,2024-11-02T07:47:18Z,dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida
-3ea9c311-88fe-4f0f-885b-805ceeb67736,42,Dakota Club,9163.28,23.73,,2025-01-08T00:47:47Z,elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit
-64544967-d58f-4ecb-9c80-362073523def,43,Outlander,1827.53,8.89,,2024-04-01T06:14:40Z,ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet
-9051177c-ccd0-4538-b4dc-f775121149bd,36,Taurus,6600.84,85.89,,2024-08-10T08:15:18Z,congue risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede
-7d02dc4a-93b8-46a5-8c17-e8b68ed97ccb,20,Rodeo,2050.99,58.99,,2024-10-26T23:44:06Z,neque sapien placerat ante nulla justo aliquam quis turpis eget elit sodales scelerisque mauris sit amet eros suspendisse
-e9fe6a74-f5e8-4ff1-a1ba-1bb46efbd3e7,10,Avalon,2451.31,89.72,,2024-07-22T14:09:25Z,duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat
-12029126-6851-4746-9abf-fedebf4ac1b4,25,Stylus,4553.98,96.33,,2024-01-22T23:12:45Z,massa donec dapibus duis at velit eu est congue elementum in hac habitasse platea dictumst morbi vestibulum velit id pretium
-5c6dcfcf-4d97-42f7-b138-963851d14dae,20,Panamera,4240.24,3.61,,2024-07-09T17:17:26Z,rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce lacus purus aliquet at feugiat
-a51c0649-7a05-426a-ad92-82e050eb4746,7,S-Series,4413.32,12.84,,2024-04-30T05:48:19Z,sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo
-45d7369e-306c-4d49-b080-8258e4198b5c,23,Outlander,4828.41,28.0,,2024-02-21T05:31:02Z,mauris viverra diam vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non
-e890c39c-d329-402a-88a5-ff0187d99b52,41,Sportage,4920.37,21.08,,2024-04-09T04:28:07Z,volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit
-110038ee-53e7-4289-9d00-2d3978c74e58,11,Z4,3629.76,3.87,,2024-04-18T09:49:23Z,libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo
-15591fb0-cdc1-4595-9ccd-b5a865d362e9,34,Golf,7723.55,82.26,,2024-10-29T17:05:43Z,purus eu magna vulputate luctus cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus
-208394bc-9950-4d03-a0f6-f19a6189a4c3,43,5 Series,2864.56,99.9,,2024-09-19T05:40:32Z,pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla sed vel enim sit amet nunc viverra dapibus nulla
-83028265-8238-4b66-9eed-307416ff96fe,21,Outlander,9684.44,90.19,,2024-12-19T22:07:04Z,eu est congue elementum in hac habitasse platea dictumst morbi
-7e0da8f0-a1a5-461d-9f8d-ea907ab4eb5b,40,Matrix,3992.65,84.78,,2024-11-07T16:24:22Z,nunc purus phasellus in felis donec semper sapien a libero
-23dc136f-23f6-47c5-b82a-77383cc1557b,30,Eurovan,8638.87,20.43,,2024-01-15T05:00:09Z,in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan
-8fcc8f3a-a141-4d66-8a02-550bc061aa10,3,Gallardo,4903.07,99.22,,2024-07-05T08:40:31Z,quis tortor id nulla ultrices aliquet maecenas leo odio condimentum
-90b01674-bd14-4b04-9ff4-887d3b66aa7f,8,LHS,9691.6,33.55,,2024-06-04T04:34:38Z,amet nulla quisque arcu libero rutrum ac lobortis vel dapibus at diam
-f4f0fd40-a9a7-4d94-9e82-d42a03e8bd9e,29,Passat,4048.65,64.13,,2024-12-12T05:42:39Z,vulputate justo in blandit ultrices enim lorem ipsum dolor sit amet consectetuer adipiscing elit proin interdum mauris
-3f4dfd0d-f509-4a07-bd4e-5902e7ecb806,25,Grand Caravan,4674.22,12.22,,2024-02-20T17:01:47Z,vivamus vel nulla eget eros elementum pellentesque quisque porta volutpat erat quisque erat
-c2a43a55-846d-4d28-89a9-f59587751685,31,Express 3500,4714.39,97.99,,2024-10-14T04:53:57Z,elementum pellentesque quisque porta volutpat erat quisque erat eros viverra eget
-1e61d629-6e2b-46c4-95d4-1c1b92fa9aef,35,Magnum,9471.03,5.03,,2024-04-10T14:08:37Z,vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci
-9434b2d0-7544-4eff-b67c-c11c40aa4b7b,35,G-Class,8267.65,39.93,,2024-07-29T01:35:32Z,nulla suspendisse potenti cras in purus eu magna vulputate luctus cum sociis natoque penatibus et magnis dis parturient montes
-b87e8374-fbe9-40aa-a04a-ac822b92fa73,19,MPV,9800.15,39.4,,2024-03-14T07:43:03Z,vestibulum ac est lacinia nisi venenatis tristique fusce congue diam
-0afc7e8c-a8bc-44db-8d1d-13791309165e,43,Lumina,6051.51,49.04,,2024-06-28T09:08:13Z,lacinia eget tincidunt eget tempus vel pede morbi porttitor lorem id ligula suspendisse ornare consequat lectus in est risus auctor
-9a6ed029-9ab9-48ba-9917-5a946f646f48,29,Blackwood,5443.16,24.43,,2024-05-09T14:16:33Z,porttitor pede justo eu massa donec dapibus duis at velit eu est congue elementum in hac
-e4418bc5-d92c-4364-b882-1937ebdca161,15,B-Series,9628.28,85.57,,2024-01-19T09:45:09Z,ut massa volutpat convallis morbi odio odio elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus
-28c74798-5425-482f-af9e-b8ff53e63256,18,Rodeo,4574.25,50.2,,2024-07-20T11:37:53Z,amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis egestas metus aenean fermentum
-50431dfb-7045-45f5-9a92-3bf2896f9094,8,Savana 2500,1885.92,64.11,,2025-01-05T15:34:46Z,ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet ultrices erat tortor sollicitudin mi sit amet
-8b8a0be4-8d1a-4073-976d-8e932f15210e,26,Vitara,9515.59,31.15,,2024-01-23T03:18:14Z,dui maecenas tristique est et tempus semper est quam pharetra magna ac consequat
-19e9605a-a253-47d6-a684-7f249b8ee03c,21,XC60,5769.26,36.09,,2024-11-02T05:10:50Z,odio elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est
-944dd3a3-6fd5-4a33-9092-30901b1dd632,23,Sonata,5564.53,81.08,,2024-04-21T02:55:30Z,vulputate nonummy maecenas tincidunt lacus at velit vivamus vel nulla eget
-c6113fd8-68bd-44e0-bc8d-94b5996af9da,13,Crown Victoria,1518.79,63.72,,2024-10-26T11:18:02Z,ut tellus nulla ut erat id mauris vulputate elementum nullam varius nulla facilisi cras
-9e9a02f3-e0f3-4bbd-9281-f5eeada6cd04,16,Lanos,4086.47,34.43,,2024-11-30T21:07:53Z,nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem integer tincidunt ante vel
-744a295c-dd1f-4e54-8260-16ceb083eced,33,Cooper Clubman,7087.1,73.84,,2024-09-05T15:57:31Z,aliquam erat volutpat in congue etiam justo etiam pretium iaculis justo in hac habitasse
-d955a91b-1220-49ad-a9ee-a8ca8244bc1d,30,NSX,5224.54,82.06,,2024-12-12T10:49:55Z,nulla mollis molestie lorem quisque ut erat curabitur gravida nisi at nibh in hac habitasse platea dictumst aliquam augue quam
-b6552856-3f0c-4669-9e39-38c3353305df,20,Tracker,6361.12,89.78,,2024-05-17T16:51:52Z,cursus urna ut tellus nulla ut erat id mauris vulputate elementum nullam varius nulla
-8c23c294-68b5-4dba-826d-fac3ec454aff,40,Echo,6661.25,98.65,,2024-10-22T22:06:03Z,ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida nisi
-9f6225fb-f878-4593-a5f0-26476e1aa8c0,18,911,2255.77,55.54,,2024-11-15T07:38:16Z,diam erat fermentum justo nec condimentum neque sapien placerat ante nulla justo aliquam quis turpis
-5834954b-8328-44ee-9d5d-7cd49e7a1057,7,Ascender,7206.41,37.37,,2024-04-28T09:00:07Z,eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper
-e18e60a3-b43d-42d8-b26d-d8f2272a39bb,8,Titan,7222.11,95.1,,2024-12-09T02:57:43Z,consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius ut blandit non interdum in ante
-6077b24b-71d0-4937-b7c5-b962eb21385e,38,Amigo,5324.75,46.56,,2024-04-16T13:03:50Z,nec nisi volutpat eleifend donec ut dolor morbi vel lectus in
-351c79ed-09d2-467a-9236-54edaae259bb,23,Torino,7389.9,55.27,,2024-02-13T03:46:32Z,lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu
-4e8c2ae3-772d-4985-81b8-c0e5e2f6d0be,30,Monte Carlo,1264.71,48.58,,2025-01-03T20:14:02Z,dui vel nisl duis ac nibh fusce lacus purus aliquet at feugiat non pretium quis lectus
-70a76b4f-5670-4aaf-9947-7f9c08c736a4,24,XC90,3086.03,57.95,,2024-07-16T20:30:04Z,posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel
-e0e22b08-502c-40c5-a2f6-8793b72385d4,10,Pathfinder,7544.2,61.37,,2024-05-13T08:14:32Z,leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla pede
-66e836af-ee4e-408b-9916-469d6825c299,6,Raider,7303.53,85.28,,2024-04-10T18:20:23Z,in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-564d8e34-1801-4d9e-a7f3-39a58d0e6c7c,24,Sienna,8203.55,74.82,,2024-01-22T04:54:27Z,duis mattis egestas metus aenean fermentum donec ut mauris eget massa tempor convallis nulla neque libero convallis eget
-a491df08-8db6-4b18-b40b-67c6f993c66e,20,Express 1500,4885.74,65.93,,2024-08-24T21:44:00Z,amet consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius
-e284daee-75c4-4e1c-8a66-7d3017b23f48,3,Ram 3500 Club,5828.48,12.08,,2024-08-17T12:06:47Z,at lorem integer tincidunt ante vel ipsum praesent blandit lacinia erat vestibulum sed
-8be9dac4-70d0-4bb3-936a-24a3666f273f,10,Explorer Sport,2224.91,82.76,,2024-04-26T20:41:28Z,vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam suspendisse
-f7941a9f-21e7-412e-9cef-1d3f16d8214c,38,Frontier,9047.14,84.14,,2024-12-12T18:11:51Z,non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus
-3c67d201-ee4a-4ed3-80df-fa1945ca28d1,1,Bravada,4666.5,47.54,,2024-04-14T12:09:00Z,nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum
-e2e90ea9-406d-4712-bd5b-18e4a779281b,19,Familia,8085.78,14.06,,2024-09-30T23:30:11Z,erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi nulla ac
+uniqueIdentifier,manufacturerId,model,purchasePrice,rentPrice,purchaseDate,description
+b025c76c-a48e-45c1-94a3-378648545352,1,Wrangler,5125.0,75.71,2024-09-20 20:45:45,interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus
+e5e5de92-4247-4c56-91c7-316e44c2a09a,1,Liberty,4631.89,58.56,2024-05-19 18:18:12,vehicula condimentum curabitur in libero ut massa volutpat convallis morbi odio
+036ee86f-c0f1-40d6-b6d8-1f6274f68a54,1,G-Series G20,9233.54,22.92,2024-04-14 04:15:53,tempus vivamus in felis eu sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod
+0f7b0726-f311-48bb-a375-5a82ff981411,1,9-3,2580.81,63.33,2024-04-11 06:27:54,mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in
+2383c149-f076-4a19-9685-1fd84bb129ec,3,Dakota Club,7943.28,31.38,2024-08-08 06:54:43,nisi nam ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla
+618232ca-f93e-41b9-8881-58243f45d211,1,Ram 1500,3137.69,66.92,2024-08-28 10:54:03,vulputate elementum nullam varius nulla facilisi cras non velit nec nisi vulputate nonummy maecenas tincidunt lacus at velit vivamus vel
+6d73398f-e962-4260-a21f-3ae89063ac5e,2,Mazdaspeed6,4124.3,47.87,2024-02-26 13:04:26,nisi at nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem
+dc6b6568-2b8e-4a0c-a672-0ecdeac69ec9,1,Dakota,4027.88,32.28,2024-07-06 09:19:52,mi sit amet lobortis sapien sapien non mi integer ac neque duis bibendum morbi non quam nec dui luctus
+3ac9be10-3f16-4a88-bdde-02a378144381,3,Freelander,8166.53,94.63,2024-02-06 14:38:32,eget tincidunt eget tempus vel pede morbi porttitor lorem id ligula suspendisse ornare consequat lectus in est risus auctor
+8c6ba4e4-b390-48af-a941-51df3defe313,1,3500,7328.88,54.81,2024-06-29 17:32:15,semper interdum mauris ullamcorper purus sit amet nulla quisque arcu libero rutrum ac lobortis vel dapibus at diam nam
+676f896c-f640-44f7-b101-365a8a20a656,2,Summit,3943.98,77.96,2025-01-02 20:57:02,vel nisl duis ac nibh fusce lacus purus aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam
+530fffff-4ce6-4db0-ad8c-1651d201de60,2,Sienna,8607.48,17.24,2024-04-21 01:20:23,platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida nisi
+13e54b8a-ca86-4b48-bbd5-914618a1c687,1,Sierra 2500,6717.59,28.82,2024-01-21 06:33:42,cursus urna ut tellus nulla ut erat id mauris vulputate elementum nullam varius
+d8c38f82-9d17-4377-ae78-6e4c885481c1,2,Fiero,8502.61,76.61,2024-10-16 00:21:12,condimentum id luctus nec molestie sed justo pellentesque viverra pede ac
+288cb6e2-1a8b-4e71-bce2-49457ce61d05,1,Sprinter 3500,3692.25,11.17,2024-06-20 04:36:49,interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+0ec1ddce-3cfd-4b60-aaa2-ea4017281c3d,2,Electra,5347.39,7.69,2024-04-14 01:05:02,vivamus vestibulum sagittis sapien cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus etiam vel
+f778ee76-2775-414b-ba74-e2b3ddacf2da,2,S2000,5600.16,36.33,2024-10-14 14:42:58,amet sem fusce consequat nulla nisl nunc nisl duis bibendum felis sed interdum venenatis turpis enim
+42bb11f9-9516-4ec7-828d-f458eda6df01,1,Aspen,9101.28,37.6,2024-08-16 18:05:02,nec dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce
+4bdd7eec-3bf0-4c45-b7b7-c517bce57b22,1,Forenza,9708.8,36.8,2024-10-06 18:46:23,est phasellus sit amet erat nulla tempus vivamus in felis eu sapien
+baea8c8b-c030-48ff-92ad-3923e9777ddc,3,Millenia,1627.26,2.81,2024-07-11 09:53:17,nisl ut volutpat sapien arcu sed augue aliquam erat volutpat
+dd3da55e-c2f6-452a-aaf3-c45d18b0f895,3,Accord,6216.79,25.61,2024-07-29 12:17:26,leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at
+e0cdfeaf-cc5e-41ef-9da1-9c6aa83ba678,2,Probe,7190.12,99.46,2024-03-30 21:04:12,sapien varius ut blandit non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+70d1f902-f85f-4634-9728-e3da65302a36,1,Ascender,9193.86,49.07,2024-10-21 05:52:37,eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit
+78ce2a0e-3778-43d2-9d51-9bf809417db5,1,CLS-Class,8379.28,9.13,2024-05-07 11:41:43,velit donec diam neque vestibulum eget vulputate ut ultrices vel augue
+a2d82fe0-83c7-4a7c-86db-df424e66fc32,2,Econoline E150,8853.62,95.78,2024-11-06 00:49:22,proin risus praesent lectus vestibulum quam sapien varius ut blandit non interdum in ante
+ada12a8c-929b-4612-8cf1-b05658570b87,2,G-Class,5805.85,99.56,2024-02-23 01:14:46,parturient montes nascetur ridiculus mus etiam vel augue vestibulum rutrum rutrum neque aenean
+3707f4bd-543b-4457-aa4d-d9932f435be2,1,S40,2391.25,21.15,2024-08-20 21:18:48,tempus semper est quam pharetra magna ac consequat metus sapien ut nunc vestibulum ante ipsum primis in
+6e2764e0-8dbf-4b75-85a0-ffb2ff5ec904,3,Cooper Countryman,5599.88,41.7,2024-06-20 04:34:19,cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis sapien cum sociis natoque
+5b5383e4-b680-4e68-8bdf-f49b364f7668,2,C30,4294.06,14.21,2024-02-12 12:44:36,pellentesque quisque porta volutpat erat quisque erat eros viverra eget congue eget semper rutrum nulla nunc
+cf3d6446-2762-494e-b0d6-091e6b77906b,1,Discovery,6878.28,96.61,2024-05-07 20:02:59,in faucibus orci luctus et ultrices posuere cubilia curae nulla dapibus dolor vel est donec
+71e490ff-4c95-4d70-b4c6-2e9a79090eea,1,Pacifica,1926.86,64.52,2024-09-01 13:31:13,neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac
+937c4524-f4c9-4fc1-a6a6-24cf36bb4e13,3,TSX,2935.12,48.64,2024-06-27 22:15:31,pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet
+e77f8fab-8eb1-4d4c-badd-3b11b6092849,2,Laser,7176.23,65.71,2024-02-14 12:00:05,erat fermentum justo nec condimentum neque sapien placerat ante nulla justo aliquam quis turpis
+9059c6de-97ee-40af-8b4d-cc065fcf0d5c,3,Phantom,5050.38,48.32,2024-09-15 14:37:04,morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed
+dc37887d-9701-48d1-9940-8daac7ca0c01,3,i-Series,5920.27,30.97,2024-07-09 02:50:26,in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis
+2a619256-fbe0-4341-b7a0-fa450268cd79,1,Escalade,9449.18,29.95,2024-10-08 19:42:06,ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia
+88fc9fc4-4069-4807-ba18-4ed5f1cd5943,2,Prizm,8560.05,83.05,2025-01-05 16:15:21,tristique fusce congue diam id ornare imperdiet sapien urna pretium nisl ut volutpat sapien
+5fce3af0-5bd5-4fca-bad7-56d9642a1339,1,GX,6420.13,89.44,2024-03-22 14:48:40,at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula condimentum curabitur in libero
+fb51f364-7951-44c0-88ce-05c40376b16f,1,Sonata,1029.42,19.31,2024-07-23 17:18:21,velit vivamus vel nulla eget eros elementum pellentesque quisque porta volutpat erat quisque erat eros viverra eget congue
+aa65d75d-5a0a-44e2-bea9-5553cd182c7b,2,SL-Class,5815.55,36.07,2024-08-03 03:30:53,proin leo odio porttitor id consequat in consequat ut nulla sed accumsan felis
+d7aa0d62-6739-4abf-b9b2-1c8ddcb74191,3,Envoy,3862.13,13.19,2024-10-20 04:47:44,vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere
+28e72fc5-b3d1-47f4-9bfd-2dda27527497,3,Ram,4008.45,32.63,2024-02-16 16:23:21,cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis sapien
+73f3f68a-411c-4524-87d9-ecf2edb4ceda,3,Phaeton,7359.32,31.06,2024-02-03 03:44:50,id nisl venenatis lacinia aenean sit amet justo morbi ut odio
+044dc87b-521a-451c-9ffa-c36d5c4cea6a,2,X5,4917.22,82.29,2024-03-26 21:44:24,sapien ut nunc vestibulum ante ipsum primis in faucibus orci
+29adadf0-ed64-49ba-98b2-bc1272c516f2,1,Mystique,8094.19,86.31,2024-11-20 11:13:30,a suscipit nulla elit ac nulla sed vel enim sit amet nunc viverra dapibus nulla suscipit ligula in lacus curabitur
+0825ccdc-74e1-4bf9-a031-b0ffcd754993,2,Celica,9081.15,5.2,2024-11-02 07:47:18,dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida
+3ea9c311-88fe-4f0f-885b-805ceeb67736,1,Dakota Club,9163.28,23.73,2025-01-08 00:47:47,elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit
+64544967-d58f-4ecb-9c80-362073523def,1,Outlander,1827.53,8.89,2024-04-01 06:14:40,ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet
+9051177c-ccd0-4538-b4dc-f775121149bd,2,Taurus,6600.84,85.89,2024-08-10 08:15:18,congue risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede
+7d02dc4a-93b8-46a5-8c17-e8b68ed97ccb,3,Rodeo,2050.99,58.99,2024-10-26 23:44:06,neque sapien placerat ante nulla justo aliquam quis turpis eget elit sodales scelerisque mauris sit amet eros suspendisse
+e9fe6a74-f5e8-4ff1-a1ba-1bb46efbd3e7,2,Avalon,2451.31,89.72,2024-07-22 14:09:25,duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat
+12029126-6851-4746-9abf-fedebf4ac1b4,3,Stylus,4553.98,96.33,2024-01-22 23:12:45,massa donec dapibus duis at velit eu est congue elementum in hac habitasse platea dictumst morbi vestibulum velit id pretium
+5c6dcfcf-4d97-42f7-b138-963851d14dae,3,Panamera,4240.24,3.61,2024-07-09 17:17:26,rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce lacus purus aliquet at feugiat
+a51c0649-7a05-426a-ad92-82e050eb4746,3,S-Series,4413.32,12.84,2024-04-30 05:48:19,sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo
+45d7369e-306c-4d49-b080-8258e4198b5c,1,Outlander,4828.41,28.0,2024-02-21 05:31:02,mauris viverra diam vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non
+e890c39c-d329-402a-88a5-ff0187d99b52,3,Sportage,4920.37,21.08,2024-04-09 04:28:07,volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit
+110038ee-53e7-4289-9d00-2d3978c74e58,1,Z4,3629.76,3.87,2024-04-18 09:49:23,libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo
+15591fb0-cdc1-4595-9ccd-b5a865d362e9,2,Golf,7723.55,82.26,2024-10-29 17:05:43,purus eu magna vulputate luctus cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus
+208394bc-9950-4d03-a0f6-f19a6189a4c3,3,5 Series,2864.56,99.9,2024-09-19 05:40:32,pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla sed vel enim sit amet nunc viverra dapibus nulla
+83028265-8238-4b66-9eed-307416ff96fe,1,Outlander,9684.44,90.19,2024-12-19 22:07:04,eu est congue elementum in hac habitasse platea dictumst morbi
+7e0da8f0-a1a5-461d-9f8d-ea907ab4eb5b,3,Matrix,3992.65,84.78,2024-11-07 16:24:22,nunc purus phasellus in felis donec semper sapien a libero
+23dc136f-23f6-47c5-b82a-77383cc1557b,3,Eurovan,8638.87,20.43,2024-01-15 05:00:09,in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan
+8fcc8f3a-a141-4d66-8a02-550bc061aa10,2,Gallardo,4903.07,99.22,2024-07-05 08:40:31,quis tortor id nulla ultrices aliquet maecenas leo odio condimentum
+90b01674-bd14-4b04-9ff4-887d3b66aa7f,3,LHS,9691.6,33.55,2024-06-04 04:34:38,amet nulla quisque arcu libero rutrum ac lobortis vel dapibus at diam
+f4f0fd40-a9a7-4d94-9e82-d42a03e8bd9e,1,Passat,4048.65,64.13,2024-12-12 05:42:39,vulputate justo in blandit ultrices enim lorem ipsum dolor sit amet consectetuer adipiscing elit proin interdum mauris
+3f4dfd0d-f509-4a07-bd4e-5902e7ecb806,2,Grand Caravan,4674.22,12.22,2024-02-20 17:01:47,vivamus vel nulla eget eros elementum pellentesque quisque porta volutpat erat quisque erat
+c2a43a55-846d-4d28-89a9-f59587751685,2,Express 3500,4714.39,97.99,2024-10-14 04:53:57,elementum pellentesque quisque porta volutpat erat quisque erat eros viverra eget
+1e61d629-6e2b-46c4-95d4-1c1b92fa9aef,3,Magnum,9471.03,5.03,2024-04-10 14:08:37,vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci
+9434b2d0-7544-4eff-b67c-c11c40aa4b7b,1,G-Class,8267.65,39.93,2024-07-29 01:35:32,nulla suspendisse potenti cras in purus eu magna vulputate luctus cum sociis natoque penatibus et magnis dis parturient montes
+b87e8374-fbe9-40aa-a04a-ac822b92fa73,2,MPV,9800.15,39.4,2024-03-14 07:43:03,vestibulum ac est lacinia nisi venenatis tristique fusce congue diam
+0afc7e8c-a8bc-44db-8d1d-13791309165e,2,Lumina,6051.51,49.04,2024-06-28 09:08:13,lacinia eget tincidunt eget tempus vel pede morbi porttitor lorem id ligula suspendisse ornare consequat lectus in est risus auctor
+9a6ed029-9ab9-48ba-9917-5a946f646f48,1,Blackwood,5443.16,24.43,2024-05-09 14:16:33,porttitor pede justo eu massa donec dapibus duis at velit eu est congue elementum in hac
+e4418bc5-d92c-4364-b882-1937ebdca161,3,B-Series,9628.28,85.57,2024-01-19 09:45:09,ut massa volutpat convallis morbi odio odio elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus
+28c74798-5425-482f-af9e-b8ff53e63256,3,Rodeo,4574.25,50.2,2024-07-20 11:37:53,amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis egestas metus aenean fermentum
+50431dfb-7045-45f5-9a92-3bf2896f9094,3,Savana 2500,1885.92,64.11,2025-01-05 15:34:46,ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet ultrices erat tortor sollicitudin mi sit amet
+8b8a0be4-8d1a-4073-976d-8e932f15210e,2,Vitara,9515.59,31.15,2024-01-23 03:18:14,dui maecenas tristique est et tempus semper est quam pharetra magna ac consequat
+19e9605a-a253-47d6-a684-7f249b8ee03c,2,XC60,5769.26,36.09,2024-11-02 05:10:50,odio elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est
+944dd3a3-6fd5-4a33-9092-30901b1dd632,2,Sonata,5564.53,81.08,2024-04-21 02:55:30,vulputate nonummy maecenas tincidunt lacus at velit vivamus vel nulla eget
+c6113fd8-68bd-44e0-bc8d-94b5996af9da,3,Crown Victoria,1518.79,63.72,2024-10-26 11:18:02,ut tellus nulla ut erat id mauris vulputate elementum nullam varius nulla facilisi cras
+9e9a02f3-e0f3-4bbd-9281-f5eeada6cd04,2,Lanos,4086.47,34.43,2024-11-30 21:07:53,nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem integer tincidunt ante vel
+744a295c-dd1f-4e54-8260-16ceb083eced,2,Cooper Clubman,7087.1,73.84,2024-09-05 15:57:31,aliquam erat volutpat in congue etiam justo etiam pretium iaculis justo in hac habitasse
+d955a91b-1220-49ad-a9ee-a8ca8244bc1d,3,NSX,5224.54,82.06,2024-12-12 10:49:55,nulla mollis molestie lorem quisque ut erat curabitur gravida nisi at nibh in hac habitasse platea dictumst aliquam augue quam
+b6552856-3f0c-4669-9e39-38c3353305df,2,Tracker,6361.12,89.78,2024-05-17 16:51:52,cursus urna ut tellus nulla ut erat id mauris vulputate elementum nullam varius nulla
+8c23c294-68b5-4dba-826d-fac3ec454aff,3,Echo,6661.25,98.65,2024-10-22 22:06:03,ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida nisi
+9f6225fb-f878-4593-a5f0-26476e1aa8c0,3,911,2255.77,55.54,2024-11-15 07:38:16,diam erat fermentum justo nec condimentum neque sapien placerat ante nulla justo aliquam quis turpis
+5834954b-8328-44ee-9d5d-7cd49e7a1057,3,Ascender,7206.41,37.37,2024-04-28 09:00:07,eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper
+e18e60a3-b43d-42d8-b26d-d8f2272a39bb,3,Titan,7222.11,95.1,2024-12-09 02:57:43,consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius ut blandit non interdum in ante
+6077b24b-71d0-4937-b7c5-b962eb21385e,1,Amigo,5324.75,46.56,2024-04-16 13:03:50,nec nisi volutpat eleifend donec ut dolor morbi vel lectus in
+351c79ed-09d2-467a-9236-54edaae259bb,3,Torino,7389.9,55.27,2024-02-13 03:46:32,lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu
+4e8c2ae3-772d-4985-81b8-c0e5e2f6d0be,2,Monte Carlo,1264.71,48.58,2025-01-03 20:14:02,dui vel nisl duis ac nibh fusce lacus purus aliquet at feugiat non pretium quis lectus
+70a76b4f-5670-4aaf-9947-7f9c08c736a4,3,XC90,3086.03,57.95,2024-07-16 20:30:04,posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel
+e0e22b08-502c-40c5-a2f6-8793b72385d4,3,Pathfinder,7544.2,61.37,2024-05-13 08:14:32,leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla pede
+66e836af-ee4e-408b-9916-469d6825c299,1,Raider,7303.53,85.28,2024-04-10 18:20:23,in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+564d8e34-1801-4d9e-a7f3-39a58d0e6c7c,3,Sienna,8203.55,74.82,2024-01-22 04:54:27,duis mattis egestas metus aenean fermentum donec ut mauris eget massa tempor convallis nulla neque libero convallis eget
+a491df08-8db6-4b18-b40b-67c6f993c66e,3,Express 1500,4885.74,65.93,2024-08-24 21:44:00,amet consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius
+e284daee-75c4-4e1c-8a66-7d3017b23f48,2,Ram 3500 Club,5828.48,12.08,2024-08-17 12:06:47,at lorem integer tincidunt ante vel ipsum praesent blandit lacinia erat vestibulum sed
+8be9dac4-70d0-4bb3-936a-24a3666f273f,3,Explorer Sport,2224.91,82.76,2024-04-26 20:41:28,vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam suspendisse
+f7941a9f-21e7-412e-9cef-1d3f16d8214c,1,Frontier,9047.14,84.14,2024-12-12 18:11:51,non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus
+3c67d201-ee4a-4ed3-80df-fa1945ca28d1,3,Bravada,4666.5,47.54,2024-04-14 12:09:00,nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum
+e2e90ea9-406d-4712-bd5b-18e4a779281b,2,Familia,8085.78,14.06,2024-09-30 23:30:11,erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi nulla ac

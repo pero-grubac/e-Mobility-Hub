@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Fault, FaultRequest } from '../../../models/fault.models';
 import { FaultService } from '../../../services/fault.service';
 import { ActivatedRoute } from '@angular/router';
@@ -12,11 +12,12 @@ import { ActivatedRoute } from '@angular/router';
 export class FaultDetailModalComponent {
   fault: Fault;
   vehicleId: number;
+
   constructor(
     public dialogRef: MatDialogRef<FaultDetailModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { fault: Fault; vehicleId: number },
     private faultService: FaultService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.fault = data.fault;
     this.vehicleId = data.vehicleId;

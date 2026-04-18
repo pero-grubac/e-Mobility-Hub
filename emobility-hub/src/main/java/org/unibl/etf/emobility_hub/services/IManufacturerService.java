@@ -16,5 +16,5 @@ public interface IManufacturerService
     List<BaseManufacturerResponse> getAll();
 
     Page<ManufacturerResponse> getAllByName(Pageable pageable, String name);
-    
+
 }

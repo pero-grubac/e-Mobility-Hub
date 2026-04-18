@@ -17,6 +17,7 @@ export class FaultItemComponent implements OnInit {
         ? this.fault.description.substring(0, 10) + '...'
         : this.fault.description;
   }
+
   onClick(): void {
     this.faultSelected.emit(this.fault);
   }

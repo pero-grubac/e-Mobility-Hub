@@ -1,44 +1,44 @@
-<div class="employee-detail-container" *ngIf="employee">
+<div *ngIf="employee" class="employee-detail-container">
   <h2>Employee Details</h2>
   <form class="employee-form">
     <div class="form-group">
       <label for="username">Username:</label>
       <input
-        type="text"
-        id="username"
         [(ngModel)]="employee.username"
-        name="username"
         class="form-control"
+        id="username"
+        name="username"
         readonly
+        type="text"
       />
     </div>
     <div class="form-group">
       <label for="firstName">First Name:</label>
       <input
-        type="text"
-        id="firstName"
         [(ngModel)]="employee.firstName"
-        name="firstName"
         class="form-control"
+        id="firstName"
+        name="firstName"
+        type="text"
       />
     </div>
     <div class="form-group">
       <label for="lastName">Last Name:</label>
       <input
-        type="text"
-        id="lastName"
         [(ngModel)]="employee.lastName"
-        name="lastName"
         class="form-control"
+        id="lastName"
+        name="lastName"
+        type="text"
       />
     </div>
     <div class="form-group">
       <label for="role">Role:</label>
       <select
-        id="role"
         [(ngModel)]="employee.role"
-        name="role"
         class="form-control"
+        id="role"
+        name="role"
       >
         <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
       </select>
@@ -46,18 +46,18 @@
     <div class="form-group">
       <label for="password">Password:</label>
       <input
-        type="password"
-        id="password"
         [(ngModel)]="password"
-        name="password"
         class="form-control"
+        id="password"
+        name="password"
         placeholder="Enter new password (optional)"
+        type="password"
       />
     </div>
   </form>
 
   <div class="actions">
-    <button class="update-button" (click)="onUpdate()">Update</button>
-    <button class="delete-button" (click)="onDelete()">Delete</button>
+    <button (click)="onUpdate()" class="update-button">Update</button>
+    <button (click)="onDelete()" class="delete-button">Delete</button>
   </div>
 </div>

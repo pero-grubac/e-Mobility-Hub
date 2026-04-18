@@ -1,29 +1,34 @@
 <div class="login-container">
   <h2>Login</h2>
-  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-    <mat-form-field class="full-width" appearance="outline">
+  <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Username</mat-label>
       <input
-        matInput
-        type="text"
         [(ngModel)]="authRequest.username"
+        matInput
         name="username"
         required
+        type="text"
       />
     </mat-form-field>
 
-    <mat-form-field class="full-width" appearance="outline">
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Password</mat-label>
       <input
-        matInput
-        type="password"
         [(ngModel)]="authRequest.password"
+        matInput
         name="password"
         required
+        type="password"
       />
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+    <button
+      [disabled]="loginForm.invalid"
+      color="primary"
+      mat-raised-button
+      type="submit"
+    >
       Login
     </button>
 

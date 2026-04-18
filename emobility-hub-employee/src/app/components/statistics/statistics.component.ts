@@ -20,18 +20,19 @@ export class StatisticsComponent implements OnInit {
   gradient = false;
   animations = true;
   maxFaultValue = 0;
+
   constructor(private statisticService: StatisticService) {}
 
   ngOnInit(): void {
     const start = this.formatDate(
-      new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1)
+      new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1),
     );
     const end = this.formatDate(
       new Date(
         this.currentDate.getFullYear(),
         this.currentDate.getMonth() + 1,
-        0
-      )
+        0,
+      ),
     );
     this.fetchDailyRevenue(start, end);
 
@@ -55,36 +56,24 @@ export class StatisticsComponent implements OnInit {
       (error) => {
         console.error('Error fetching daily revenue:', error);
         this.dailyRevenueData = []; // Fallback in case of an error
-      }
+      },
     );
   }
 
   chooseMonth(normalizedMonth: Date, datepicker: MatDatepicker<Date>): void {
     const start = this.formatDate(
-      new Date(normalizedMonth.getFullYear(), normalizedMonth.getMonth(), 1)
+      new Date(normalizedMonth.getFullYear(), normalizedMonth.getMonth(), 1),
     );
     const end = this.formatDate(
-      new Date(normalizedMonth.getFullYear(), normalizedMonth.getMonth() + 1, 0)
+      new Date(
+        normalizedMonth.getFullYear(),
+        normalizedMonth.getMonth() + 1,
+        0,
+      ),
     );
 
     this.fetchDailyRevenue(start, end);
     datepicker.close();
-  }
-
-  // Format date to yyyy-MM-ddThh:mm:ss
-  private formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = this.pad(date.getMonth() + 1); // Months are 0-indexed
-    const day = this.pad(date.getDate());
-    const hours = this.pad(date.getHours());
-    const minutes = this.pad(date.getMinutes());
-    const seconds = this.pad(date.getSeconds());
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-  }
-
-  // Helper to pad single-digit months/days/hours/minutes/seconds with a leading zero
-  private pad(value: number): string {
-    return value < 10 ? `0${value}` : `${value}`;
   }
 
   fetchRevenueByVehicleType(): void {
@@ -104,9 +93,23 @@ export class StatisticsComponent implements OnInit {
       }));
     });
     this.maxFaultValue = Math.ceil(
-      Math.max(...this.faultsPerVehicleData.map((d) => d.value))
+      Math.max(...this.faultsPerVehicleData.map((d) => d.value)),
     );
-  
   }
-  
+
+  // Format date to yyyy-MM-ddThh:mm:ss
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = this.pad(date.getMonth() + 1); // Months are 0-indexed
+    const day = this.pad(date.getDate());
+    const hours = this.pad(date.getHours());
+    const minutes = this.pad(date.getMinutes());
+    const seconds = this.pad(date.getSeconds());
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
+  // Helper to pad single-digit months/days/hours/minutes/seconds with a leading zero
+  private pad(value: number): string {
+    return value < 10 ? `0${value}` : `${value}`;
+  }
 }

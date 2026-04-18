@@ -8,10 +8,9 @@ describe('FaultDetailModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FaultDetailModalComponent]
-    })
-    .compileComponents();
-    
+      declarations: [FaultDetailModalComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(FaultDetailModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

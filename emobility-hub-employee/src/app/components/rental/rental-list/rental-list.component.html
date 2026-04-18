@@ -2,9 +2,9 @@
 <div class="rental-list-container">
   <div class="rental-list">
     <app-rental-item
+      (rentalClick)="onRentalSelected($event)"
       *ngFor="let rental of rentals"
       [rental]="rental"
-      (rentalClick)="onRentalSelected($event)"
     ></app-rental-item>
   </div>
 
@@ -14,10 +14,10 @@
     </button>
 
     <button
-      *ngFor="let page of displayedPages"
-      [disabled]="!isNumber(page)"
-      [class.active]="page === currentPage"
       (click)="handlePageClick(page)"
+      *ngFor="let page of displayedPages"
+      [class.active]="page === currentPage"
+      [disabled]="!isNumber(page)"
     >
       {{ page }}
     </button>
