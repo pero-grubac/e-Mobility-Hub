@@ -1,0 +1,308 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+    # Documentation-only changes do not need a build.
+    paths-ignore:
+      - '**.md'
+      - 'images/**'
+      - 'LICENSE.txt'
+      - '*.pdf'
+      - '.vscode/**'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'images/**'
+      - 'LICENSE.txt'
+      - '*.pdf'
+      - '.vscode/**'
+  workflow_dispatch:
+
+# A new push to the same branch or PR cancels the run that is still going.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ─── Which parts changed? Jobs below skip the parts that did not ─────────
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      backend: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.backend == 'true' }}
+      jsp: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.jsp == 'true' }}
+      frontend: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.frontend == 'true' }}
+      stack: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.stack == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            workflow: &workflow
+              - '.github/workflows/ci.yml'
+            backend:
+              - *workflow
+              - 'emobility-hub/**'
+              - 'Mackaroo/**'
+            jsp:
+              - *workflow
+              - 'emobility-hub-user/**'
+              - 'emobility-hub-promotions/**'
+              # the client app's DAO tests build MySQL from the API's migrations
+              - 'emobility-hub/src/main/resources/db/**'
+            frontend:
+              - *workflow
+              - 'emobility-hub-employee/**'
+            stack:
+              - *workflow
+              - 'docker-compose.yml'
+              - 'emobility-hub/**'
+              - 'emobility-hub-employee/**'
+              - 'emobility-hub-user/**'
+              - 'emobility-hub-promotions/**'
+
+  # ─── Spring Boot API: unit, slice and Testcontainers (MySQL 8) tests ─────
+  backend:
+    name: API · build & test
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: emobility-hub
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven            # ~/.m2, keyed on pom.xml
+
+      - name: Build, test and measure coverage
+        run: mvn -B -ntp verify
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-reports
+          path: |
+            emobility-hub/target/surefire-reports/
+            emobility-hub/target/site/jacoco/
+          retention-days: 14
+
+  # ─── JSP apps: Maven build + tests (DAO tests run on MySQL 8) ─────────────
+  jsp:
+    name: JSP · ${{ matrix.app }}
+    needs: changes
+    if: needs.changes.outputs.jsp == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [emobility-hub-user, emobility-hub-promotions]
+    defaults:
+      run:
+        working-directory: ${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: ${{ matrix.app }}/pom.xml
+
+      - name: Build WAR and run tests
+        run: mvn -B -ntp verify
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app }}-reports
+          path: ${{ matrix.app }}/target/surefire-reports/
+          retention-days: 14
+
+  # ─── Angular employee app: unit tests + production build ──────────────────
+  frontend:
+    name: Employee app · test & build
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: emobility-hub-employee
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm              # ~/.npm, keyed on package-lock.json
+          cache-dependency-path: emobility-hub-employee/package-lock.json
+
+      # Angular's incremental build cache
+      - uses: actions/cache@v4
+        with:
+          path: emobility-hub-employee/.angular/cache
+          key: angular-${{ runner.os }}-${{ hashFiles('emobility-hub-employee/package-lock.json') }}-${{ github.sha }}
+          restore-keys: angular-${{ runner.os }}-${{ hashFiles('emobility-hub-employee/package-lock.json') }}-
+
+      - run: npm ci --legacy-peer-deps --no-audit --no-fund
+
+      - name: Unit tests (headless Chrome)
+        run: npm run test:ci
+
+      - name: Production build
+        run: npm run build
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: emobility-hub-employee/coverage/
+          retention-days: 14
+
+  # ─── Whole stack: build every image, start it, smoke-test it ─────────────
+  smoke:
+    name: Docker Compose · smoke test
+    needs: [changes, backend, jsp, frontend]
+    # Runs when any app changed and nothing it depends on failed; a skipped
+    # test job (its part did not change) does not block it.
+    if: >-
+      always() && needs.changes.outputs.stack == 'true'
+      && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Build all four images from docker-compose.yml with a layer cache in
+      # GitHub Actions; the publish job reuses the same cache scopes.
+      - name: Build images
+        uses: docker/bake-action@v6
+        with:
+          source: .
+          files: docker-compose.yml
+          load: true
+          set: |
+            backend.cache-from=type=gha,scope=backend
+            backend.cache-to=type=gha,mode=max,scope=backend
+            frontend.cache-from=type=gha,scope=frontend
+            frontend.cache-to=type=gha,mode=max,scope=frontend
+            jsp-user.cache-from=type=gha,scope=jsp-user
+            jsp-user.cache-to=type=gha,mode=max,scope=jsp-user
+            jsp-promotions.cache-from=type=gha,scope=jsp-promotions
+            jsp-promotions.cache-to=type=gha,mode=max,scope=jsp-promotions
+
+      - name: Start the stack
+        run: docker compose up -d --wait
+
+      - name: Check every application responds
+        run: |
+          # Tomcat needs a few seconds to deploy each WAR, so retry.
+          check() {
+            for _ in $(seq 1 30); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "$1")
+              [ "$code" = "${2:-200}" ] && echo "$1 -> $code" && return 0
+              sleep 2
+            done
+            echo "$1 -> $code (expected ${2:-200})"; return 1
+          }
+          check http://localhost:8080/actuator/health
+          check http://localhost/
+          check http://localhost/login
+          # Angular routes that share a name with an API resource still load the app
+          curl -fs http://localhost/statistics | grep -q '<app-root'
+          curl -fs http://localhost/rentals | grep -q '<app-root'
+          check http://localhost:8081/user/
+          check http://localhost:8082/promotions/
+          check http://localhost:8080/rss/promotions
+          check http://localhost:8080/v3/api-docs
+          check http://localhost:8080/electric-cars 401
+
+      - name: Browser flow through Nginx (cookie session + CSRF)
+        run: |
+          jar=$(mktemp)
+          # Sign in: the session arrives as an httpOnly cookie
+          curl -fs -c "$jar" -H 'Content-Type: application/json' \
+            -d '{"username":"admin","password":"admin123"}' http://localhost/api/auth/login > /dev/null
+          grep -q EMH_SESSION "$jar"
+          # The cookie alone authenticates reads
+          curl -fs -b "$jar" -c "$jar" http://localhost/api/auth/me | grep -q ROLE_ADMIN
+          curl -fs -b "$jar" -c "$jar" 'http://localhost/api/electric-cars?page=0&size=1' > /dev/null
+          # A write without the CSRF header is refused...
+          code=$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" -X DELETE http://localhost/api/electric-cars/999999)
+          echo "write without CSRF -> $code"; [ "$code" = "403" ]
+          # ...and accepted with it (404: the vehicle does not exist)
+          xsrf=$(awk '$6=="XSRF-TOKEN"{print $7}' "$jar")
+          code=$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" -H "X-XSRF-TOKEN: $xsrf" -X DELETE http://localhost/api/electric-cars/999999)
+          echo "write with CSRF -> $code"; [ "$code" = "404" ]
+
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs --no-color
+
+      - name: Stop
+        if: always()
+        run: docker compose down -v
+
+  # ─── CD: publish images to GitHub Container Registry on main ─────────────
+  publish:
+    name: Publish · ${{ matrix.service.image }}
+    needs: smoke
+    if: needs.smoke.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          # scope = the Compose service, so the layers built by the smoke job are reused
+          - { image: backend, context: emobility-hub, scope: backend }
+          - { image: employee, context: emobility-hub-employee, scope: frontend }
+          - { image: user, context: emobility-hub-user, scope: jsp-user }
+          - { image: promotions, context: emobility-hub-promotions, scope: jsp-promotions }
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: image
+        run: echo "name=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/emobility-hub-${{ matrix.service.image }}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.service.context }}
+          push: true
+          tags: |
+            ${{ steps.image.outputs.name }}:latest
+            ${{ steps.image.outputs.name }}:${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.service.scope }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service.scope }}
