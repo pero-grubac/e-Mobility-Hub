@@ -1,25 +1,23 @@
-version: '3.8'
-
 services:
 
-  # ─── MySQL database ────────────────────────────────────────────────────────
+  # ─── MySQL database (schema and demo data come from Flyway in the API) ─────
   mysql:
     image: mysql:8.0
     container_name: emobility-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-emobility}
+      MYSQL_USER: ${MYSQL_USER:-student}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-student}
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./ddl.sql:/docker-entrypoint-initdb.d/01-ddl.sql:ro
-      - ./seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      # TCP, not the socket: the temporary server that runs the init step has no
+      # networking, so the API only starts once the real server is up.
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--protocol=tcp", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -27,6 +25,7 @@ services:
 
   # ─── Spring Boot backend ───────────────────────────────────────────────────
   backend:
+    image: emobility-hub-backend:local
     build:
       context: ./emobility-hub
       dockerfile: Dockerfile
@@ -35,23 +34,31 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      TOKEN_SIGNING_KEY: ${JWT_SIGNING_KEY}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-emobility}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-student}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-student}
+      TOKEN_SIGNING_KEY: ${JWT_SIGNING_KEY:-413F4428472B4B6250655368566D5970337336763979244226452948404D6351}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-false}
+      FLYWAY_LOCATIONS: ${FLYWAY_LOCATIONS:-classpath:db/migration,classpath:db/seed}
       FRONTEND_URL: http://localhost
-      PROMOTIONS_URL: http://emobility-jsp-promotions:8080
+      PROMOTIONS_URL: http://localhost:8082
       FILE_UPLOAD_DIR: /app/uploads
-      FILE_TEMP_DIR: /app/temp
       BACKEND_URL: http://localhost:8080
     volumes:
       - uploads_data:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 30s
     depends_on:
       mysql:
         condition: service_healthy
 
-  # ─── JSP User application (Tomcat) ────────────────────────────────────────
+  # ─── JSP client application (Tomcat, JDBC) ─────────────────────────────────
   jsp-user:
+    image: emobility-hub-user:local
     build:
       context: ./emobility-hub-user
       dockerfile: Dockerfile
@@ -59,12 +66,21 @@ services:
     restart: unless-stopped
     ports:
       - "8081:8080"
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-emobility}?useUnicode=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      DB_USERNAME: ${MYSQL_USER:-student}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-student}
+    volumes:
+      # client avatars
+      - avatars_data:/tmp/uploads
     depends_on:
-      mysql:
+      # The API owns the schema: wait until Flyway has created it.
+      backend:
         condition: service_healthy
 
-  # ─── JSP Promotions application (Tomcat) ──────────────────────────────────
+  # ─── JSP promotions application (Tomcat, REST client) ──────────────────────
   jsp-promotions:
+    image: emobility-hub-promotions:local
     build:
       context: ./emobility-hub-promotions
       dockerfile: Dockerfile
@@ -72,11 +88,17 @@ services:
     restart: unless-stopped
     ports:
       - "8082:8080"
+    environment:
+      LOGIN_URL: http://backend:8080/auth/login
+      PROMOTIONS_URL: http://backend:8080/promotions
+      ANNOUNCEMENTS_URL: http://backend:8080/announcements
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
-  # ─── Angular Employee frontend + Nginx ────────────────────────────────────
+  # ─── Angular employee app + Nginx ──────────────────────────────────────────
   frontend:
+    image: emobility-hub-employee:local
     build:
       context: ./emobility-hub-employee
       dockerfile: Dockerfile
@@ -85,10 +107,13 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
 volumes:
   mysql_data:
     name: emobility_mysql_data
   uploads_data:
     name: emobility_uploads_data
+  avatars_data:
+    name: emobility_avatars_data
