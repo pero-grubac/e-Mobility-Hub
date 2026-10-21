@@ -3,7 +3,6 @@ package org.unibl.etf.emobility_hub.services.implementations;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ public class AnnouncementServiceImpl
         extends BaseCRUDServiceImpl<AnnouncementEntity, AnnouncementRequest, AnnouncementResponse, AnnouncementResponse, Long>
         implements IAnnouncementService {
 
-    @Autowired
     public AnnouncementServiceImpl(ModelMapper mapper, AnnouncementEntityRepository repository) {
         super(mapper, repository, AnnouncementEntity.class, AnnouncementRequest.class, AnnouncementResponse.class, AnnouncementResponse.class);
     }

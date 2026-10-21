@@ -2,6 +2,7 @@ package org.unibl.etf.emobility_hub.models.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.unibl.etf.emobility_hub.models.domain.value.DocumentType;
 import org.unibl.etf.emobility_hub.models.domain.value.Location;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ public class RentalEntity {
     @Column(nullable = false)
     private LocalDateTime rentalStart;
 
-    @Column(nullable = false)
+    // Empty while the ride is still going.
     private LocalDateTime rentalEnd;
 
     @Embedded
@@ -34,14 +35,22 @@ public class RentalEntity {
     })
     private Location endLocation;
 
-    @Column(nullable = false)
-    private double duration;
+    private Double duration;
 
-    @Column(nullable = false)
-    private double distance;
+    private Double distance;
 
-    @Column(nullable = true)
-    private double price;
+    private Double price;
+
+    // Required for cars: identity document and driver's licence.
+    @Enumerated(EnumType.STRING)
+    private DocumentType documentType;
+
+    private String documentNumber;
+
+    private String driverLicenseNumber;
+
+    @Column(length = 4)
+    private String paymentCardLast4;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)

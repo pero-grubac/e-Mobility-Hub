@@ -1,11 +1,12 @@
 package org.unibl.etf.emobility_hub.services.implementations;
 
+import lombok.RequiredArgsConstructor;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.emobility_hub.exception.ConflictException;
 import org.unibl.etf.emobility_hub.exception.EntityNotFoundException;
 import org.unibl.etf.emobility_hub.models.domain.entity.ElectricBicycleEntity;
 import org.unibl.etf.emobility_hub.models.domain.entity.ElectricCarEntity;
@@ -20,6 +21,7 @@ import org.unibl.etf.emobility_hub.repositories.ElectricBicycleEntityRepository;
 import org.unibl.etf.emobility_hub.repositories.ElectricCarEntityRepository;
 import org.unibl.etf.emobility_hub.repositories.ElectricScooterEntityRepository;
 import org.unibl.etf.emobility_hub.repositories.ManufacturerEntityRepository;
+import org.unibl.etf.emobility_hub.repositories.TransportVehicleRepository;
 import org.unibl.etf.emobility_hub.services.IParseVehicleService;
 
 import java.io.File;
@@ -36,22 +38,20 @@ import java.util.Map;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ParseVehicleServiceImpl implements IParseVehicleService {
 
-    @Autowired
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
-    @Autowired
-    private ElectricBicycleEntityRepository electricBicycleEntityRepository;
+    private final ElectricBicycleEntityRepository electricBicycleEntityRepository;
 
-    @Autowired
-    private ElectricCarEntityRepository electricCarEntityRepository;
+    private final ElectricCarEntityRepository electricCarEntityRepository;
 
-    @Autowired
-    private ElectricScooterEntityRepository electricScooterEntityRepository;
+    private final ElectricScooterEntityRepository electricScooterEntityRepository;
 
-    @Autowired
-    private ManufacturerEntityRepository manufacturerEntityRepository;
+    private final ManufacturerEntityRepository manufacturerEntityRepository;
+
+    private final TransportVehicleRepository transportVehicleRepository;
 
     @Override
     public ParsedVehicleResponse parse(File file) {
@@ -74,6 +74,7 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
             // Čitanje redova podataka
             String[] line;
             while ((line = csvReader.readNext()) != null) {
+                rowNumber++;
                 try {
                     Map<String, String> rowData = mapRow(headers, line);
                     TransportVehicleRequest request = mapToRequest(rowData);
@@ -197,6 +198,11 @@ public class ParseVehicleServiceImpl implements IParseVehicleService {
         }
         if (request.getModel() == null || request.getModel().isEmpty()) {
             throw new IllegalArgumentException("Model is required.");
+        }
+        // Checked up front: a unique-constraint violation would mark the whole
+        // import transaction rollback-only and fail every row with a 500.
+        if (transportVehicleRepository.existsByUniqueIdentifier(request.getUniqueIdentifier())) {
+            throw new ConflictException("Vehicle with identifier " + request.getUniqueIdentifier() + " already exists.");
         }
     }
 

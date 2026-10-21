@@ -1,6 +1,5 @@
 package org.unibl.etf.emobility_hub.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequestMapping("/manufacturers")
 public class ManufacturerController
         extends BaseCRUDController<ManufacturerRequest, ManufacturerResponse, DetailedManufacturerResponse, Long> {
-    @Autowired
     public ManufacturerController(IManufacturerService service) {
         super(service);
     }

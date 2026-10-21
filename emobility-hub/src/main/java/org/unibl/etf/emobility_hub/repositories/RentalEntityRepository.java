@@ -15,9 +15,10 @@ import java.util.List;
 
 @Repository
 public interface RentalEntityRepository extends JpaRepository<RentalEntity, Long> {
-    Page<RentalEntity> findAllByVehicle_Id(Long vehicleId, Pageable pageable);
+    Page<RentalEntity> findAllByClient_UsernameContainingIgnoreCaseOrVehicle_UniqueIdentifierContainingIgnoreCase(
+            String username, String uniqueIdentifier, Pageable pageable);
 
-    Page<RentalEntity> findAllByClient_Id(Long clientId, Pageable pageable);
+    Page<RentalEntity> findAllByVehicle_IdAndClient_UsernameContainingIgnoreCase(Long vehicleId, String username, Pageable pageable);
 
 
     // STATISTIC

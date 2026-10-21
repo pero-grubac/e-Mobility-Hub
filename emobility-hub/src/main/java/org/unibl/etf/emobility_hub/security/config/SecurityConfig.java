@@ -1,9 +1,11 @@
 package org.unibl.etf.emobility_hub.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -11,22 +13,39 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.unibl.etf.emobility_hub.security.jwt.JwtAuthenticationFilter;
+import org.unibl.etf.emobility_hub.security.jwt.SessionCookies;
+
+import java.util.Set;
+
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-    @Autowired
-    public UserDetailsServiceImpl userService;
+    // Every employee of the company.
+    static final String[] EMPLOYEE = {"ADMIN", "MANAGER", "OPERATOR"};
+    // Employees who manage master data (fleet, manufacturers, staff).
+    static final String[] BACK_OFFICE = {"ADMIN", "MANAGER"};
+    static final String MANAGER = "MANAGER";
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private static final Set<String> SAFE_METHODS = Set.of("GET", "HEAD", "OPTIONS", "TRACE");
+
+    private final UserDetailsServiceImpl userService;
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private final SessionCookies sessionCookies;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -49,91 +68,67 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                        .requireCsrfProtectionMatcher(cookieAuthenticatedWrite()))
                 .cors(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/clients/register", "/auth/login", "/users/register", "/uploads/**").permitAll()
-                        .requestMatchers("/rss/**").permitAll()
+                        // Error dispatches run without the JWT filter; without this a 403 is reported as 401.
+                        .requestMatchers("/error").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/promotions/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/promotions").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.GET, "/promotions/getAll").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/promotions").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/promotions").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/promotions/{id:[\\d]+}").hasRole("MANAGER")
+                        // ── Public ─────────────────────────────────────────────
+                        .requestMatchers(POST, "/auth/login", "/auth/logout").permitAll()
+                        .requestMatchers(GET, "/actuator/health/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(GET, "/rss/**", "/uploads/**").permitAll()
+                        .requestMatchers(GET, "/promotions/{id:\\d+}", "/announcements/{id:\\d+}").permitAll()
+                        .requestMatchers(POST, "/clients/register").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/announcements/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/announcements").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.GET, "/announcements/getAll").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/announcements").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/announcements").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/announcements/{id:[\\d]+}").hasRole("MANAGER")
+                        .requestMatchers(GET, "/auth/me").authenticated()
 
-                        .requestMatchers(HttpMethod.GET, "/electric-cars/getByModel").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/electric-cars/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/electric-cars").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/electric-cars").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/electric-cars/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/electric-cars/fix/{id:[\\d]+}").permitAll()
+                        // ── Promotions app ─────────────────────────────────────
+                        .requestMatchers("/promotions/**", "/announcements/**").hasRole(MANAGER)
 
-                        .requestMatchers(HttpMethod.GET, "/electric-scooters/getByModel").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/electric-scooters/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/electric-scooters").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/electric-scooters").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/electric-scooters/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/electric-scooters/fix/{id:[\\d]+}").permitAll()
+                        // ── Fleet ──────────────────────────────────────────────
+                        .requestMatchers(GET, "/electric-*/**").hasAnyRole(EMPLOYEE)
+                        .requestMatchers(PUT, "/electric-*/rent/*", "/electric-*/brake/*", "/electric-*/fix/*").hasAnyRole(EMPLOYEE)
+                        .requestMatchers("/electric-*/**", "/parse-vehicle").hasAnyRole(BACK_OFFICE)
+                        .requestMatchers(GET, "/vehicles/**").hasAnyRole(EMPLOYEE)
+                        .requestMatchers(PUT, "/vehicles/*/rent-price").hasRole(MANAGER)
+                        .requestMatchers(GET, "/manufacturers/**").hasAnyRole(EMPLOYEE)
+                        .requestMatchers("/manufacturers/**").hasAnyRole(BACK_OFFICE)
 
-                        .requestMatchers(HttpMethod.GET, "/electric-bicycles/getByModel").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/electric-bicycles/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/electric-bicycles").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/electric-bicycles").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/electric-bicycles/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/electric-bicycles/fix/{id:[\\d]+}").permitAll()
+                        // ── Faults and rentals ─────────────────────────────────
+                        .requestMatchers(GET, "/faults/**").hasAnyRole(EMPLOYEE)
+                        .requestMatchers(POST, "/faults").hasAnyRole(EMPLOYEE)
+                        .requestMatchers("/faults/**").hasAnyRole(BACK_OFFICE)
+                        .requestMatchers(GET, "/rentals/**").hasAnyRole(EMPLOYEE)
 
-                        .requestMatchers(HttpMethod.GET, "/manufacturers").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/manufacturers/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/manufacturers/getAll").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/manufacturers/getAllByName").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/manufacturers").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/manufacturers").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/manufacturers/{id:[\\d]+}").permitAll()
+                        // ── People ─────────────────────────────────────────────
+                        .requestMatchers(GET, "/clients/**").hasAnyRole(EMPLOYEE)
+                        .requestMatchers(PUT, "/clients/block/*").hasAnyRole(EMPLOYEE)
+                        .requestMatchers("/clients/**").hasAnyRole(BACK_OFFICE)
+                        .requestMatchers("/users/**").hasAnyRole(BACK_OFFICE)
 
-                        .requestMatchers(HttpMethod.POST, "/parse-vehicle").permitAll()
+                        // ── Reports ────────────────────────────────────────────
+                        .requestMatchers("/statistics/**").hasRole(MANAGER)
 
-                        .requestMatchers(HttpMethod.GET, "/clients/getAllByUsername").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/clients/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/clients/block/{id:[\\d]+}").permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/users/getAllByUsername").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/users").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/users/changeRole/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/users/{id:[\\d]+}").permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/faults").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/faults/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/faults/getAllByVehicleId/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/faults").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/faults").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/faults/{id:[\\d]+}").permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/rentals").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/rentals/getAllByVehicleId/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/rentals/getAllByClientId/{id:[\\d]+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/rentals/{id:[\\d]+}").permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/statistics/getDailyRevenue").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/statistics/getRevenueByVehicleType").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/statistics/getFaultsPerVehicle").permitAll()
-
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-
-                        .anyRequest().authenticated()
+                        .anyRequest().denyAll()
                 )
                 .authenticationProvider(daoAuthenticationProvider())
-                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    // CSRF only matters when the browser attaches the session cookie by itself.
+    // Bearer-token clients and the login request itself are exempt.
+    private RequestMatcher cookieAuthenticatedWrite() {
+        return (HttpServletRequest request) ->
+                !SAFE_METHODS.contains(request.getMethod())
+                        && request.getHeader(HttpHeaders.AUTHORIZATION) == null
+                        && sessionCookies.hasSessionCookie(request)
+                        && !request.getRequestURI().equals(request.getContextPath() + "/auth/login");
     }
 }

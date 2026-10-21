@@ -1,5 +1,6 @@
 package org.unibl.etf.emobility_hub.base.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Slf4j
 @Getter
 @Transactional
 public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleRepository<TEntity>, TEntity extends TransportVehicleEntity, TRequest extends TransportVehicleRequest, TResponse, TDetailedResponse extends IContainManufacturer>
@@ -122,7 +124,6 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
                 + File.separator + te.getClass().getSimpleName().toLowerCase() + File.separator
                 + te.getId() + File.separator;
         Path uploadPath = Paths.get(uploadDir);
-        System.out.println("uploadDir " + uploadDir);
         if (!Files.exists(uploadPath)) {
             try {
                 Files.createDirectories(uploadPath);
@@ -133,7 +134,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
 
         String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileName);
-        System.out.println("filePath " + filePath);
+        log.debug("Saving vehicle image to {}", filePath);
 
         try {
             Files.copy(imageFile.getInputStream(), filePath);
@@ -188,7 +189,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
 
         String baseUrl = backendUrl + "/uploads/";
         if (!imagePath.startsWith(baseUrl)) {
-            System.err.println("Invalid image path: " + imagePath);
+            log.warn("Not deleting image outside the upload directory: {}", imagePath);
             return;
         }
 
@@ -198,9 +199,9 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
         try {
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
-                System.out.println("File deleted: " + filePath);
+                log.debug("Deleted vehicle image {}", filePath);
             } else {
-                System.err.println("File not found: " + filePath);
+                log.warn("Vehicle image not found: {}", filePath);
             }
 
             Path parentDir = filePath.getParent();
@@ -208,7 +209,7 @@ public class BaseVehicleCRUDServiceImpl<TRepository extends JpaTransportVehicleR
                 boolean isEmpty = Files.list(parentDir).findAny().isEmpty();
                 if (isEmpty) {
                     Files.delete(parentDir);
-                    System.out.println("Deleted empty directory: " + parentDir);
+                    log.debug("Deleted empty directory {}", parentDir);
                 }
             }
         } catch (IOException e) {

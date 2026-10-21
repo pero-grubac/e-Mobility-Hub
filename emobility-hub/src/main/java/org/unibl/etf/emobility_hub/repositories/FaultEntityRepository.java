@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface FaultEntityRepository extends JpaRepository<FaultEntity, Long> {
-    Page<FaultEntity> findAllByVehicleId(Long vehicleId, Pageable pageable);
+    Page<FaultEntity> findAllByVehicleIdAndDescriptionContainingIgnoreCase(Long vehicleId, String description, Pageable pageable);
 
 
     // STATISTIC

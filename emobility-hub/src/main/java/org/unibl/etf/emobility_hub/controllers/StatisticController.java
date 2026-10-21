@@ -1,6 +1,6 @@
 package org.unibl.etf.emobility_hub.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/statistics")
+@RequiredArgsConstructor
 public class StatisticController {
-    @Autowired
-    private IStatisticService statisticService;
+    private final IStatisticService statisticService;
 
     @GetMapping("/getDailyRevenue")
     public ResponseEntity<List<DailyRevenueProjection>> getDailyRevenue(@RequestParam("start") String start, @RequestParam("end") String end) {

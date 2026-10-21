@@ -2,7 +2,6 @@ package org.unibl.etf.emobility_hub.services.implementations;
 
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ public class PromotionServiceImpl
         extends BaseCRUDServiceImpl<PromotionEntity, PromotionRequest, PromotionResponse, PromotionResponse, Long>
         implements IPromotionService {
 
-    @Autowired
     public PromotionServiceImpl(ModelMapper mapper, PromotionEntityRepository repository) {
         super(mapper, repository, PromotionEntity.class, PromotionRequest.class, PromotionResponse.class, PromotionResponse.class);
     }

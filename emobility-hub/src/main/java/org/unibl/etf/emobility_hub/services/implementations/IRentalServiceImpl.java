@@ -1,8 +1,8 @@
 package org.unibl.etf.emobility_hub.services.implementations;
 
+import lombok.RequiredArgsConstructor;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,28 +17,26 @@ import org.unibl.etf.emobility_hub.services.IRentalService;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class IRentalServiceImpl implements IRentalService {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private RentalEntityRepository repository;
+    private final RentalEntityRepository repository;
 
 
     @Override
-    public Page<RentalResponse> getAll(Pageable pageable) {
-        return repository.findAll(pageable).map(entity -> modelMapper.map(entity, RentalResponse.class));
+    public Page<RentalResponse> getAll(Pageable pageable, String search) {
+        Page<RentalEntity> page = search == null || search.isBlank()
+                ? repository.findAll(pageable)
+                : repository.findAllByClient_UsernameContainingIgnoreCaseOrVehicle_UniqueIdentifierContainingIgnoreCase(search, search, pageable);
+        return page.map(entity -> modelMapper.map(entity, RentalResponse.class));
     }
 
     @Override
-    public Page<RentalResponse> getAllByVehicleId(Long vehicleId, Pageable pageable) {
-        return repository.findAllByVehicle_Id(vehicleId, pageable).map(entity -> modelMapper.map(entity, RentalResponse.class));
-    }
-
-    @Override
-    public Page<RentalResponse> getAllByClientId(Long clientId, Pageable pageable) {
-        return repository.findAllByClient_Id(clientId, pageable).map(entity -> modelMapper.map(entity, RentalResponse.class));
+    public Page<RentalResponse> getAllByVehicleId(Long vehicleId, Pageable pageable, String search) {
+        return repository.findAllByVehicle_IdAndClient_UsernameContainingIgnoreCase(vehicleId, search == null ? "" : search, pageable)
+                .map(entity -> modelMapper.map(entity, RentalResponse.class));
     }
 
     @Override

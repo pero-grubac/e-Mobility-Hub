@@ -1,7 +1,7 @@
 package org.unibl.etf.emobility_hub.controllers;
 
+import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,9 +13,9 @@ import org.unibl.etf.emobility_hub.services.IUserService;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private IUserService service;
+    private final IUserService service;
 
     @GetMapping
     public ResponseEntity<Page<UserResponse>> getAll(Pageable pageable) {
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/getAllByUsername")
-    public ResponseEntity<Page<UserResponse>> getAllByUsername(Pageable pageable, @RequestBody(required = false) String search) {
+    public ResponseEntity<Page<UserResponse>> getAllByUsername(Pageable pageable, @RequestParam(required = false) String search) {
         if (search != null && !search.isEmpty()) {
             Page<UserResponse> responses = service.getAllByUsername(pageable, search);
             return new ResponseEntity<>(responses, HttpStatus.OK);
@@ -56,10 +56,5 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/changeRole/{id}")
-    public ResponseEntity<UserResponse> changeRole(@PathVariable Long id, @RequestBody String role) {
-        UserResponse response = service.changeRole(id, role);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 
 }

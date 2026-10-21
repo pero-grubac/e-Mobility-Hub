@@ -9,5 +9,5 @@ import org.unibl.etf.emobility_hub.models.dto.response.detailed.DetailedFaultRes
 
 public interface IFaultService
         extends IBaseCRUDService<FaultRequest, FaultResponse, DetailedFaultResponse, Long> {
-    Page<FaultResponse> getAllByVehicleId(Pageable pageable, Long vehicleId);
+    Page<FaultResponse> getAllByVehicleId(Pageable pageable, Long vehicleId, String search);
 }

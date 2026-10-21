@@ -9,8 +9,8 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Create directories for file uploads and temp storage
-RUN mkdir -p /app/uploads /app/temp
+# Directory for vehicle image uploads
+RUN mkdir -p /app/uploads
 
 EXPOSE 8080
 

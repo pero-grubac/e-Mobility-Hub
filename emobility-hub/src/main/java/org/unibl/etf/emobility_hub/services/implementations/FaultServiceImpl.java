@@ -3,7 +3,6 @@ package org.unibl.etf.emobility_hub.services.implementations;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,11 +24,11 @@ import java.time.LocalDateTime;
 public class FaultServiceImpl
         extends BaseCRUDServiceImpl<FaultEntity, FaultRequest, FaultResponse, DetailedFaultResponse, Long>
         implements IFaultService {
-    @Autowired
-    private TransportVehicleRepository vehicleRepository;
+    private final TransportVehicleRepository vehicleRepository;
 
-    public FaultServiceImpl(ModelMapper mapper, FaultEntityRepository repository) {
+    public FaultServiceImpl(ModelMapper mapper, FaultEntityRepository repository, TransportVehicleRepository vehicleRepository) {
         super(mapper, repository, FaultEntity.class, FaultRequest.class, FaultResponse.class, DetailedFaultResponse.class);
+        this.vehicleRepository = vehicleRepository;
     }
 
 
@@ -69,8 +68,9 @@ public class FaultServiceImpl
     }
 
     @Override
-    public Page<FaultResponse> getAllByVehicleId(Pageable pageable, Long vehicleId) {
-        return ((FaultEntityRepository) getRepository()).findAllByVehicleId(vehicleId, pageable)
+    public Page<FaultResponse> getAllByVehicleId(Pageable pageable, Long vehicleId, String search) {
+        return ((FaultEntityRepository) getRepository())
+                .findAllByVehicleIdAndDescriptionContainingIgnoreCase(vehicleId, search == null ? "" : search, pageable)
                 .map(fe -> getMapper().map(fe, FaultResponse.class));
     }
 }

@@ -1,7 +1,7 @@
 package org.unibl.etf.emobility_hub.controllers;
 
+import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,9 +13,9 @@ import org.unibl.etf.emobility_hub.services.IClientService;
 
 @RestController
 @RequestMapping("/clients")
+@RequiredArgsConstructor
 public class ClientController {
-    @Autowired
-    private IClientService service;
+    private final IClientService service;
 
     @GetMapping
     public ResponseEntity<Page<ClientResponse>> getAll(Pageable pageable) {

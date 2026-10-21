@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.unibl.etf.emobility_hub.base.controllers.BaseCRUDController;
 import org.unibl.etf.emobility_hub.models.dto.request.FaultRequest;
@@ -23,8 +24,9 @@ public class FaultController
     }
 
     @GetMapping("/getAllByVehicleId/{id}")
-    public ResponseEntity<Page<FaultResponse>> getAllByVehicleId(@PathVariable Long id, Pageable pageable) {
-        Page<FaultResponse> responses = ((IFaultService) getService()).getAllByVehicleId(pageable, id);
+    public ResponseEntity<Page<FaultResponse>> getAllByVehicleId(@PathVariable Long id, Pageable pageable,
+                                                                 @RequestParam(required = false) String search) {
+        Page<FaultResponse> responses = ((IFaultService) getService()).getAllByVehicleId(pageable, id, search);
         return ResponseEntity.ok(responses);
     }
 }

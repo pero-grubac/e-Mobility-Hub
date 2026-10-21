@@ -1,6 +1,6 @@
 package org.unibl.etf.emobility_hub.security.auth.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -12,15 +12,13 @@ import org.unibl.etf.emobility_hub.security.auth.IAuthenticationService;
 import org.unibl.etf.emobility_hub.security.jwt.JwtService;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements IAuthenticationService {
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserEntityRepository userEntityRepository;
+    private final UserEntityRepository userEntityRepository;
 
     @Override
     public AuthResponse login(AuthRequest request) {
@@ -29,6 +27,11 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                 () -> new EntityNotFoundException("User not found")
         );
         var token = jwtService.generateToken(user);
-        return AuthResponse.builder().token(token).build();
+        return AuthResponse.builder()
+                .token(token)
+                .username(user.getUsername())
+                .role(user.getRole().name())
+                .expiresAt(jwtService.extractExpiration(token))
+                .build();
     }
 }

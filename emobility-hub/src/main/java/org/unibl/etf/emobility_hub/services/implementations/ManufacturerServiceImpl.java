@@ -2,7 +2,6 @@ package org.unibl.etf.emobility_hub.services.implementations;
 
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ public class ManufacturerServiceImpl
         extends BaseCRUDServiceImpl<ManufacturerEntity, ManufacturerRequest, ManufacturerResponse, DetailedManufacturerResponse, Long>
         implements IManufacturerService {
 
-    @Autowired
     public ManufacturerServiceImpl(ModelMapper mapper, ManufacturerEntityRepository repository) {
         super(mapper, repository, ManufacturerEntity.class, ManufacturerRequest.class, ManufacturerResponse.class, DetailedManufacturerResponse.class);
     }

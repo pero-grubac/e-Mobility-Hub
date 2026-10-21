@@ -12,4 +12,6 @@ public interface JpaTransportVehicleRepository<T extends TransportVehicleEntity>
     Page<T> findAllByIsBroken(Pageable pageable, Boolean isBroken);
 
     Page<T> findAllByModelIgnoreCaseContaining(String model, Pageable pageable);
+
+    boolean existsByUniqueIdentifier(String uniqueIdentifier);
 }

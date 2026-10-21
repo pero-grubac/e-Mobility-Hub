@@ -1,6 +1,6 @@
 package org.unibl.etf.emobility_hub.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +15,9 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/parse-vehicle")
+@RequiredArgsConstructor
 public class ParseVehicleController {
-    @Autowired
-    private IParseVehicleService service;
+    private final IParseVehicleService service;
 
 
     @PostMapping

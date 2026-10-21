@@ -24,12 +24,17 @@ public abstract class TransportVehicleEntity {
 
     private double purchasePrice;
 
+    // Empty until an image is uploaded; the apps then show a placeholder.
     @Column(nullable = false, columnDefinition = "varchar(255) default ''")
-    private String image;
+    private String image = "";
 
     private boolean isBroken;
     private boolean isRented;
 
     @Column(nullable = false)
     private double rentPrice;
+
+    // Current position; shown on the operators' map.
+    private Double latitude;
+    private Double longitude;
 }

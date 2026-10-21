@@ -1,8 +1,8 @@
 package org.unibl.etf.emobility_hub.services.implementations;
 
+import lombok.RequiredArgsConstructor;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,13 +19,11 @@ import org.unibl.etf.emobility_hub.services.IUserService;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
-    @Autowired
-    private UserEntityRepository repository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private ModelMapper mapper;
+    private final UserEntityRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper mapper;
 
     @Override
     public Page<UserResponse> getAll(Pageable pageable) {
@@ -89,24 +87,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserResponse changeRole(Long id, String role) {
-        UserEntity user = findById(id);
-        try {
-            RoleEnum newRole = RoleEnum.valueOf(role.toUpperCase());
-            user.setRole(newRole);
-            repository.saveAndFlush(user);
-            return mapper.map(user, UserResponse.class);
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Invalid role: " + role);
-        }
-    }
-
-    @Override
     public Page<UserResponse> getAllByUsername(Pageable pageable, String search) {
-        System.out.println(RoleEnum.ROLE_CLIENT);
-        System.out.println("RoleEnum.ROLE_CLIENT");
-
-        return repository.getAllByUsernameContainingIgnoreCaseAndRoleIsNotIgnoreCase(search, RoleEnum.ROLE_CLIENT, pageable)
+        return repository.getAllByUsernameContainingIgnoreCaseAndRoleIsNot(search, RoleEnum.ROLE_CLIENT, pageable)
                 .map(te -> mapper.map(te, UserResponse.class));
     }
 }

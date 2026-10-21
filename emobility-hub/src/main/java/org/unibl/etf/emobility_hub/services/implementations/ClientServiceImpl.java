@@ -1,8 +1,9 @@
 package org.unibl.etf.emobility_hub.services.implementations;
 
+import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -27,18 +28,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ClientServiceImpl implements IClientService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
-    @Autowired
-    private ClientEntityRepository repository;
+    private final ClientEntityRepository repository;
 
     @Value("${file.upload-dir}")
     private String baseDir;
@@ -151,23 +151,26 @@ public class ClientServiceImpl implements IClientService {
     }
 
     private void deleteImageFromFileSystem(String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) {
+            return;
+        }
         Path filePath = Paths.get(imagePath);
         Path folderPath = filePath.getParent();
 
         try {
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
-                System.out.println("File deleted successfully: " + imagePath);
+                log.debug("Deleted avatar {}", imagePath);
             } else {
-                System.out.println("File does not exist: " + imagePath);
+                log.warn("Avatar not found: {}", imagePath);
             }
             if (folderPath != null && Files.exists(folderPath)) {
                 try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(folderPath)) {
                     if (!directoryStream.iterator().hasNext()) {
                         Files.delete(folderPath);
-                        System.out.println("Folder deleted successfully: " + folderPath);
+                        log.debug("Deleted empty avatar folder {}", folderPath);
                     } else {
-                        System.out.println("Folder is not empty, cannot delete: " + folderPath);
+                        log.debug("Avatar folder not empty, keeping it: {}", folderPath);
                     }
                 }
             }
