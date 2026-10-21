@@ -1,9 +1,11 @@
 package org.unibl.etf.emobility_hub_user.dao;
 
+import java.util.logging.Logger;
 import java.sql.*;
 import java.util.*;
 
 public class ConnectionPool {
+	private static final Logger logger = Logger.getLogger(ConnectionPool.class.getName());
 	public static ConnectionPool getConnectionPool() {
 		return connectionPool;
 	}
@@ -12,9 +14,9 @@ public class ConnectionPool {
 
 	static {
 		ResourceBundle bundle = PropertyResourceBundle.getBundle("org.unibl.etf.emobility_hub_user.dao.ConnectionPool");
-		String jdbcURL = bundle.getString("jdbcURL");
-		String username = bundle.getString("username");
-		String password = bundle.getString("password");
+		String jdbcURL = setting("db.url", "DB_URL", bundle.getString("jdbcURL"));
+		String username = setting("db.username", "DB_USERNAME", bundle.getString("username"));
+		String password = setting("db.password", "DB_PASSWORD", bundle.getString("password"));
 		String driver = bundle.getString("driver");
 		int preconnectCount = 0;
 		int maxIdleConnections = 10;
@@ -28,7 +30,7 @@ public class ConnectionPool {
 			maxConnections = Integer.parseInt(
 					bundle.getString("maxConnections"));
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.severe(ex.getMessage());
 		}
 		try {
 			connectionPool = new ConnectionPool(
@@ -36,8 +38,18 @@ public class ConnectionPool {
 					preconnectCount, maxIdleConnections,
 					maxConnections);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.severe(ex.getMessage());
 		}
+	}
+
+	// A JVM system property wins over an environment variable, which wins over
+	// ConnectionPool.properties; Docker sets DB_URL, DB_USERNAME and DB_PASSWORD.
+	static String setting(String property, String env, String fallback) {
+		String value = System.getProperty(property);
+		if (value == null || value.isEmpty()) {
+			value = System.getenv(env);
+		}
+		return value == null || value.isEmpty() ? fallback : value;
 	}
 
 	protected ConnectionPool(String aJdbcURL, String aUsername,
@@ -85,7 +97,7 @@ public class ConnectionPool {
 					freeConnections.removeElementAt(0);
 					usedConnections.addElement(conn);
 				} catch (InterruptedException ex) {
-					ex.printStackTrace();
+					logger.severe(ex.getMessage());
 				}
 			}
 		}
@@ -102,7 +114,8 @@ public class ConnectionPool {
 				Connection conn = (Connection) freeConnections.elementAt(lastOne);
 				try {
 					conn.close();
-				} catch (SQLException ex) {
+				} catch (SQLException ignored) {
+					// The idle connection is dropped from the pool either way.
 				}
 				freeConnections.removeElementAt(lastOne);
 			}

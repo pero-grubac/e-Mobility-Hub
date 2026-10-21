@@ -1,5 +1,6 @@
 package org.unibl.etf.emobility_hub_user.dao;
 
+import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,15 +12,16 @@ import org.unibl.etf.emobility_hub_user.models.dto.PaginatedResponse;
 import org.unibl.etf.emobility_hub_user.models.entity.ElectricCarEntity;
 
 public class ElectricCarDAO {
+	private static final Logger logger = Logger.getLogger(ElectricCarDAO.class.getName());
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
 	private static final String SELECT_ELECTRIC_CARS_PAGINATED = "SELECT ec.id, tv.uniqueIdentifier, m.name AS manufacturer_name, tv.model, tv.purchasePrice, "
 			+ "tv.image, tv.isBroken, tv.rentPrice, ec.purchaseDate, ec.description " + "FROM electric_car ec "
 			+ "JOIN transport_vehicle tv ON ec.id = tv.id " + "JOIN manufacturer m ON tv.manufacturer_id = m.id "
-			+ "WHERE tv.isBroken = 0 " + "ORDER BY ec.id DESC LIMIT ? OFFSET ?";
+			+ "WHERE tv.isBroken = 0 AND tv.isRented = 0 " + "ORDER BY ec.id DESC LIMIT ? OFFSET ?";
 
 	private static final String COUNT_ELECTRIC_CARS = "SELECT COUNT(*) " + "FROM electric_car es "
-			+ "JOIN transport_vehicle tv ON es.id = tv.id " + "WHERE tv.isBroken = 0";
+			+ "JOIN transport_vehicle tv ON es.id = tv.id " + "WHERE tv.isBroken = 0 AND tv.isRented = 0";
 
 	public static PaginatedResponse<ElectricCarEntity> getElectricCarsPaginated(int page, int size) {
 		PaginatedResponse<ElectricCarEntity> response = new PaginatedResponse<>();
@@ -66,7 +68,7 @@ public class ElectricCarDAO {
 			response.setPage(metadata);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		} finally {
 			connectionPool.checkIn(connection);
 		}

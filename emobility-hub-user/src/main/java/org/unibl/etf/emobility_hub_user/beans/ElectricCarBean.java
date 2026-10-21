@@ -14,7 +14,6 @@ public class ElectricCarBean implements Serializable {
 
 	public boolean getElectricCars(int page, int size) {
 		try {
-			electricCars = null;
 			electricCars = ElectricCarDAO.getElectricCarsPaginated(page, size);
 			return true;
 		} catch (Exception e) {
@@ -26,10 +25,6 @@ public class ElectricCarBean implements Serializable {
 
 	public PaginatedResponse<ElectricCarEntity> getElectricCars() {
 		return electricCars;
-	}
-
-	public void setElectricCars(PaginatedResponse<ElectricCarEntity> electricCars) {
-		this.electricCars = electricCars;
 	}
 
 }

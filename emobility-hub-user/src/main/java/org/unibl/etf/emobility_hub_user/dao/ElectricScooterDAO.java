@@ -1,5 +1,6 @@
 package org.unibl.etf.emobility_hub_user.dao;
 
+import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,13 +12,14 @@ import org.unibl.etf.emobility_hub_user.models.dto.PaginatedResponse;
 import org.unibl.etf.emobility_hub_user.models.entity.ElectricScooterEntity;
 
 public class ElectricScooterDAO {
+	private static final Logger logger = Logger.getLogger(ElectricScooterDAO.class.getName());
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 	private static final String SELECT_ELECTRIC_SCOOTERS_PAGINATED = "SELECT es.id, tv.uniqueIdentifier, m.name AS manufacturer_name, tv.model, tv.purchasePrice, "
 			+ "tv.image, tv.isBroken, tv.rentPrice, es.maxSpeed " + "FROM electric_scooter es "
 			+ "JOIN transport_vehicle tv ON es.id = tv.id " + "JOIN manufacturer m ON tv.manufacturer_id = m.id "
-			+ "WHERE tv.isBroken = 0 " + "ORDER BY es.id DESC " + "LIMIT ? OFFSET ?";
+			+ "WHERE tv.isBroken = 0 AND tv.isRented = 0 " + "ORDER BY es.id DESC " + "LIMIT ? OFFSET ?";
 	private static final String COUNT_ELECTRIC_SCOOTERS = "SELECT COUNT(*) " + "FROM electric_scooter es "
-			+ "JOIN transport_vehicle tv ON es.id = tv.id " + "WHERE tv.isBroken = 0";
+			+ "JOIN transport_vehicle tv ON es.id = tv.id " + "WHERE tv.isBroken = 0 AND tv.isRented = 0";
 
 	public static PaginatedResponse<ElectricScooterEntity> getElectricScootersPaginated(int page, int size) {
 		PaginatedResponse<ElectricScooterEntity> response = new PaginatedResponse<>();
@@ -62,7 +64,7 @@ public class ElectricScooterDAO {
 			response.setContent(scooters);
 			response.setPage(metadata);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		} finally {
 			connectionPool.checkIn(connection);
 		}

@@ -1,43 +1,37 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Login</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap.min.css">
+    <%@ include file="fragments/head.jspf" %>
+    <title>Sign in - eMobilityHub</title>
 </head>
-<body class="bg-light">
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card mt-5 shadow">
-                <div class="card-body">
-                    <h2 class="text-center mb-4">Login</h2>
-                    <%
-                    String notification = (String) request.getSession().getAttribute("notification");
-                    if (notification != null && !notification.isEmpty()) {
-                    %>
-                    <div class="alert alert-danger" role="alert"><%= notification %></div>
-                    <% request.getSession().removeAttribute("notification"); } %>
-                    <form action="clients?action=login" method="post">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
-                    </form>
-                    <div class="mt-3 text-center">
-                        <p>Don't have an account? <a href="clients?action=register" class="text-primary">Register here</a></p>
-                    </div>
+<body>
+<main class="app-main">
+    <div class="card auth-card shadow-sm">
+        <div class="card-body p-4">
+            <div class="auth-brand mb-1">eMobilityHub</div>
+            <p class="text-center text-muted mb-4">Rent an electric scooter, bicycle or car</p>
+            <%@ include file="fragments/messages.jspf" %>
+            <form action="clients" method="post" class="needs-validation" novalidate>
+                <input type="hidden" name="action" value="login">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" autocomplete="username"
+                           required autofocus>
+                    <div class="invalid-feedback">Enter your username.</div>
                 </div>
-            </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password"
+                           autocomplete="current-password" required>
+                    <div class="invalid-feedback">Enter your password.</div>
+                </div>
+                <button type="submit" id="loginButton" class="btn btn-primary w-100">Sign in</button>
+            </form>
+            <p class="mt-3 mb-0 text-center">No account yet? <a href="clients?action=register">Register</a></p>
         </div>
     </div>
-</div>
-<script src="<%= request.getContextPath() %>/js/bootstrap.bundle.min.js"></script>
+</main>
+<%@ include file="fragments/scripts.jspf" %>
 </body>
 </html>

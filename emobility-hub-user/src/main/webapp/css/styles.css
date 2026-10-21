@@ -1,0 +1,190 @@
+/* eMobilityHub client app. Mobile first: base rules target phones,
+   the media queries widen the layout on larger screens. */
+
+:root {
+    --emh-primary: #0d6efd;
+    --emh-accent: #20c997;
+    --emh-bg: #f4f6fb;
+}
+
+body {
+    background: var(--emh-bg);
+    min-height: 100vh;
+}
+
+main.app-main {
+    padding: 1rem 0.75rem 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Header */
+.app-navbar .navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.ride-badge {
+    animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    50% { opacity: 0.6; }
+}
+
+/* Sign-in and registration */
+.auth-card {
+    max-width: 420px;
+    margin: 1.5rem auto;
+    border: 0;
+    border-radius: 1rem;
+}
+
+.auth-brand {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--emh-primary);
+    text-align: center;
+}
+
+/* The four options after sign-in */
+.option-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.option-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 130px;
+    border-radius: 1rem;
+    background: #fff;
+    color: #212529;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.option-card:hover,
+.option-card:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    color: var(--emh-primary);
+}
+
+.option-icon {
+    font-size: 2.4rem;
+    line-height: 1;
+}
+
+/* Vehicle lists */
+.vehicle-card {
+    border: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.vehicle-card .card-img-top {
+    height: 160px;
+    object-fit: cover;
+    background: #e9ecef;
+}
+
+.price-tag {
+    font-weight: 700;
+    color: var(--emh-primary);
+}
+
+/* Rent, ride and summary */
+.step-card {
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-bottom: 1rem;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--emh-primary);
+    color: #fff;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+.ride-clock {
+    font-size: 3rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+.ride-amount {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--emh-accent);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.detail-list dt {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.detail-list dd {
+    margin-bottom: 0.6rem;
+}
+
+/* Profile */
+.avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Buttons that fill the width on phones */
+.btn-block-sm {
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    main.app-main {
+        padding: 1.5rem 1rem 2.5rem;
+    }
+
+    .option-card {
+        min-height: 160px;
+    }
+
+    .btn-block-sm {
+        width: auto;
+    }
+}
+
+@media (min-width: 768px) {
+    .option-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+    }
+}

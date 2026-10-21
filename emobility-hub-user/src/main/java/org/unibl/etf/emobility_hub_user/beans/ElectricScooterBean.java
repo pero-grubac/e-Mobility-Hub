@@ -14,7 +14,6 @@ public class ElectricScooterBean implements Serializable {
 
 	public boolean getElectricScooters(int page, int size) {
 		try {
-			electricScooters = null;
 			electricScooters = ElectricScooterDAO.getElectricScootersPaginated(page, size);
 			return true;
 		} catch (Exception e) {
@@ -26,9 +25,5 @@ public class ElectricScooterBean implements Serializable {
 
 	public PaginatedResponse<ElectricScooterEntity> getElectricScooters() {
 		return electricScooters;
-	}
-
-	public void setElectricScooters(PaginatedResponse<ElectricScooterEntity> electricScooters) {
-		this.electricScooters = electricScooters;
 	}
 }

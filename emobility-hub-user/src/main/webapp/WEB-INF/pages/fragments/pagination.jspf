@@ -1,0 +1,18 @@
+<%-- Page links. Expects pageInfo (PageMetadata) and pageLink (URL without the page number). --%>
+<% if (pageInfo != null && pageInfo.getTotalPages() > 1) { %>
+<nav aria-label="Pages">
+    <ul class="pagination justify-content-center flex-wrap">
+        <li class="page-item <%= pageInfo.getNumber() <= 1 ? "disabled" : "" %>">
+            <a class="page-link" href="<%= pageLink + (pageInfo.getNumber() - 1) %>" aria-label="Previous">&laquo;</a>
+        </li>
+        <% for (int p = 1; p <= pageInfo.getTotalPages(); p++) { %>
+        <li class="page-item <%= p == pageInfo.getNumber() ? "active" : "" %>">
+            <a class="page-link" href="<%= pageLink + p %>"><%= p %></a>
+        </li>
+        <% } %>
+        <li class="page-item <%= pageInfo.getNumber() >= pageInfo.getTotalPages() ? "disabled" : "" %>">
+            <a class="page-link" href="<%= pageLink + (pageInfo.getNumber() + 1) %>" aria-label="Next">&raquo;</a>
+        </li>
+    </ul>
+</nav>
+<% } %>

@@ -1,0 +1,25 @@
+<%-- Top navigation. It collapses into a menu button on small screens. --%>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary app-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="clients?action=welcome">eMobilityHub</a>
+        <% if (session.getAttribute("activeRideId") != null) { %>
+        <a class="badge text-bg-warning text-decoration-none ride-badge ms-auto me-2 d-md-none" href="clients?action=ride">Ride in progress</a>
+        <% } %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto">
+                <% if (session.getAttribute("activeRideId") != null) { %>
+                <li class="nav-item d-none d-md-block"><a class="nav-link fw-semibold text-warning" href="clients?action=ride">Ride in progress</a></li>
+                <% } %>
+                <li class="nav-item"><a class="nav-link" href="clients?action=scooter">Scooters</a></li>
+                <li class="nav-item"><a class="nav-link" href="clients?action=bicycle">Bicycles</a></li>
+                <li class="nav-item"><a class="nav-link" href="clients?action=car">Cars</a></li>
+                <li class="nav-item"><a class="nav-link" href="clients?action=profile">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="clients?action=logout">Log out</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

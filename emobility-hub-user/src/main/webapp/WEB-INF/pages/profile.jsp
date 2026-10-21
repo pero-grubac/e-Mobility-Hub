@@ -1,87 +1,130 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="org.unibl.etf.emobility_hub_user.beans.ClientBean" %>
+<%@ page import="org.unibl.etf.emobility_hub_user.models.dto.PageMetadata" %>
+<%@ page import="org.unibl.etf.emobility_hub_user.models.dto.PaginatedResponse" %>
 <%@ page import="org.unibl.etf.emobility_hub_user.models.entity.ClientEntity" %>
-<%@ page import="java.util.Objects" %>
-<jsp:useBean id="clientBean" type="org.unibl.etf.emobility_hub_user.beans.ClientBean" scope="session" />
+<%@ page import="org.unibl.etf.emobility_hub_user.models.entity.RentalEntity" %>
+<%@ page import="org.unibl.etf.emobility_hub_user.util.Html" %>
+<%@ page import="org.unibl.etf.emobility_hub_user.validation.Validators" %>
+<%
+    ClientEntity client = ((ClientBean) session.getAttribute("clientBean")).getEntity();
+    String avatar = client.getAvatarImage() == null || client.getAvatarImage().isEmpty()
+            ? request.getContextPath() + "/images/default-avatar.png" : client.getAvatarImage();
+    @SuppressWarnings("unchecked")
+    PaginatedResponse<RentalEntity> rentals = (PaginatedResponse<RentalEntity>) request.getAttribute("rentals");
+    PageMetadata pageInfo = rentals == null ? null : rentals.getPage();
+    String pageLink = "clients?action=profile&page=";
+    DateTimeFormatter time = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Profile</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap.min.css">
+    <%@ include file="fragments/head.jspf" %>
+    <title>My profile - eMobilityHub</title>
 </head>
-<body class="bg-light">
-<jsp:include page="header.html" />
-<div class="container mt-5">
-    <h2 class="mb-4">My Profile</h2>
-    <%
-    String avatarPath = clientBean.getEntity().getAvatarImage();
-    if (Objects.isNull(avatarPath) || avatarPath.isEmpty()) {
-        avatarPath = request.getContextPath() + "/images/default-avatar.png";
-    }
-    %>
-    <div class="row">
-        <div class="col-md-4 text-center">
-            <img src="<%= avatarPath %>" alt="Profile Image" class="img-thumbnail mb-3" style="width: 100%; max-width: 300px;">
+<body>
+<%@ include file="fragments/header.jspf" %>
+<main class="app-main">
+    <h1 class="page-title">My profile</h1>
+    <%@ include file="fragments/messages.jspf" %>
+
+    <section class="card step-card">
+        <div class="card-body">
+            <div class="d-flex flex-column flex-sm-row gap-3 align-items-center">
+                <img src="<%= Html.escape(avatar) %>" alt="Profile picture" class="avatar">
+                <div class="flex-grow-1 text-center text-sm-start">
+                    <div class="h5 mb-0"><%= Html.escape(client.getFirstName()) %> <%= Html.escape(client.getLastName()) %></div>
+                    <div class="text-muted">@<%= Html.escape(client.getUsername()) %></div>
+                    <div class="small"><%= Html.escape(client.getEmail()) %> &middot; <%= Html.escape(client.getPhoneNumber()) %></div>
+                    <div class="small">ID card <%= Html.escape(client.getIdCardNumber()) %></div>
+                </div>
+            </div>
             <form action="clients" method="post" enctype="multipart/form-data" class="mt-3">
                 <input type="hidden" name="action" value="updateAvatar">
-                <input type="file" id="avatar" name="avatar" style="display: none;" onchange="form.submit();">
-                <button type="button" class="btn btn-primary w-100" onclick="document.getElementById('avatar').click();">
-                    Upload & Update Picture
-                </button>
+                <label for="avatar" class="form-label small">Change picture</label>
+                <div class="input-group">
+                    <input type="file" class="form-control" id="avatar" name="avatar" required
+                           accept="image/png,image/jpeg,image/gif,image/webp">
+                    <button type="submit" class="btn btn-outline-primary">Upload</button>
+                </div>
             </form>
         </div>
+    </section>
 
-        <div class="col-md-8">
-            <form action="clients" method="post">
+    <section class="card step-card" id="rentals">
+        <div class="card-body">
+            <h2 class="h5">My rentals</h2>
+            <% if (rentals == null || rentals.getContent() == null || rentals.getContent().isEmpty()) { %>
+            <p class="text-muted mb-0">You have not rented anything yet.</p>
+            <% } else { %>
+            <div class="list-group list-group-flush">
+                <% for (RentalEntity r : rentals.getContent()) { %>
+                <div class="list-group-item px-0 d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                    <div>
+                        <div class="fw-semibold"><%= Html.escape(r.getVehicleModel()) %>
+                            <span class="text-muted small">&middot; <%= r.getVehicleType().getLabel() %></span></div>
+                        <div class="small text-muted">
+                            <%= r.getRentalStart().format(time) %>
+                            <% if (!r.isActive()) { %> &ndash; <%= r.getRentalEnd().format(time) %> &middot; <%= Html.number(r.getDistance(), "km") %><% } %>
+                        </div>
+                    </div>
+                    <% if (r.isActive()) { %>
+                    <a class="btn btn-warning btn-sm" href="clients?action=ride">In progress &rarr;</a>
+                    <% } else { %>
+                    <div class="text-end">
+                        <div class="fw-semibold"><%= Html.money(r.getPrice()) %></div>
+                        <a class="small" href="clients?action=invoice&amp;rentalId=<%= r.getId() %>">Invoice (PDF)</a>
+                    </div>
+                    <% } %>
+                </div>
+                <% } %>
+            </div>
+            <div class="mt-3"><%@ include file="fragments/pagination.jspf" %></div>
+            <% } %>
+        </div>
+    </section>
+
+    <section class="card step-card">
+        <div class="card-body">
+            <h2 class="h5">Change password</h2>
+            <form action="clients" method="post" class="needs-validation" novalidate id="passwordForm">
                 <input type="hidden" name="action" value="changePassword">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" value="<%= clientBean.getEntity().getUsername() %>" readonly>
+                <div class="mb-2">
+                    <label for="currentPassword" class="form-label">Current password</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required
+                           autocomplete="current-password">
+                    <div class="invalid-feedback">Enter your current password.</div>
+                </div>
+                <div class="mb-2">
+                    <label for="newPassword" class="form-label">New password</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" required
+                           minlength="<%= Validators.PASSWORD_MIN_LENGTH %>" maxlength="72" autocomplete="new-password">
+                    <div class="invalid-feedback">At least <%= Validators.PASSWORD_MIN_LENGTH %> characters.</div>
                 </div>
                 <div class="mb-3">
-                    <label for="firstName" class="form-label">First Name</label>
-                    <input type="text" id="firstName" name="firstName" class="form-control" value="<%= clientBean.getEntity().getFirstName() %>" readonly>
+                    <label for="confirmPassword" class="form-label">Repeat new password</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required
+                           data-match="#newPassword" autocomplete="new-password">
+                    <div class="invalid-feedback">The passwords must match.</div>
                 </div>
-                <div class="mb-3">
-                    <label for="lastName" class="form-label">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" class="form-control" value="<%= clientBean.getEntity().getLastName() %>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" value="<%= clientBean.getEntity().getEmail() %>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="phoneNumber" class="form-label">Phone Number</label>
-                    <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" value="<%= clientBean.getEntity().getPhoneNumber() %>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="idCardNumber" class="form-label">ID Card Number</label>
-                    <input type="text" id="idCardNumber" name="idCardNumber" class="form-control" value="<%= clientBean.getEntity().getIdCardNumber() %>" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">New Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter new password" required>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <button type="submit" class="btn btn-primary">Update Password</button>
-                    <button type="button" class="btn btn-success" onclick="redirectToRentals()">Rentals</button>
-                    <button type="button" class="btn btn-danger" onclick="deactivateAccount()">Deactivate Account</button>
-                </div>
+                <button type="submit" class="btn btn-primary btn-block-sm">Change password</button>
             </form>
         </div>
-    </div>
-</div>
+    </section>
 
-<script>
-    function deactivateAccount() {
-        if (confirm("Are you sure you want to deactivate your account?")) {
-            window.location.href = "clients?action=deactivate";
-        }
-    }
-    function redirectToRentals() {
-        window.location.href = "clients?action=rentals";
-    }
-</script>
-<script src="<%= request.getContextPath() %>/js/bootstrap.bundle.min.js"></script>
+    <section class="card step-card border-danger-subtle">
+        <div class="card-body">
+            <h2 class="h5 text-danger">Deactivate account</h2>
+            <p class="small text-muted">You will be signed out and will not be able to sign in again.</p>
+            <form action="clients" method="post"
+                  onsubmit="return confirm('Are you sure you want to deactivate your account?');">
+                <input type="hidden" name="action" value="deactivate">
+                <button type="submit" class="btn btn-outline-danger btn-block-sm">Deactivate my account</button>
+            </form>
+        </div>
+    </section>
+</main>
+<%@ include file="fragments/scripts.jspf" %>
 </body>
 </html>

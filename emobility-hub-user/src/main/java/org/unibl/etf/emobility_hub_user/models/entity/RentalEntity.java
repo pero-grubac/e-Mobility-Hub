@@ -2,44 +2,37 @@ package org.unibl.etf.emobility_hub_user.models.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
+// One ride. It is stored when the ride starts; the end time, end location,
+// duration, distance and price are filled in when it finishes.
 public class RentalEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private LocalDateTime rentalStart;
-	private LocalDateTime rentalEnd;
-	private double end_latitude;
-	private double end_longitude;
-	private double start_latitude;
-	private double start_longitude;
-	private double duration;
-	private double distance;
-	private double price;
 	private Long clientId;
 	private Long vehicleId;
+	private LocalDateTime rentalStart;
+	private LocalDateTime rentalEnd;
+	private double startLatitude;
+	private double startLongitude;
+	private Double endLatitude;
+	private Double endLongitude;
+	private Double duration;
+	private Double distance;
+	private Double price;
+	private DocumentType documentType;
+	private String documentNumber;
+	private String driverLicenseNumber;
+	private String paymentCardLast4;
 
-	public RentalEntity() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	// Read-only details of the rented vehicle, joined in for display.
+	private VehicleType vehicleType;
+	private String vehicleModel;
+	private String vehicleUniqueIdentifier;
+	private String vehicleImage;
+	private double rentPrice;
 
-	public RentalEntity(Long id, LocalDateTime rentalStart, LocalDateTime rentalEnd, double end_latitude,
-			double end_longitude, double start_latitude, double start_longitude, double duration, double distance,
-			double price, Long clientId, Long vehicleId) {
-		super();
-		this.id = id;
-		this.rentalStart = rentalStart;
-		this.rentalEnd = rentalEnd;
-		this.end_latitude = end_latitude;
-		this.end_longitude = end_longitude;
-		this.start_latitude = start_latitude;
-		this.start_longitude = start_longitude;
-		this.duration = duration;
-		this.distance = distance;
-		this.price = price;
-		this.clientId = clientId;
-		this.vehicleId = vehicleId;
+	public boolean isActive() {
+		return rentalEnd == null;
 	}
 
 	public Long getId() {
@@ -48,78 +41,6 @@ public class RentalEntity implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public LocalDateTime getRentalStart() {
-		return rentalStart;
-	}
-
-	public void setRentalStart(LocalDateTime rentalStart) {
-		this.rentalStart = rentalStart;
-	}
-
-	public LocalDateTime getRentalEnd() {
-		return rentalEnd;
-	}
-
-	public void setRentalEnd(LocalDateTime rentalEnd) {
-		this.rentalEnd = rentalEnd;
-	}
-
-	public double getEnd_latitude() {
-		return end_latitude;
-	}
-
-	public void setEnd_latitude(double end_latitude) {
-		this.end_latitude = end_latitude;
-	}
-
-	public double getEnd_longitude() {
-		return end_longitude;
-	}
-
-	public void setEnd_longitude(double end_longitude) {
-		this.end_longitude = end_longitude;
-	}
-
-	public double getStart_latitude() {
-		return start_latitude;
-	}
-
-	public void setStart_latitude(double start_latitude) {
-		this.start_latitude = start_latitude;
-	}
-
-	public double getStart_longitude() {
-		return start_longitude;
-	}
-
-	public void setStart_longitude(double start_longitude) {
-		this.start_longitude = start_longitude;
-	}
-
-	public double getDuration() {
-		return duration;
-	}
-
-	public void setDuration(double duration) {
-		this.duration = duration;
-	}
-
-	public double getDistance() {
-		return distance;
-	}
-
-	public void setDistance(double distance) {
-		this.distance = distance;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
 	}
 
 	public Long getClientId() {
@@ -138,40 +59,147 @@ public class RentalEntity implements Serializable {
 		this.vehicleId = vehicleId;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(clientId, distance, duration, end_latitude, end_longitude, id, price, rentalEnd,
-				rentalStart, start_latitude, start_longitude, vehicleId);
+	public LocalDateTime getRentalStart() {
+		return rentalStart;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RentalEntity other = (RentalEntity) obj;
-		return Objects.equals(clientId, other.clientId)
-				&& Double.doubleToLongBits(distance) == Double.doubleToLongBits(other.distance)
-				&& Double.doubleToLongBits(duration) == Double.doubleToLongBits(other.duration)
-				&& Double.doubleToLongBits(end_latitude) == Double.doubleToLongBits(other.end_latitude)
-				&& Double.doubleToLongBits(end_longitude) == Double.doubleToLongBits(other.end_longitude)
-				&& Objects.equals(id, other.id)
-				&& Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price)
-				&& Objects.equals(rentalEnd, other.rentalEnd) && Objects.equals(rentalStart, other.rentalStart)
-				&& Double.doubleToLongBits(start_latitude) == Double.doubleToLongBits(other.start_latitude)
-				&& Double.doubleToLongBits(start_longitude) == Double.doubleToLongBits(other.start_longitude)
-				&& Objects.equals(vehicleId, other.vehicleId);
+	public void setRentalStart(LocalDateTime rentalStart) {
+		this.rentalStart = rentalStart;
 	}
 
-	@Override
-	public String toString() {
-		return "RentalEntity [id=" + id + ", rentalStart=" + rentalStart + ", rentalEnd=" + rentalEnd
-				+ ", end_latitude=" + end_latitude + ", end_longitude=" + end_longitude + ", start_latitude="
-				+ start_latitude + ", start_longitude=" + start_longitude + ", duration=" + duration + ", distance="
-				+ distance + ", price=" + price + ", clientId=" + clientId + ", vehicleId=" + vehicleId + "]";
+	public LocalDateTime getRentalEnd() {
+		return rentalEnd;
 	}
 
+	public void setRentalEnd(LocalDateTime rentalEnd) {
+		this.rentalEnd = rentalEnd;
+	}
+
+	public double getStartLatitude() {
+		return startLatitude;
+	}
+
+	public void setStartLatitude(double startLatitude) {
+		this.startLatitude = startLatitude;
+	}
+
+	public double getStartLongitude() {
+		return startLongitude;
+	}
+
+	public void setStartLongitude(double startLongitude) {
+		this.startLongitude = startLongitude;
+	}
+
+	public Double getEndLatitude() {
+		return endLatitude;
+	}
+
+	public void setEndLatitude(Double endLatitude) {
+		this.endLatitude = endLatitude;
+	}
+
+	public Double getEndLongitude() {
+		return endLongitude;
+	}
+
+	public void setEndLongitude(Double endLongitude) {
+		this.endLongitude = endLongitude;
+	}
+
+	public Double getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Double duration) {
+		this.duration = duration;
+	}
+
+	public Double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public DocumentType getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(DocumentType documentType) {
+		this.documentType = documentType;
+	}
+
+	public String getDocumentNumber() {
+		return documentNumber;
+	}
+
+	public void setDocumentNumber(String documentNumber) {
+		this.documentNumber = documentNumber;
+	}
+
+	public String getDriverLicenseNumber() {
+		return driverLicenseNumber;
+	}
+
+	public void setDriverLicenseNumber(String driverLicenseNumber) {
+		this.driverLicenseNumber = driverLicenseNumber;
+	}
+
+	public String getPaymentCardLast4() {
+		return paymentCardLast4;
+	}
+
+	public void setPaymentCardLast4(String paymentCardLast4) {
+		this.paymentCardLast4 = paymentCardLast4;
+	}
+
+	public VehicleType getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(VehicleType vehicleType) {
+		this.vehicleType = vehicleType;
+	}
+
+	public String getVehicleModel() {
+		return vehicleModel;
+	}
+
+	public void setVehicleModel(String vehicleModel) {
+		this.vehicleModel = vehicleModel;
+	}
+
+	public String getVehicleUniqueIdentifier() {
+		return vehicleUniqueIdentifier;
+	}
+
+	public void setVehicleUniqueIdentifier(String vehicleUniqueIdentifier) {
+		this.vehicleUniqueIdentifier = vehicleUniqueIdentifier;
+	}
+
+	public String getVehicleImage() {
+		return vehicleImage;
+	}
+
+	public void setVehicleImage(String vehicleImage) {
+		this.vehicleImage = vehicleImage;
+	}
+
+	public double getRentPrice() {
+		return rentPrice;
+	}
+
+	public void setRentPrice(double rentPrice) {
+		this.rentPrice = rentPrice;
+	}
 }

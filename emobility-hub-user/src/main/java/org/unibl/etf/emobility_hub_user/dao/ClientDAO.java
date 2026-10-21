@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import org.unibl.etf.emobility_hub_user.beans.ClientBean;
 import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
 import org.unibl.etf.emobility_hub_user.models.entity.RoleEnum;
 
@@ -21,11 +20,13 @@ public class ClientDAO {
 	private static final String SQL_SELECT_BY_USERNAME = "SELECT COUNT(*) AS count FROM user WHERE username = ?";
 	private static final String SQL_INSERT_USER = "INSERT INTO user (username, password, firstName, lastName, role) VALUES (?, ?, ?, ?, ?)";
 	private static final String SQL_INSERT_CLIENT = "INSERT INTO client (id, email, phoneNumber, idCardNumber, avatarImage, isDeactivated, isBlocked) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_SELECT_DUPLICATE = "SELECT email, phoneNumber, idCardNumber FROM client "
+			+ "WHERE email = ? OR phoneNumber = ? OR idCardNumber = ?";
 	private static final String SQL_UPDATE_PASSWORD = "UPDATE user SET password = ? WHERE id = ?";
 	private static final String SQL_UPDATE_IS_DEACTIVATED = "UPDATE client SET isDeactivated = ? WHERE id = ?";
 	private static final String SQL_UPDATE_AVATAR = "UPDATE client SET avatarImage = ? WHERE id = ?";
 
-	private static final Logger logger = Logger.getLogger(ClientBean.class.getName());
+	private static final Logger logger = Logger.getLogger(ClientDAO.class.getName());
 
 	public static ClientEntity getByUsernameAndPassword(String username, String password) {
 		Connection connection = null;
@@ -135,13 +136,50 @@ public class ClientDAO {
 					connection.rollback();
 				}
 			} catch (SQLException rollbackEx) {
-				rollbackEx.printStackTrace();
+				logger.severe(rollbackEx.getMessage());
 			}
 		} finally {
+			// Pooled connections must go back in auto-commit mode.
+			try {
+				if (connection != null) {
+					connection.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				logger.severe(e.getMessage());
+			}
 			connectionPool.checkIn(connection);
 		}
 
 		return success;
+	}
+
+	// Name of the first unique client field another account already uses, or null.
+	public static String findTakenField(ClientEntity client) {
+		Connection connection = null;
+		String taken = null;
+
+		try {
+			connection = connectionPool.checkOut();
+			try (PreparedStatement pstmt = DAOUtil.prepareStatement(connection, SQL_SELECT_DUPLICATE, false,
+					client.getEmail(), client.getPhoneNumber(), client.getIdCardNumber());
+					ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next() && taken == null) {
+					if (client.getEmail().equalsIgnoreCase(rs.getString("email"))) {
+						taken = "email";
+					} else if (client.getPhoneNumber().equals(rs.getString("phoneNumber"))) {
+						taken = "phone number";
+					} else if (client.getIdCardNumber().equalsIgnoreCase(rs.getString("idCardNumber"))) {
+						taken = "ID card number";
+					}
+				}
+			}
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
+		} finally {
+			connectionPool.checkIn(connection);
+		}
+
+		return taken;
 	}
 
 	public static boolean updatePassword(Long userId, String newPassword) {
@@ -150,7 +188,6 @@ public class ClientDAO {
 
 		try {
 			connection = connectionPool.checkOut();
-			System.out.println(newPassword);
 			PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE_PASSWORD);
 			pstmt.setString(1, BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 			pstmt.setLong(2, userId);

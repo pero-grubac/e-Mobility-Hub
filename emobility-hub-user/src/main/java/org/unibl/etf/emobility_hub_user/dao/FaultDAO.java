@@ -1,9 +1,11 @@
 package org.unibl.etf.emobility_hub_user.dao;
 
+import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class FaultDAO {
+	private static final Logger logger = Logger.getLogger(FaultDAO.class.getName());
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
 	private static final String INSERT_FAULT = "INSERT INTO fault (description, vehicle_id, creationDateTime, updateDateTime) "
@@ -41,13 +43,13 @@ public class FaultDAO {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 			try {
 				if (connection != null) {
 					connection.rollback();
 				}
 			} catch (Exception rollbackEx) {
-				rollbackEx.printStackTrace();
+				logger.severe(rollbackEx.getMessage());
 			}
 		} finally {
 			try {
@@ -56,7 +58,7 @@ public class FaultDAO {
 					connectionPool.checkIn(connection);
 				}
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.severe(ex.getMessage());
 			}
 		}
 		return success;

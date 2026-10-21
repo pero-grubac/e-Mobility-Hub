@@ -1,10 +1,10 @@
 package org.unibl.etf.emobility_hub_user.beans;
 
-import org.unibl.etf.emobility_hub_user.dao.ClientDAO;
-import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
-
 import java.io.Serializable;
 import java.util.logging.Logger;
+
+import org.unibl.etf.emobility_hub_user.dao.ClientDAO;
+import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
 
 public class ClientBean implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -18,22 +18,13 @@ public class ClientBean implements Serializable {
                 isLoggedIn = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
         return isLoggedIn;
     }
 
     public boolean isLoggedIn() {
         return isLoggedIn;
-    }
-
-    public void setLoggedIn(boolean isLoggedIn) {
-        this.isLoggedIn = isLoggedIn;
-    }
-
-    public void logout() {
-        entity = new ClientEntity();
-        isLoggedIn = false;
     }
 
     public boolean add(ClientEntity client) {
@@ -48,6 +39,25 @@ public class ClientBean implements Serializable {
     public boolean isUsernameAllowed(String username) {
         try {
             return !ClientDAO.usernameExists(username);
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+        }
+        return false;
+    }
+
+    // Which unique field (email, phone, ID card) is already used, or null.
+    public String takenField(ClientEntity client) {
+        try {
+            return ClientDAO.findTakenField(client);
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+        }
+        return null;
+    }
+
+    public boolean isCurrentPassword(String password) {
+        try {
+            return ClientDAO.getByUsernameAndPassword(entity.getUsername(), password) != null;
         } catch (Exception e) {
             logger.severe(e.getMessage());
         }
@@ -71,7 +81,7 @@ public class ClientBean implements Serializable {
         }
     }
 
-    public boolean updateAvater(String path) {
+    public boolean updateAvatar(String path) {
         try {
             if (ClientDAO.updateAvatar(entity.getId(), path)) {
                 entity.setAvatarImage(path);
@@ -86,9 +96,5 @@ public class ClientBean implements Serializable {
 
     public ClientEntity getEntity() {
         return entity;
-    }
-
-    public void setEntity(ClientEntity entity) {
-        this.entity = entity;
     }
 }

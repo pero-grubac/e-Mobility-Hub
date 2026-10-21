@@ -1,193 +1,55 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
-<%@ page import="org.unibl.etf.emobility_hub_user.models.entity.ElectricScooterEntity" %>
-<%@ page import="java.util.List" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="org.unibl.etf.emobility_hub_user.models.dto.PageMetadata" %>
 <%@ page import="org.unibl.etf.emobility_hub_user.models.dto.PaginatedResponse" %>
-<jsp:useBean id="electricScooterBean" class="org.unibl.etf.emobility_hub_user.beans.ElectricScooterBean" scope="session" />
+<%@ page import="org.unibl.etf.emobility_hub_user.models.entity.ElectricScooterEntity" %>
+<%@ page import="org.unibl.etf.emobility_hub_user.util.Html" %>
+<%
+    @SuppressWarnings("unchecked")
+    PaginatedResponse<ElectricScooterEntity> vehicles = (PaginatedResponse<ElectricScooterEntity>) request.getAttribute("vehicles");
+    PageMetadata pageInfo = vehicles == null ? null : vehicles.getPage();
+    String pageLink = "clients?action=scooter&page=";
+%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Electric Scooters</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .card-img-top { width: 100%; height: 200px; object-fit: cover; }
-    </style>
+    <%@ include file="fragments/head.jspf" %>
+    <title>Electric scooters - eMobilityHub</title>
 </head>
 <body>
-<jsp:include page="header.html" />
-<div class="container mt-5">
-    <h2 class="mb-4">Electric Scooters</h2>
-    <div class="row">
-        <%
-        PaginatedResponse<ElectricScooterEntity> scooters = electricScooterBean.getElectricScooters();
-        if (scooters != null && scooters.getContent() != null) {
-            for (ElectricScooterEntity scooter : scooters.getContent()) {
-                String imagePath = (scooter.getImage() != null && !scooter.getImage().isEmpty())
-                    ? scooter.getImage()
-                    : request.getContextPath() + "/images/default-avatar.png";
-        %>
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <img src="<%= imagePath %>" class="card-img-top" alt="Scooter Image">
-                <div class="card-body">
-                    <h4 class="card-title"><%= (scooter.getModel() != null) ? scooter.getModel() : "Unknown Model" %></h4>
-                    <h6 class="card-title"><%= (scooter.getManufacturerName() != null) ? scooter.getManufacturerName() : "Unknown Manufacturer" %></h6>
-                    <p class="card-text">
-                        $<%= scooter.getRentPrice() != 0 ? scooter.getRentPrice() : "N/A" %><br>
-                        Max Speed: <%= scooter.getMaxSpeed() %> km/h
-                    </p>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-success" onclick="openRentModal('<%= scooter.getId() %>')">Rent</button>
-                        <button class="btn btn-warning" onclick="openBrokenModal('<%= scooter.getId() %>')">Broken</button>
+<%@ include file="fragments/header.jspf" %>
+<main class="app-main">
+    <h1 class="page-title">Electric scooters</h1>
+    <%@ include file="fragments/messages.jspf" %>
+    <% if (vehicles == null || vehicles.getContent() == null || vehicles.getContent().isEmpty()) { %>
+    <div class="alert alert-info">No scooters are free right now. Please check again later.</div>
+    <% } else { %>
+    <div class="row g-3">
+        <% for (ElectricScooterEntity v : vehicles.getContent()) { %>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card vehicle-card h-100">
+                <img src="<%= Html.escape(Html.vehicleImage(v.getImage(), request.getContextPath())) %>" class="card-img-top"
+                     alt="<%= Html.escape(v.getModel()) %>">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h5 card-title mb-1"><%= Html.escape(v.getModel()) %></h2>
+                    <div class="text-muted small mb-2"><%= Html.escape(v.getManufacturerName()) %> &middot; <%= Html.escape(v.getUniqueIdentifier()) %></div>
+                    <p class="mb-2">Top speed: <%= String.format(Locale.US, "%.0f", v.getMaxSpeed()) %> km/h</p>
+                    <div class="price-tag mb-3"><%= String.format(Locale.US, "%.2f", v.getRentPrice()) %> EUR / hour</div>
+                    <div class="d-flex gap-2 mt-auto">
+                        <a class="btn btn-primary flex-grow-1" data-rent="<%= v.getId() %>"
+                           href="clients?action=rent&amp;vehicleId=<%= v.getId() %>">Rent</a>
+                        <button type="button" class="btn btn-outline-warning" data-report="<%= v.getId() %>"
+                                data-name="<%= Html.escape(v.getModel()) %>">Report broken</button>
                     </div>
                 </div>
             </div>
-        </div>
-        <% } } else { %>
-        <div class="col-12">
-            <p>No scooters available.</p>
         </div>
         <% } %>
     </div>
-
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <%
-            int totalPages = scooters.getPage().getTotalPages();
-            int currentPage = (session.getAttribute("currentPage") != null) ? (Integer) session.getAttribute("currentPage") : 1;
-            int visiblePages = 3;
-            if (currentPage > visiblePages + 1) {
-            %>
-            <li class="page-item"><a class="page-link" href="clients?action=scooter&page=1">1</a></li>
-            <li class="page-item disabled"><a class="page-link">...</a></li>
-            <%
-            }
-            int startPage = Math.max(1, currentPage - visiblePages);
-            int endPage = Math.min(totalPages, currentPage + visiblePages);
-            for (int i = startPage; i <= endPage; i++) {
-            %>
-            <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
-                <a class="page-link" href="clients?action=scooter&page=<%= i %>"><%= i %></a>
-            </li>
-            <%
-            }
-            if (currentPage < totalPages - visiblePages) {
-            %>
-            <li class="page-item disabled"><a class="page-link">...</a></li>
-            <li class="page-item"><a class="page-link" href="clients?action=scooter&page=<%= totalPages %>"><%= totalPages %></a></li>
-            <% } %>
-        </ul>
-    </nav>
-</div>
-
-<!-- Broken Modal -->
-<div class="modal fade" id="brokenModal" tabindex="-1" aria-labelledby="brokenModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="brokenModalLabel">Report Broken Scooter</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="brokenForm" method="post" action="clients">
-                    <input type="hidden" name="action" value="brokenVehicle">
-                    <input type="hidden" id="vehicleId" name="id">
-                    <div class="mb-3">
-                        <label for="reason" class="form-label">Reason</label>
-                        <textarea class="form-control" id="reason" name="reason" rows="3" maxlength="255"
-                            placeholder="Enter reason for the broken scooter..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitBrokenForm()">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Rent Modal -->
-<div class="modal fade" id="rentModal" tabindex="-1" aria-labelledby="rentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="rentForm" method="post" action="clients">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="rentModalLabel">Rent Scooter</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="action" value="rent" />
-                    <input type="hidden" id="rentVehicleId" name="vehicleId" />
-                    <div class="mb-3">
-                        <label for="rentalStart" class="form-label">Rental Start</label>
-                        <input type="datetime-local" class="form-control" id="rentalStart" name="rentalStart" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="rentalEnd" class="form-label">Rental End</label>
-                        <input type="datetime-local" class="form-control" id="rentalEnd" name="rentalEnd" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="startLatitude" class="form-label">Start Latitude</label>
-                        <input type="number" step="any" class="form-control" id="startLatitude" name="startLatitude" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="startLongitude" class="form-label">Start Longitude</label>
-                        <input type="number" step="any" class="form-control" id="startLongitude" name="startLongitude" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="endLatitude" class="form-label">End Latitude</label>
-                        <input type="number" step="any" class="form-control" id="endLatitude" name="endLatitude" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="endLongitude" class="form-label">End Longitude</label>
-                        <input type="number" step="any" class="form-control" id="endLongitude" name="endLongitude" required />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="submitRentForm()">Rent</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    function openBrokenModal(vehicleId) {
-        document.getElementById("vehicleId").value = vehicleId;
-        const modal = new bootstrap.Modal(document.getElementById('brokenModal'));
-        modal.show();
-    }
-
-    function submitBrokenForm() {
-        const vehicleId = document.getElementById("vehicleId").value;
-        const reason = document.getElementById("reason").value.trim();
-        if (!reason) { alert("Please enter a reason!"); return; }
-        if (!vehicleId) { alert("Scooter ID is missing!"); return; }
-        document.getElementById("brokenForm").submit();
-    }
-
-    function openRentModal(vehicleId) {
-        document.getElementById("rentVehicleId").value = vehicleId;
-        const modal = new bootstrap.Modal(document.getElementById("rentModal"));
-        modal.show();
-    }
-
-    function submitRentForm() {
-        const rentalStart = document.getElementById("rentalStart").value;
-        const rentalEnd = document.getElementById("rentalEnd").value;
-        const startLatitude = document.getElementById("startLatitude").value;
-        const startLongitude = document.getElementById("startLongitude").value;
-        const endLatitude = document.getElementById("endLatitude").value;
-        const endLongitude = document.getElementById("endLongitude").value;
-        if (!rentalStart || !rentalEnd || !startLatitude || !startLongitude || !endLatitude || !endLongitude) {
-            alert("All fields are required!");
-            return;
-        }
-        document.getElementById("rentForm").submit();
-    }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="mt-3"><%@ include file="fragments/pagination.jspf" %></div>
+    <% } %>
+</main>
+<%@ include file="fragments/brokenModal.jspf" %>
+<%@ include file="fragments/scripts.jspf" %>
 </body>
 </html>

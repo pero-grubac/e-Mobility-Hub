@@ -1,13 +1,14 @@
 package org.unibl.etf.emobility_hub_user.controller;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.logging.Logger;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -24,38 +25,58 @@ import org.unibl.etf.emobility_hub_user.beans.ElectricScooterBean;
 import org.unibl.etf.emobility_hub_user.beans.FaultBean;
 import org.unibl.etf.emobility_hub_user.beans.RentalBean;
 import org.unibl.etf.emobility_hub_user.beans.TransportVehicleBean;
+import org.unibl.etf.emobility_hub_user.invoice.InvoicePdf;
 import org.unibl.etf.emobility_hub_user.models.entity.ClientEntity;
+import org.unibl.etf.emobility_hub_user.models.entity.DocumentType;
 import org.unibl.etf.emobility_hub_user.models.entity.RentalEntity;
+import org.unibl.etf.emobility_hub_user.models.entity.TransportVehicleEntity;
+import org.unibl.etf.emobility_hub_user.models.entity.VehicleType;
+import org.unibl.etf.emobility_hub_user.ride.RideException;
+import org.unibl.etf.emobility_hub_user.storage.AvatarStorage;
+import org.unibl.etf.emobility_hub_user.validation.Validators;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
-
-@MultipartConfig
+// Model 2 front controller: GET renders pages, POST runs an action and redirects.
+@MultipartConfig(maxFileSize = 5L * 1024 * 1024, maxRequestSize = 10L * 1024 * 1024, fileSizeThreshold = 512 * 1024)
 @WebServlet("/clients")
 public class ClientController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	public ClientController() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	private static final Logger logger = Logger.getLogger(ClientController.class.getName());
+	private static final String PAGES = "/WEB-INF/pages/";
+	private static final int PAGE_SIZE = 6;
+	public static final String FLASH_ERROR = "flashError";
+	public static final String FLASH_SUCCESS = "flashSuccess";
+	public static final String ACTIVE_RIDE = "activeRideId";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String action = request.getParameter("action");
-		if ("downloadPdf".equals(action)) {
-			generateRentalPdf(request, response);
+		HttpSession session = request.getSession();
+		ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
+
+		if (clientBean == null) {
+			forward(request, response, "register".equals(action) ? "register.jsp" : "login.jsp");
 			return;
 		}
-		String address = handleAction(request, response, action);
-		RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-		dispatcher.forward(request, response);
+
+		switch (action == null ? "welcome" : action) {
+			case "login", "welcome" -> {
+				if (!redirectToActiveRide(request, response, clientBean)) {
+					forward(request, response, "welcome.jsp");
+				}
+			}
+			case "car", "bicycle", "scooter" -> showVehicles(request, response, clientBean, action);
+			case "rent" -> showRentPage(request, response, clientBean);
+			case "ride" -> showRide(request, response, clientBean);
+			case "summary" -> showSummary(request, response, clientBean);
+			case "invoice" -> sendInvoice(request, response, clientBean);
+			case "profile" -> showProfile(request, response, clientBean);
+			case "logout" -> {
+				session.invalidate();
+				response.sendRedirect("clients");
+			}
+			default -> notFound(request, response);
+		}
 	}
 
 	@Override
@@ -63,485 +84,439 @@ public class ClientController extends HttpServlet {
 			throws ServletException, IOException {
 		String action = request.getParameter("action");
 		HttpSession session = request.getSession();
+		ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
 
-		if ("brokenVehicle".equals(action)) {
-			handleBrokenVehicle(request, response);
-		} else if ("rent".equals(action)) {
-			handleRent(request, response, session);
-		} else if ("login".equals(action)) {
-			String address = handleLogin(request, session);
-			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-			dispatcher.forward(request, response);
-		} else if ("register".equals(action)) {
-			String address = handleRegister(request, session);
-			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-			dispatcher.forward(request, response);
-		} else if ("updateAvatar".equals(action)) {
-			String address = handleUpdateAvatar(request, session);
-			RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-			dispatcher.forward(request, response);
-		} else {
-			response.sendRedirect("clients?action=wellcome");
+		if ("login".equals(action)) {
+			handleLogin(request, response);
+			return;
+		}
+		if ("register".equals(action)) {
+			handleRegister(request, response);
+			return;
+		}
+		if (clientBean == null) {
+			response.sendRedirect("clients");
+			return;
+		}
+
+		switch (action == null ? "" : action) {
+			case "startRide" -> handleStartRide(request, response, clientBean);
+			case "finishRide" -> handleFinishRide(request, response, clientBean);
+			case "brokenVehicle" -> handleBrokenVehicle(request, response);
+			case "changePassword" -> handleChangePassword(request, response, clientBean);
+			case "updateAvatar" -> handleUpdateAvatar(request, response, clientBean);
+			case "deactivate" -> {
+				clientBean.deactivate();
+				session.invalidate();
+				request.getSession().setAttribute(FLASH_SUCCESS, "Your account has been deactivated.");
+				response.sendRedirect("clients");
+			}
+			default -> notFound(request, response);
 		}
 	}
 
-	private void handleRent(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-			throws IOException {
-		RentalBean rentalBean = new RentalBean();
-		TransportVehicleBean transportVehicleBean = new TransportVehicleBean();
-		try {
+	// ── Pages ────────────────────────────────────────────────────────────────
 
-			long vehicleId = Long.parseLong(request.getParameter("vehicleId"));
-			LocalDateTime rentalStart = LocalDateTime.parse(request.getParameter("rentalStart"));
-			LocalDateTime rentalEnd = LocalDateTime.parse(request.getParameter("rentalEnd"));
-			double startLatitude = Double.parseDouble(request.getParameter("startLatitude"));
-			double startLongitude = Double.parseDouble(request.getParameter("startLongitude"));
-			double endLatitude = Double.parseDouble(request.getParameter("endLatitude"));
-			double endLongitude = Double.parseDouble(request.getParameter("endLongitude"));
-			if (rentalStart.isAfter(rentalEnd)) {
-				session.setAttribute("errorMessage", "Rental end time must be after start time.");
-				response.sendRedirect("clients?action=welcome");
-				return;
+	private void showVehicles(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean,
+			String type) throws ServletException, IOException {
+		if (redirectToActiveRide(request, response, clientBean)) {
+			return;
+		}
+		int page = pageParam(request);
+		switch (type) {
+			case "car" -> {
+				ElectricCarBean bean = new ElectricCarBean();
+				bean.getElectricCars(page, PAGE_SIZE);
+				request.setAttribute("vehicles", bean.getElectricCars());
 			}
-
-			double duration = java.time.Duration.between(rentalStart, rentalEnd).toMinutes() / 60.0;
-
-			double distance = calculateDistance(startLatitude, startLongitude, endLatitude, endLongitude);
-			distance = Math.round(distance * 100.0) / 100.0;
-
-			double rentPrice = transportVehicleBean.getRentPriceById(vehicleId);
-
-			if (rentPrice <= 0) {
-				session.setAttribute("errorMessage", "Invalid vehicle price.");
-				response.sendRedirect("clients?action=welcome");
-				return;
+			case "bicycle" -> {
+				ElectricBicycleBean bean = new ElectricBicycleBean();
+				bean.getElectricBicycles(page, PAGE_SIZE);
+				request.setAttribute("vehicles", bean.getElectricBicycles());
 			}
-
-			double price = duration * rentPrice * distance * 0.1;
-			price = Math.round(price * 100.0) / 100.0;
-
-			RentalEntity rental = new RentalEntity();
-			rental.setVehicleId(vehicleId);
-			rental.setRentalStart(rentalStart);
-			rental.setRentalEnd(rentalEnd);
-			rental.setStart_latitude(startLatitude);
-			rental.setStart_longitude(startLongitude);
-			rental.setEnd_latitude(endLatitude);
-			rental.setEnd_longitude(endLongitude);
-			rental.setDuration(duration);
-			rental.setDistance(distance);
-			rental.setPrice(price);
-			ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
-			if (clientBean == null) {
-				response.sendRedirect("clients?action=welcome");
-				return;
+			default -> {
+				ElectricScooterBean bean = new ElectricScooterBean();
+				bean.getElectricScooters(page, PAGE_SIZE);
+				request.setAttribute("vehicles", bean.getElectricScooters());
 			}
-			rental.setClientId(clientBean.getEntity().getId());
-			RentalEntity createdRental = rentalBean.makeRent(rental);
-			if (createdRental != null) {
-				response.sendRedirect("clients?action=downloadPdf&vehicleId=" + createdRental.getVehicleId()
-						+ "&rentalId=" + createdRental.getId());
-			} else {
-				session.setAttribute("errorMessage", "Failed to create rental.");
-				response.sendRedirect("clients?action=welcome");
-				return;
-			}
+		}
+		forward(request, response, type + ".jsp");
+	}
 
-		} catch (Exception e) {
-			session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-			e.printStackTrace();
+	private void showRentPage(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws ServletException, IOException {
+		if (redirectToActiveRide(request, response, clientBean)) {
+			return;
+		}
+		TransportVehicleEntity vehicle = vehicleParam(request);
+		if (vehicle == null || !vehicle.isAvailable()) {
+			flash(request, FLASH_ERROR, "This vehicle is not available any more. Please pick another one.");
+			response.sendRedirect("clients?action=" + (vehicle == null ? "welcome" : vehicle.getType().getAction()));
+			return;
+		}
+		request.setAttribute("vehicle", vehicle);
+		forward(request, response, "rent.jsp");
+	}
+
+	private void showRide(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws ServletException, IOException {
+		RentalEntity ride = new RentalBean().getActiveRide(clientBean.getEntity().getId());
+		if (ride == null) {
+			request.getSession().removeAttribute(ACTIVE_RIDE);
 			response.sendRedirect("clients?action=welcome");
 			return;
 		}
+		request.getSession().setAttribute(ACTIVE_RIDE, ride.getId());
+		request.setAttribute("ride", ride);
+		forward(request, response, "ride.jsp");
 	}
 
-	private void generateRentalPdf(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			long rentalId = Long.parseLong(request.getParameter("rentalId"));
-			RentalBean rentalBean = new RentalBean();
-			RentalEntity rental = rentalBean.getById(rentalId);
-			if (rental == null) {
-				response.sendRedirect("clients?action=welcome");
-				return;
-			}
+	private void showSummary(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws ServletException, IOException {
+		RentalEntity rental = completedRentalParam(request, clientBean);
+		if (rental == null) {
+			notFound(request, response);
+			return;
+		}
+		request.setAttribute("rental", rental);
+		forward(request, response, "summary.jsp");
+	}
 
-			response.setContentType("application/pdf");
-			response.setHeader("Content-Disposition", "attachment; filename=rental_" + rentalId + ".pdf");
-
-			try (OutputStream out = response.getOutputStream()) {
-				Document document = new Document();
-				PdfWriter.getInstance(document, out);
-				document.open();
-
-				Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
-				Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK);
-
-				document.add(new Paragraph("Rental Details", titleFont));
-				document.add(new Paragraph("Rental ID: " + rental.getId(), normalFont));
-				document.add(new Paragraph("Vehicle ID: " + rental.getVehicleId(), normalFont));
-				document.add(new Paragraph("Client ID: " + rental.getClientId(), normalFont));
-				document.add(new Paragraph("Rental Start: " + rental.getRentalStart(), normalFont));
-				document.add(new Paragraph("Rental End: " + rental.getRentalEnd(), normalFont));
-				document.add(new Paragraph("Distance Traveled: " + rental.getDistance() + " km", normalFont));
-				document.add(new Paragraph("Total Price: $" + rental.getPrice(), normalFont));
-
-				document.close();
-			}
+	private void sendInvoice(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws ServletException, IOException {
+		RentalEntity rental = completedRentalParam(request, clientBean);
+		if (rental == null) {
+			notFound(request, response);
+			return;
+		}
+		response.setContentType("application/pdf");
+		response.setHeader("Content-Disposition", "attachment; filename=invoice_" + rental.getId() + ".pdf");
+		try (OutputStream out = response.getOutputStream()) {
+			InvoicePdf.write(rental, clientBean.getEntity(), out);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.severe("Invoice " + rental.getId() + " failed: " + e.getMessage());
 		}
 	}
 
-	private double calculateDistance(double startLat, double startLon, double endLat, double endLon) {
-		final int R = 6371;
-		double latDistance = Math.toRadians(endLat - startLat);
-		double lonDistance = Math.toRadians(endLon - startLon);
-		double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + Math.cos(Math.toRadians(startLat))
-				* Math.cos(Math.toRadians(endLat)) * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		return R * c;
+	private void showProfile(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws ServletException, IOException {
+		RentalBean rentalBean = new RentalBean();
+		rentalBean.loadRentals(pageParam(request), PAGE_SIZE, clientBean.getEntity().getId());
+		request.setAttribute("rentals", rentalBean.getRentals());
+		forward(request, response, "profile.jsp");
+	}
+
+	// ── Actions ──────────────────────────────────────────────────────────────
+
+	private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ClientBean clientBean = new ClientBean();
+		if (!clientBean.login(request.getParameter("username"), request.getParameter("password"))) {
+			flash(request, FLASH_ERROR, "Wrong username or password.");
+			response.sendRedirect("clients");
+			return;
+		}
+		// A new session on sign-in, so an old session id cannot be reused.
+		request.getSession().invalidate();
+		HttpSession session = request.getSession(true);
+		session.setAttribute("clientBean", clientBean);
+		RentalEntity ride = new RentalBean().getActiveRide(clientBean.getEntity().getId());
+		if (ride != null) {
+			session.setAttribute(ACTIVE_RIDE, ride.getId());
+			response.sendRedirect("clients?action=ride");
+		} else {
+			response.sendRedirect("clients?action=welcome");
+		}
+	}
+
+	private void handleRegister(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		ClientEntity client = new ClientEntity(trim(request.getParameter("username")), request.getParameter("password"),
+				trim(request.getParameter("firstName")), trim(request.getParameter("lastName")),
+				trim(request.getParameter("email")), trim(request.getParameter("phoneNumber")),
+				trim(request.getParameter("idCardNumber")));
+
+		List<String> errors = validateRegistration(client, request.getParameter("confirmPassword"));
+		ClientBean clientBean = new ClientBean();
+		if (errors.isEmpty() && !clientBean.isUsernameAllowed(client.getUsername())) {
+			errors.add("This username is already taken.");
+		}
+		if (errors.isEmpty()) {
+			String taken = clientBean.takenField(client);
+			if (taken != null) {
+				errors.add("An account with this " + taken + " already exists.");
+			}
+		}
+		Part avatar = request.getPart("avatar");
+		if (errors.isEmpty() && AvatarStorage.isPresent(avatar)) {
+			try {
+				client.setAvatarImage(AvatarStorage.save(avatar, client.getUsername(), request.getContextPath()));
+			} catch (IllegalArgumentException e) {
+				errors.add(e.getMessage());
+			}
+		}
+		if (errors.isEmpty() && !clientBean.add(client)) {
+			errors.add("The account could not be created. Please try again.");
+		}
+
+		if (!errors.isEmpty()) {
+			request.setAttribute("errors", errors);
+			forward(request, response, "register.jsp");
+			return;
+		}
+		flash(request, FLASH_SUCCESS, "Your account is ready. Please sign in.");
+		response.sendRedirect("clients");
+	}
+
+	static List<String> validateRegistration(ClientEntity client, String confirmPassword) {
+		List<String> errors = new ArrayList<>();
+		if (!Validators.isValidUsername(client.getUsername())) {
+			errors.add("Username must be 3-30 letters, digits, dots or underscores.");
+		}
+		if (!Validators.isValidPassword(client.getPassword())) {
+			errors.add("Password must be at least " + Validators.PASSWORD_MIN_LENGTH + " characters long.");
+		} else if (!client.getPassword().equals(confirmPassword)) {
+			errors.add("The passwords do not match.");
+		}
+		if (Validators.isBlank(client.getFirstName()) || Validators.isBlank(client.getLastName())) {
+			errors.add("First and last name are required.");
+		}
+		if (!Validators.isValidEmail(client.getEmail())) {
+			errors.add("Enter a valid email address.");
+		}
+		if (!Validators.isValidPhone(client.getPhoneNumber())) {
+			errors.add("Enter a valid phone number, e.g. +387-65-123-456.");
+		}
+		if (!Validators.isValidIdCard(client.getIdCardNumber())) {
+			errors.add("ID card number must be 5-20 letters, digits or dashes.");
+		}
+		return errors;
+	}
+
+	private void handleStartRide(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws IOException {
+		TransportVehicleEntity vehicle = vehicleParam(request);
+		if (vehicle == null) {
+			flash(request, FLASH_ERROR, "Unknown vehicle.");
+			response.sendRedirect("clients?action=welcome");
+			return;
+		}
+		String backToForm = "clients?action=rent&vehicleId=" + vehicle.getId();
+
+		RentalEntity ride = new RentalEntity();
+		List<String> errors = validateRide(request::getParameter, vehicle, ride, YearMonth.now());
+		if (!errors.isEmpty()) {
+			flash(request, FLASH_ERROR, String.join(" ", errors));
+			response.sendRedirect(backToForm);
+			return;
+		}
+		ride.setClientId(clientBean.getEntity().getId());
+		ride.setVehicleId(vehicle.getId());
+		ride.setRentalStart(LocalDateTime.now());
+
+		try {
+			RentalEntity started = new RentalBean().startRide(ride);
+			request.getSession().setAttribute(ACTIVE_RIDE, started.getId());
+			flash(request, FLASH_SUCCESS, "Payment confirmed. Enjoy your ride!");
+			response.sendRedirect("clients?action=ride");
+		} catch (RideException e) {
+			flash(request, FLASH_ERROR, e.getMessage());
+			response.sendRedirect(backToForm);
+		}
+	}
+
+	// Fills the ride from the form; the full card number and CVV are only checked, never kept.
+	static List<String> validateRide(Function<String, String> param, TransportVehicleEntity vehicle,
+			RentalEntity ride, YearMonth now) {
+		List<String> errors = new ArrayList<>();
+		Double latitude = Validators.parseDouble(param.apply("startLatitude"));
+		Double longitude = Validators.parseDouble(param.apply("startLongitude"));
+		if (!Validators.isValidLatitude(latitude) || !Validators.isValidLongitude(longitude)) {
+			errors.add("Enter a valid pick-up location (latitude -90 to 90, longitude -180 to 180).");
+		} else {
+			ride.setStartLatitude(latitude);
+			ride.setStartLongitude(longitude);
+		}
+
+		if (vehicle.getType() == VehicleType.CAR) {
+			String documentType = param.apply("documentType");
+			String documentNumber = trim(param.apply("documentNumber"));
+			String licence = trim(param.apply("driverLicenseNumber"));
+			if (!"ID_CARD".equals(documentType) && !"PASSPORT".equals(documentType)) {
+				errors.add("Choose your identity document: ID card or passport.");
+			} else {
+				ride.setDocumentType(DocumentType.valueOf(documentType));
+			}
+			if (!Validators.isValidDocumentNumber(documentNumber)) {
+				errors.add("Enter the document number (5-30 letters, digits or dashes).");
+			} else {
+				ride.setDocumentNumber(documentNumber);
+			}
+			if (!Validators.isValidDocumentNumber(licence)) {
+				errors.add("Enter your driver's licence number (5-30 letters, digits or dashes).");
+			} else {
+				ride.setDriverLicenseNumber(licence);
+			}
+		}
+
+		String cardNumber = param.apply("cardNumber");
+		if (Validators.isBlank(param.apply("cardHolder"))) {
+			errors.add("Enter the name on the card.");
+		}
+		if (!Validators.isValidCardNumber(cardNumber)) {
+			errors.add("The card number is not valid.");
+		} else {
+			ride.setPaymentCardLast4(Validators.lastFour(cardNumber));
+		}
+		if (!Validators.isValidExpiry(param.apply("cardExpiry"), now)) {
+			errors.add("The card has expired or the expiry date is not MM/YY.");
+		}
+		if (!Validators.isValidCvv(param.apply("cardCvv"))) {
+			errors.add("The CVV must be 3 or 4 digits.");
+		}
+		return errors;
+	}
+
+	private void handleFinishRide(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws IOException {
+		Double latitude = Validators.parseDouble(request.getParameter("endLatitude"));
+		Double longitude = Validators.parseDouble(request.getParameter("endLongitude"));
+		long rentalId;
+		try {
+			rentalId = Long.parseLong(request.getParameter("rentalId"));
+		} catch (NumberFormatException e) {
+			response.sendRedirect("clients?action=ride");
+			return;
+		}
+		if (!Validators.isValidLatitude(latitude) || !Validators.isValidLongitude(longitude)) {
+			flash(request, FLASH_ERROR, "Enter a valid drop-off location (latitude -90 to 90, longitude -180 to 180).");
+			response.sendRedirect("clients?action=ride");
+			return;
+		}
+		try {
+			RentalEntity finished = new RentalBean().finishRide(rentalId, clientBean.getEntity().getId(), latitude,
+					longitude);
+			request.getSession().removeAttribute(ACTIVE_RIDE);
+			response.sendRedirect("clients?action=summary&rentalId=" + finished.getId());
+		} catch (RideException e) {
+			flash(request, FLASH_ERROR, e.getMessage());
+			response.sendRedirect("clients?action=ride");
+		}
 	}
 
 	private void handleBrokenVehicle(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		HttpSession session = request.getSession();
+		TransportVehicleEntity vehicle = vehicleParam(request);
+		String reason = trim(request.getParameter("reason"));
+		String back = "clients?action=" + (vehicle == null ? "welcome" : vehicle.getType().getAction());
 
-		String idParam = request.getParameter("id");
-		String reason = request.getParameter("reason");
-		if (idParam == null || reason == null || reason.trim().isEmpty()) {
-			session.setAttribute("errorMessage", "Invalid request parameters.");
-			response.sendRedirect("clients?action=welcome");
-			return;
-		}
-		FaultBean faultBean = new FaultBean();
-		try {
-			long id = Long.parseLong(idParam);
-			boolean isBrokenReported = faultBean.broke(id, reason.trim());
-
-			if (isBrokenReported) {
-				session.setAttribute("successMessage", "Bicycle reported as broken successfully.");
-			} else {
-				session.setAttribute("errorMessage", "Failed to report broken bicycle.");
-			}
-		} catch (NumberFormatException e) {
-			session.setAttribute("errorMessage", "Invalid bicycle ID.");
-		} catch (Exception e) {
-			session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		response.sendRedirect("clients?action=welcome");
-	}
-
-	private String getActionFromMultipartRequest(HttpServletRequest request) throws Exception {
-		String action = null;
-
-		boolean isMultipart = org.apache.commons.fileupload.servlet.ServletFileUpload.isMultipartContent(request);
-
-		if (isMultipart) {
-			org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
-			org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(
-					factory);
-
-			java.util.List<org.apache.commons.fileupload.FileItem> items = upload.parseRequest(request);
-
-			for (org.apache.commons.fileupload.FileItem item : items) {
-				if (item.isFormField() && "action".equals(item.getFieldName())) {
-					action = item.getString();
-					break;
-				}
-			}
-		}
-
-		return action;
-	}
-
-	private String handleAction(HttpServletRequest request, HttpServletResponse response, String action) {
-		HttpSession session = request.getSession();
-		session.setAttribute("notification", "");
-
-		if (action == null || action.isEmpty()) {
-			try {
-				action = getActionFromMultipartRequest(request);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "/WEB-INF/pages/404.jsp";
-			}
-
-		}
-
-		if (action == null || action.isEmpty()) {
-			return "/WEB-INF/pages/login.jsp";
-		}
-
-		try {
-			switch (action) {
-				case "login":
-					return handleLogin(request, session);
-				case "register":
-					return handleRegister(request, session);
-				case "welcome":
-					return handleWelcome(session);
-				case "logout":
-					return handleLogout(session);
-				case "profile":
-					return hadnleProfile(session);
-				case "changePassword":
-					return handleChangePassword(request, session);
-				case "deactivate":
-					return handleDeactivate(session);
-				case "updateAvatar":
-					return handleUpdateAvatar(request, session);
-				case "bicycle":
-					return handlebicycle(request, session);
-				case "rentals":
-					return hendleRentals(request, session);
-				case "car":
-					return handleCar(request, session);
-				case "scooter":
-					return handleScooter(request, session);
-				default:
-					return "/WEB-INF/pages/404.jsp";
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "/WEB-INF/pages/404.jsp";
-		}
-
-	}
-
-	private String handleScooter(HttpServletRequest request, HttpSession session) {
-		ElectricScooterBean electricScooterBean = new ElectricScooterBean();
-		int page = 1;
-		int size = 6;
-
-		String pageParam = request.getParameter("page");
-		if (pageParam != null && !pageParam.isEmpty()) {
-			try {
-				page = Integer.parseInt(pageParam);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-		}
-		if (electricScooterBean.getElectricScooters(page, size)) {
-			session.setAttribute("electricScooterBean", electricScooterBean);
-			session.setAttribute("currentPage", page);
+		if (vehicle == null || Validators.isBlank(reason) || reason.length() > 1500) {
+			flash(request, FLASH_ERROR, "Please describe what is wrong with the vehicle (up to 1500 characters).");
+		} else if (new FaultBean().broke(vehicle.getId(), reason)) {
+			flash(request, FLASH_SUCCESS, "Thank you. " + vehicle.getModel() + " has been reported as broken.");
 		} else {
-			session.setAttribute("notification", "Failed to load bicycles.");
+			flash(request, FLASH_ERROR, "The report could not be saved. Please try again.");
 		}
-
-		return "/WEB-INF/pages/scooter.jsp";
+		response.sendRedirect(back);
 	}
 
-	private String handleCar(HttpServletRequest request, HttpSession session) {
-		ElectricCarBean electricCarBean = new ElectricCarBean();
-		int page = 1;
-		int size = 6;
+	private void handleChangePassword(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws IOException {
+		String current = request.getParameter("currentPassword");
+		String password = request.getParameter("newPassword");
+		String confirm = request.getParameter("confirmPassword");
 
-		String pageParam = request.getParameter("page");
-		if (pageParam != null && !pageParam.isEmpty()) {
+		if (!clientBean.isCurrentPassword(current)) {
+			flash(request, FLASH_ERROR, "The current password is not correct.");
+		} else if (!Validators.isValidPassword(password)) {
+			flash(request, FLASH_ERROR,
+					"The new password must be at least " + Validators.PASSWORD_MIN_LENGTH + " characters long.");
+		} else if (!password.equals(confirm)) {
+			flash(request, FLASH_ERROR, "The new passwords do not match.");
+		} else if (clientBean.changePassword(password)) {
+			flash(request, FLASH_SUCCESS, "Your password has been changed.");
+		} else {
+			flash(request, FLASH_ERROR, "The password could not be changed. Please try again.");
+		}
+		response.sendRedirect("clients?action=profile");
+	}
+
+	private void handleUpdateAvatar(HttpServletRequest request, HttpServletResponse response, ClientBean clientBean)
+			throws IOException, ServletException {
+		Part avatar = request.getPart("avatar");
+		if (!AvatarStorage.isPresent(avatar)) {
+			flash(request, FLASH_ERROR, "Choose a picture first.");
+		} else {
 			try {
-				page = Integer.parseInt(pageParam);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-		}
-		if (electricCarBean.getElectricCars(page, size)) {
-			session.setAttribute("electricCarBean", electricCarBean);
-			session.setAttribute("currentPage", page);
-		} else {
-			session.setAttribute("notification", "Failed to load bicycles.");
-		}
-
-		return "/WEB-INF/pages/car.jsp";
-	}
-
-	private String hendleRentals(HttpServletRequest request, HttpSession session) {
-		RentalBean rentalBean = new RentalBean();
-		int page = 1;
-		int size = 6;
-		String pageParam = request.getParameter("page");
-		if (pageParam != null && !pageParam.isEmpty()) {
-			try {
-				page = Integer.parseInt(pageParam);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-		}
-		ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
-		if (clientBean != null && rentalBean.getRentals(page, size, clientBean.getEntity().getId())) {
-			session.setAttribute("rentalBean", rentalBean);
-			session.setAttribute("rentalPage", page);
-		} else {
-			session.setAttribute("notification", "Failed to load bicycles.");
-		}
-
-		return "/WEB-INF/pages/rentals.jsp";
-	}
-
-	private String handlebicycle(HttpServletRequest request, HttpSession session) {
-
-		ElectricBicycleBean bicycleBean = new ElectricBicycleBean();
-		int page = 1;
-		int size = 6;
-
-		String pageParam = request.getParameter("page");
-		if (pageParam != null && !pageParam.isEmpty()) {
-			try {
-				page = Integer.parseInt(pageParam);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (bicycleBean.getElectricBicycles(page, size)) {
-			session.setAttribute("bicycleBean", bicycleBean);
-			session.setAttribute("currentPage", page);
-		} else {
-			session.setAttribute("notification", "Failed to load bicycles.");
-		}
-
-		return "/WEB-INF/pages/bicycle.jsp";
-	}
-
-	private String handleUpdateAvatar(HttpServletRequest request, HttpSession session) {
-		ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
-
-		if (clientBean != null) {
-			try {
-				boolean isMultipart = org.apache.commons.fileupload.servlet.ServletFileUpload
-						.isMultipartContent(request);
-
-				if (isMultipart) {
-					Part file = request.getPart("avatar");
-					String originalFileName = file.getSubmittedFileName();
-					String extension = "";
-
-					if (originalFileName != null && originalFileName.contains(".")) {
-						extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-					}
-
-					String fileName = UUID.randomUUID().toString() + extension;
-
-					String uploadDir = "/tmp/uploads/images/" + clientBean.getEntity().getUsername();
-					java.io.File dir = new java.io.File(uploadDir);
-					if (!dir.exists()) {
-						dir.mkdirs();
-					}
-
-					String uploadPath = uploadDir + java.io.File.separator + fileName;
-
-					try (FileOutputStream fos = new FileOutputStream(uploadPath);
-							InputStream is = file.getInputStream()) {
-						byte[] data = new byte[is.available()];
-						is.read(data);
-						fos.write(data);
-					}
-
-					// URL koji je dostupan browseru
-					String dbPath = "http://localhost:8081/user/images/"
-							+ clientBean.getEntity().getUsername() + "/" + fileName;
-
-					if (clientBean.updateAvater(dbPath)) {
-						session.setAttribute("notification", "Avatar updated successfully.");
-					} else {
-						session.setAttribute("notification", "Failed to update avatar.");
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				session.setAttribute("notification", "Error while uploading file.");
-			}
-		}
-
-		return "/WEB-INF/pages/profile.jsp";
-	}
-
-	private String handleDeactivate(HttpSession session) {
-		ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
-
-		if (clientBean != null) {
-			clientBean.deactivate();
-			session.invalidate();
-			return "/WEB-INF/pages/login.jsp";
-		}
-
-		return "/WEB-INF/pages/404.jsp";
-	}
-
-	private String handleChangePassword(HttpServletRequest request, HttpSession session) {
-		String newPassword = request.getParameter("password");
-		ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
-
-		if (clientBean != null && clientBean.changePassword(newPassword)) {
-			session.setAttribute("notification", "Password updated successfully.");
-		} else {
-			session.setAttribute("notification", "Failed to update password.");
-		}
-
-		return "/WEB-INF/pages/profile.jsp";
-	}
-
-	private String hadnleProfile(HttpSession session) {
-		return "/WEB-INF/pages/profile.jsp";
-	}
-
-	private String handleLogin(HttpServletRequest request, HttpSession session) {
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		ClientBean clientBean = new ClientBean();
-
-		if (clientBean.login(username, password)) {
-			session.setAttribute("clientBean", clientBean);
-			return "/WEB-INF/pages/welcome.jsp";
-		} else {
-			session.setAttribute("notification", "Wrong credentials");
-			return "/WEB-INF/pages/login.jsp";
-		}
-	}
-
-	private String handleRegister(HttpServletRequest request, HttpSession session) {
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		String firstName = request.getParameter("firstName");
-		String lastName = request.getParameter("lastName");
-		String email = request.getParameter("email");
-		String phoneNumber = request.getParameter("phoneNumber");
-		String idCardNumber = request.getParameter("idCardNumber");
-
-		if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
-			return "/WEB-INF/pages/register.jsp";
-		}
-
-		ClientEntity entity = new ClientEntity(username, password, firstName, lastName, email, phoneNumber,
-				idCardNumber);
-		ClientBean clientBean = new ClientBean();
-
-		try {
-			if (clientBean.isUsernameAllowed(username)) {
-				if (clientBean.add(entity)) {
-					return "/WEB-INF/pages/login.jsp";
+				String url = AvatarStorage.save(avatar, clientBean.getEntity().getUsername(), request.getContextPath());
+				if (clientBean.updateAvatar(url)) {
+					flash(request, FLASH_SUCCESS, "Your picture has been updated.");
 				} else {
-					session.setAttribute("notification", "Username exists");
+					flash(request, FLASH_ERROR, "The picture could not be saved.");
 				}
+			} catch (IllegalArgumentException e) {
+				flash(request, FLASH_ERROR, e.getMessage());
 			}
-		} catch (Exception e) {
-			session.setAttribute("notification", "ERROR: " + e.getMessage());
 		}
-
-		return "/WEB-INF/pages/register.jsp";
+		response.sendRedirect("clients?action=profile");
 	}
 
-	private String handleWelcome(HttpSession session) {
-		ClientBean clientBean = (ClientBean) session.getAttribute("clientBean");
-		if (clientBean == null || !clientBean.isLoggedIn()) {
-			return "/WEB-INF/pages/login.jsp";
+	// ── Helpers ──────────────────────────────────────────────────────────────
+
+	// A client with a ride in progress always lands on the ride screen.
+	private boolean redirectToActiveRide(HttpServletRequest request, HttpServletResponse response,
+			ClientBean clientBean) throws IOException {
+		RentalEntity ride = new RentalBean().getActiveRide(clientBean.getEntity().getId());
+		if (ride == null) {
+			request.getSession().removeAttribute(ACTIVE_RIDE);
+			return false;
 		}
-		return "/WEB-INF/pages/welcome.jsp";
+		request.getSession().setAttribute(ACTIVE_RIDE, ride.getId());
+		response.sendRedirect("clients?action=ride");
+		return true;
 	}
 
-	private String handleLogout(HttpSession session) {
-		session.invalidate();
-		return "/WEB-INF/pages/login.jsp";
+	private TransportVehicleEntity vehicleParam(HttpServletRequest request) {
+		try {
+			return new TransportVehicleBean().getById(Long.parseLong(request.getParameter("vehicleId")));
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	// Only the signed-in client's own, finished rentals.
+	private RentalEntity completedRentalParam(HttpServletRequest request, ClientBean clientBean) {
+		try {
+			RentalEntity rental = new RentalBean().getForClient(Long.parseLong(request.getParameter("rentalId")),
+					clientBean.getEntity().getId());
+			return rental == null || rental.isActive() ? null : rental;
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	private static int pageParam(HttpServletRequest request) {
+		try {
+			return Math.max(1, Integer.parseInt(request.getParameter("page")));
+		} catch (NumberFormatException e) {
+			return 1;
+		}
+	}
+
+	private static String trim(String value) {
+		return value == null ? null : value.trim();
+	}
+
+	private static void flash(HttpServletRequest request, String key, String message) {
+		request.getSession().setAttribute(key, message);
+	}
+
+	private static void notFound(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		forward(request, response, "404.jsp");
+	}
+
+	private static void forward(HttpServletRequest request, HttpServletResponse response, String page)
+			throws ServletException, IOException {
+		request.getRequestDispatcher(PAGES + page).forward(request, response);
 	}
 }

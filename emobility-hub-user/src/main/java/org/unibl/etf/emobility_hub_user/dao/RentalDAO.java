@@ -4,86 +4,166 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.unibl.etf.emobility_hub_user.models.dto.PageMetadata;
 import org.unibl.etf.emobility_hub_user.models.dto.PaginatedResponse;
+import org.unibl.etf.emobility_hub_user.models.entity.DocumentType;
 import org.unibl.etf.emobility_hub_user.models.entity.RentalEntity;
+import org.unibl.etf.emobility_hub_user.models.entity.VehicleType;
+import org.unibl.etf.emobility_hub_user.ride.RideCalculator;
+import org.unibl.etf.emobility_hub_user.ride.RideException;
 
 public class RentalDAO {
 	private static ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
+	private static final Logger logger = Logger.getLogger(RentalDAO.class.getName());
 
-	private static final String INSERT_RENTAL = "INSERT INTO rental ("
-			+ "duration, rentalEnd, rentalStart, client_id, vehicle_id, "
-			+ "end_latitude, end_longitude, start_latitude, start_longitude, distance, price) "
-			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-	private static final String SELECT_PAGINATED_RENTALS_BY_CLIENT = "SELECT * FROM rental WHERE client_id = ? ORDER BY id DESC LIMIT ? OFFSET ?;";
-	private static final String COUNT_TOTAL_RENTALS_BY_CLIENT = "SELECT COUNT(*) FROM rental WHERE client_id = ?;";
-	private static final String GET_LAST_INSERTED_RENTAL = "SELECT * FROM rental WHERE id = LAST_INSERT_ID();";
-	private static final String GET_RENTAL_BY_ID = "SELECT * FROM rental WHERE id = ?";
+	private static final String SELECT_RENTAL = "SELECT r.*, tv.model, tv.uniqueIdentifier, tv.image, tv.rentPrice, "
+			+ TransportVehicleDAO.VEHICLE_TYPE_SQL + " AS vehicle_type FROM rental r "
+			+ "JOIN transport_vehicle tv ON tv.id = r.vehicle_id " + TransportVehicleDAO.VEHICLE_TYPE_JOINS;
 
-	public static RentalEntity createRental(RentalEntity rental) {
+	private static final String SELECT_BY_ID_AND_CLIENT = SELECT_RENTAL + "WHERE r.id = ? AND r.client_id = ?";
+	private static final String SELECT_ACTIVE_BY_CLIENT = SELECT_RENTAL
+			+ "WHERE r.client_id = ? AND r.rentalEnd IS NULL ORDER BY r.id DESC LIMIT 1";
+	private static final String SELECT_PAGINATED_BY_CLIENT = SELECT_RENTAL
+			+ "WHERE r.client_id = ? ORDER BY r.rentalEnd IS NULL DESC, r.id DESC LIMIT ? OFFSET ?";
+	private static final String COUNT_BY_CLIENT = "SELECT COUNT(*) FROM rental WHERE client_id = ?";
+	private static final String COUNT_ACTIVE_BY_CLIENT = "SELECT COUNT(*) FROM rental WHERE client_id = ? AND rentalEnd IS NULL";
+
+	// Only a free vehicle can be taken; checking and taking happen in one statement.
+	private static final String TAKE_VEHICLE = "UPDATE transport_vehicle SET isRented = 1 "
+			+ "WHERE id = ? AND isRented = 0 AND isBroken = 0";
+	private static final String INSERT_RIDE = "INSERT INTO rental (rentalStart, start_latitude, start_longitude, "
+			+ "client_id, vehicle_id, documentType, documentNumber, driverLicenseNumber, paymentCardLast4) "
+			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+	private static final String LOCK_ACTIVE_RIDE = "SELECT r.rentalStart, r.start_latitude, r.start_longitude, "
+			+ "r.vehicle_id, tv.rentPrice FROM rental r JOIN transport_vehicle tv ON tv.id = r.vehicle_id "
+			+ "WHERE r.id = ? AND r.client_id = ? AND r.rentalEnd IS NULL FOR UPDATE";
+	private static final String COMPLETE_RIDE = "UPDATE rental SET rentalEnd = ?, end_latitude = ?, end_longitude = ?, "
+			+ "duration = ?, distance = ?, price = ? WHERE id = ?";
+	private static final String RELEASE_VEHICLE = "UPDATE transport_vehicle SET isRented = 0, latitude = ?, longitude = ? "
+			+ "WHERE id = ?";
+
+	// Creates the rental and marks the vehicle rented, both or neither.
+	public static RentalEntity startRide(RentalEntity ride) throws RideException {
 		Connection connection = null;
-		RentalEntity newRental = null;
+		Long rentalId = null;
 
 		try {
 			connection = connectionPool.checkOut();
-			PreparedStatement stmt = connection.prepareStatement(INSERT_RENTAL, Statement.RETURN_GENERATED_KEYS);
+			connection.setAutoCommit(false);
 
-			stmt.setDouble(1, rental.getDuration());
-			stmt.setObject(2, rental.getRentalEnd());
-			stmt.setObject(3, rental.getRentalStart());
-			stmt.setLong(4, rental.getClientId());
-			stmt.setLong(5, rental.getVehicleId());
-			stmt.setDouble(6, rental.getEnd_latitude());
-			stmt.setDouble(7, rental.getEnd_longitude());
-			stmt.setDouble(8, rental.getStart_latitude());
-			stmt.setDouble(9, rental.getStart_longitude());
-			stmt.setDouble(10, rental.getDistance());
-			stmt.setDouble(11, rental.getPrice());
+			if (count(connection, COUNT_ACTIVE_BY_CLIENT, ride.getClientId()) > 0) {
+				throw new RideException("You already have a ride in progress.");
+			}
 
-			int affectedRows = stmt.executeUpdate();
-
-			if (affectedRows > 0) {
-				ResultSet generatedKeys = stmt.getGeneratedKeys();
-				if (generatedKeys.next()) {
-					long rentalId = generatedKeys.getLong(1);
-
-					PreparedStatement getRentalStmt = connection.prepareStatement(GET_LAST_INSERTED_RENTAL);
-					ResultSet rs = getRentalStmt.executeQuery();
-
-					if (rs.next()) {
-						newRental = new RentalEntity();
-						newRental.setId(rs.getLong("id"));
-						newRental.setVehicleId(rs.getLong("vehicle_id"));
-						newRental.setClientId(rs.getLong("client_id"));
-						newRental.setRentalStart(rs.getTimestamp("rentalStart").toLocalDateTime());
-						newRental.setRentalEnd(rs.getTimestamp("rentalEnd").toLocalDateTime());
-						newRental.setDuration(rs.getDouble("duration"));
-						newRental.setStart_latitude(rs.getDouble("start_latitude"));
-						newRental.setStart_longitude(rs.getDouble("start_longitude"));
-						newRental.setEnd_latitude(rs.getDouble("end_latitude"));
-						newRental.setEnd_longitude(rs.getDouble("end_longitude"));
-						newRental.setDistance(rs.getDouble("distance"));
-						newRental.setPrice(rs.getDouble("price"));
-					}
-					rs.close();
-					getRentalStmt.close();
+			try (PreparedStatement take = connection.prepareStatement(TAKE_VEHICLE)) {
+				take.setLong(1, ride.getVehicleId());
+				if (take.executeUpdate() == 0) {
+					throw new RideException("This vehicle is no longer available.");
 				}
-				generatedKeys.close();
 			}
-			stmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			try (PreparedStatement insert = DAOUtil.prepareStatement(connection, INSERT_RIDE, true,
+					Timestamp.valueOf(ride.getRentalStart()), ride.getStartLatitude(), ride.getStartLongitude(),
+					ride.getClientId(), ride.getVehicleId(),
+					ride.getDocumentType() == null ? null : ride.getDocumentType().name(), ride.getDocumentNumber(),
+					ride.getDriverLicenseNumber(), ride.getPaymentCardLast4())) {
+				insert.executeUpdate();
+				try (ResultSet keys = insert.getGeneratedKeys()) {
+					if (keys.next()) {
+						rentalId = keys.getLong(1);
+					}
+				}
+			}
+
+			connection.commit();
+		} catch (RideException e) {
+			rollback(connection);
+			throw e;
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
+			rollback(connection);
+			throw new RideException("The ride could not be started. Please try again.");
 		} finally {
-			if (connection != null) {
-				connectionPool.checkIn(connection);
-			}
+			release(connection);
 		}
 
-		return newRental;
+		return getByIdForClient(rentalId, ride.getClientId());
+	}
+
+	// Stops the clock, charges the ride and parks the vehicle at the drop-off point.
+	public static RentalEntity finishRide(long rentalId, long clientId, double endLatitude, double endLongitude,
+			LocalDateTime end) throws RideException {
+		Connection connection = null;
+
+		try {
+			connection = connectionPool.checkOut();
+			connection.setAutoCommit(false);
+
+			LocalDateTime start;
+			double startLatitude;
+			double startLongitude;
+			long vehicleId;
+			double rentPrice;
+			try (PreparedStatement lock = connection.prepareStatement(LOCK_ACTIVE_RIDE)) {
+				lock.setLong(1, rentalId);
+				lock.setLong(2, clientId);
+				try (ResultSet rs = lock.executeQuery()) {
+					if (!rs.next()) {
+						throw new RideException("This ride is not in progress.");
+					}
+					start = rs.getTimestamp("rentalStart").toLocalDateTime();
+					startLatitude = rs.getDouble("start_latitude");
+					startLongitude = rs.getDouble("start_longitude");
+					vehicleId = rs.getLong("vehicle_id");
+					rentPrice = rs.getDouble("rentPrice");
+				}
+			}
+
+			double distance = RideCalculator
+					.round2(RideCalculator.distanceKm(startLatitude, startLongitude, endLatitude, endLongitude));
+			double hours = RideCalculator.billableHours(start, end);
+			double price = RideCalculator.price(rentPrice, start, end);
+
+			try (PreparedStatement complete = DAOUtil.prepareStatement(connection, COMPLETE_RIDE, false,
+					Timestamp.valueOf(end), endLatitude, endLongitude, hours, distance, price, rentalId);
+					PreparedStatement free = DAOUtil.prepareStatement(connection, RELEASE_VEHICLE, false, endLatitude,
+							endLongitude, vehicleId)) {
+				complete.executeUpdate();
+				free.executeUpdate();
+			}
+
+			connection.commit();
+		} catch (RideException e) {
+			rollback(connection);
+			throw e;
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
+			rollback(connection);
+			throw new RideException("The ride could not be finished. Please try again.");
+		} finally {
+			release(connection);
+		}
+
+		return getByIdForClient(rentalId, clientId);
+	}
+
+	public static RentalEntity getActiveRide(long clientId) {
+		return querySingle(SELECT_ACTIVE_BY_CLIENT, clientId);
+	}
+
+	// A client can only see their own rentals.
+	public static RentalEntity getByIdForClient(Long rentalId, long clientId) {
+		if (rentalId == null) {
+			return null;
+		}
+		return querySingle(SELECT_BY_ID_AND_CLIENT, rentalId, clientId);
 	}
 
 	public static PaginatedResponse<RentalEntity> getPaginatedRentalsByClient(int page, int size, long clientId) {
@@ -92,107 +172,109 @@ public class RentalDAO {
 
 		try {
 			connection = connectionPool.checkOut();
-
-			int offset = (page - 1) * size;
-
-			PreparedStatement stmt = connection.prepareStatement(SELECT_PAGINATED_RENTALS_BY_CLIENT);
-			stmt.setLong(1, clientId);
-			stmt.setInt(2, size);
-			stmt.setInt(3, offset);
-
-			ResultSet rs = stmt.executeQuery();
 			List<RentalEntity> rentals = new ArrayList<>();
-
-			while (rs.next()) {
-				RentalEntity rental = new RentalEntity();
-				rental.setId(rs.getLong("id"));
-				rental.setDuration(rs.getDouble("duration"));
-				rental.setRentalEnd(rs.getTimestamp("rentalEnd").toLocalDateTime());
-				rental.setRentalStart(rs.getTimestamp("rentalStart").toLocalDateTime());
-				rental.setClientId(rs.getLong("client_id"));
-				rental.setVehicleId(rs.getLong("vehicle_id"));
-				rental.setEnd_latitude(rs.getDouble("end_latitude"));
-				rental.setEnd_longitude(rs.getDouble("end_longitude"));
-				rental.setStart_latitude(rs.getDouble("start_latitude"));
-				rental.setStart_longitude(rs.getDouble("start_longitude"));
-				rental.setDistance(rs.getDouble("distance"));
-				rental.setPrice(rs.getDouble("price"));
-
-				rentals.add(rental);
+			try (PreparedStatement stmt = DAOUtil.prepareStatement(connection, SELECT_PAGINATED_BY_CLIENT, false,
+					clientId, size, (page - 1) * size); ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					rentals.add(map(rs));
+				}
 			}
 
-			rs.close();
-			stmt.close();
-
-			PreparedStatement countStmt = connection.prepareStatement(COUNT_TOTAL_RENTALS_BY_CLIENT);
-			countStmt.setLong(1, clientId);
-			ResultSet countRs = countStmt.executeQuery();
-
-			long totalElements = 0;
-			if (countRs.next()) {
-				totalElements = countRs.getLong(1);
-			}
-
-			countRs.close();
-			countStmt.close();
-
-			int totalPages = (int) Math.ceil((double) totalElements / size);
-
+			long totalElements = count(connection, COUNT_BY_CLIENT, clientId);
 			PageMetadata pageMetadata = new PageMetadata();
 			pageMetadata.setSize(size);
 			pageMetadata.setNumber(page);
 			pageMetadata.setTotalElements(totalElements);
-			pageMetadata.setTotalPages(totalPages);
+			pageMetadata.setTotalPages((int) Math.ceil((double) totalElements / size));
 
 			response.setContent(rentals);
 			response.setPage(pageMetadata);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
 		} finally {
-			if (connection != null) {
-				connectionPool.checkIn(connection);
-			}
+			connectionPool.checkIn(connection);
 		}
 
 		return response;
 	}
 
-	public static RentalEntity getById(Long id) {
+	private static RentalEntity querySingle(String sql, Object... params) {
 		Connection connection = null;
 		RentalEntity rental = null;
 
 		try {
 			connection = connectionPool.checkOut();
-			PreparedStatement stmt = connection.prepareStatement(GET_RENTAL_BY_ID);
-			stmt.setLong(1, id);
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				rental = new RentalEntity();
-				rental.setId(rs.getLong("id"));
-				rental.setVehicleId(rs.getLong("vehicle_id"));
-				rental.setClientId(rs.getLong("client_id"));
-				rental.setRentalStart(rs.getTimestamp("rentalStart").toLocalDateTime());
-				rental.setRentalEnd(rs.getTimestamp("rentalEnd").toLocalDateTime());
-				rental.setDuration(rs.getDouble("duration"));
-				rental.setStart_latitude(rs.getDouble("start_latitude"));
-				rental.setStart_longitude(rs.getDouble("start_longitude"));
-				rental.setEnd_latitude(rs.getDouble("end_latitude"));
-				rental.setEnd_longitude(rs.getDouble("end_longitude"));
-				rental.setDistance(rs.getDouble("distance"));
-				rental.setPrice(rs.getDouble("price"));
+			try (PreparedStatement stmt = DAOUtil.prepareStatement(connection, sql, false, params);
+					ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					rental = map(rs);
+				}
 			}
-
-			rs.close();
-			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		} finally {
-			if (connection != null) {
-				connectionPool.checkIn(connection);
-			}
+			connectionPool.checkIn(connection);
 		}
 
 		return rental;
+	}
+
+	private static long count(Connection connection, String sql, long clientId) throws SQLException {
+		try (PreparedStatement stmt = DAOUtil.prepareStatement(connection, sql, false, clientId);
+				ResultSet rs = stmt.executeQuery()) {
+			return rs.next() ? rs.getLong(1) : 0;
+		}
+	}
+
+	private static RentalEntity map(ResultSet rs) throws SQLException {
+		RentalEntity rental = new RentalEntity();
+		rental.setId(rs.getLong("id"));
+		rental.setClientId(rs.getLong("client_id"));
+		rental.setVehicleId(rs.getLong("vehicle_id"));
+		rental.setRentalStart(rs.getTimestamp("rentalStart").toLocalDateTime());
+		Timestamp end = rs.getTimestamp("rentalEnd");
+		rental.setRentalEnd(end == null ? null : end.toLocalDateTime());
+		rental.setStartLatitude(rs.getDouble("start_latitude"));
+		rental.setStartLongitude(rs.getDouble("start_longitude"));
+		rental.setEndLatitude(DAOUtil.getNullableDouble(rs, "end_latitude"));
+		rental.setEndLongitude(DAOUtil.getNullableDouble(rs, "end_longitude"));
+		rental.setDuration(DAOUtil.getNullableDouble(rs, "duration"));
+		rental.setDistance(DAOUtil.getNullableDouble(rs, "distance"));
+		rental.setPrice(DAOUtil.getNullableDouble(rs, "price"));
+		String documentType = rs.getString("documentType");
+		rental.setDocumentType(documentType == null ? null : DocumentType.valueOf(documentType));
+		rental.setDocumentNumber(rs.getString("documentNumber"));
+		rental.setDriverLicenseNumber(rs.getString("driverLicenseNumber"));
+		rental.setPaymentCardLast4(rs.getString("paymentCardLast4"));
+		rental.setVehicleType(VehicleType.valueOf(rs.getString("vehicle_type")));
+		rental.setVehicleModel(rs.getString("model"));
+		rental.setVehicleUniqueIdentifier(rs.getString("uniqueIdentifier"));
+		rental.setVehicleImage(rs.getString("image"));
+		rental.setRentPrice(rs.getDouble("rentPrice"));
+		return rental;
+	}
+
+	private static void rollback(Connection connection) {
+		if (connection == null) {
+			return;
+		}
+		try {
+			connection.rollback();
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
+		}
+	}
+
+	// Pooled connections go back in auto-commit mode.
+	private static void release(Connection connection) {
+		if (connection == null) {
+			return;
+		}
+		try {
+			connection.setAutoCommit(true);
+		} catch (SQLException e) {
+			logger.severe(e.getMessage());
+		}
+		connectionPool.checkIn(connection);
 	}
 }
