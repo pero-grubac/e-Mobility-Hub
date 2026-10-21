@@ -12,13 +12,14 @@ import { ClientListComponent } from './components/client/client-list/client-list
 import { ClientDetailComponent } from './components/client/client-detail/client-detail.component';
 import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
 import { EmployeeDetailComponent } from './components/employee/employee-detail/employee-detail.component';
-import { FaultListComponent } from './components/faults/fault-list/fault-list.component';
 import { RentalListComponent } from './components/rental/rental-list/rental-list.component';
 import { RentalDetailComponent } from './components/rental/rental-detail/rental-detail.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
 import { LoginComponent } from './components/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { VehicleMapComponent } from './components/vehicle-map/vehicle-map.component';
+import { PricingComponent } from './components/pricing/pricing.component';
 
 const routes: Routes = [
   {
@@ -94,22 +95,10 @@ const routes: Routes = [
     data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] },
   },
   {
-    path: 'faults/:id',
-    component: FaultListComponent,
-    canActivate: [authGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] },
-  },
-  {
     path: 'rentals',
     component: RentalListComponent,
     canActivate: [authGuard],
     data: { roles: ['ROLE_OPERATOR', 'ROLE_MANAGER'] },
-  },
-  {
-    path: 'rentals/:id',
-    component: RentalListComponent,
-    canActivate: [authGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] },
   },
   {
     path: 'rental/:id',
@@ -118,9 +107,22 @@ const routes: Routes = [
     data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_OPERATOR'] },
   },
   {
+    path: 'map',
+    component: VehicleMapComponent,
+    canActivate: [authGuard],
+    data: { roles: ['ROLE_OPERATOR', 'ROLE_MANAGER'] },
+  },
+  {
+    path: 'pricing',
+    component: PricingComponent,
+    canActivate: [authGuard],
+    data: { roles: ['ROLE_MANAGER'] },
+  },
+  {
     path: 'statistics',
     component: StatisticsComponent,
     canActivate: [authGuard],
+    data: { roles: ['ROLE_MANAGER'] },
   },
   { path: 'login', component: LoginComponent },
   {

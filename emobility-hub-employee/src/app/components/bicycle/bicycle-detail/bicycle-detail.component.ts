@@ -4,9 +4,7 @@ import { DetailedBicycle } from '../../../models/bicycle.models';
 import { BaseManufacturer } from '../../../models/manufacturer.model';
 import { BicycleService } from '../../../services/bicycle.service';
 import { ManufacturerService } from '../../../services/manufacturer.service';
-import { MatDialog } from '@angular/material/dialog';
-import { AddFaultModalComponent } from '../../faults/add-fault-modal/add-fault-modal.component';
-import { JWTService } from '../../../services/jwt.service';
+import { SessionService } from '../../../services/session.service';
 
 @Component({
   selector: 'app-bicycle-detail',
@@ -26,17 +24,16 @@ export class BicycleDetailComponent implements OnInit {
     private router: Router,
     private bicycleService: BicycleService,
     private manufacturerService: ManufacturerService,
-    private dialog: MatDialog,
-    private jwtService: JWTService,
+    private sessionService: SessionService,
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadBicycleDetailes(id);
+    this.loadBicycleDetails(id);
     this.loadManufacturers();
   }
 
-  loadBicycleDetailes(id: number): void {
+  loadBicycleDetails(id: number): void {
     this.bicycleService.getById(id).subscribe({
       next: (bicycle) => {
         this.bicycle = bicycle;
@@ -109,6 +106,9 @@ export class BicycleDetailComponent implements OnInit {
   }
 
   deleteBicycle(): void {
+    if (!confirm('Delete this bicycle?')) {
+      return;
+    }
     this.bicycleService.deleteBicycle(this.bicycle.id).subscribe({
       next: () => {
         alert('Bicycle deleted successfully!');
@@ -120,47 +120,23 @@ export class BicycleDetailComponent implements OnInit {
     });
   }
 
-  report(): void {
-    const dialogRef = this.dialog.open(AddFaultModalComponent, {
-      width: '400px',
-      data: this.bicycle.id,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('Fault reported successfully!');
-      }
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadBicycleDetailes(this.bicycle.id);
-      }
-    });
-  }
 
   fix(): void {
     if (this.bicycle.broken) {
       this.bicycleService.fix(this.bicycle.id).subscribe({
         next: () => {
-          console.log(`Car with ID: ${this.bicycle.id} fixed successfully.`);
-          this.loadBicycleDetailes(this.bicycle.id); // Ponovno učitavanje ažuriranih podataka
+          this.loadBicycleDetails(this.bicycle.id); // Ponovno učitavanje ažuriranih podataka
         },
         error: (err) => {
-          console.error('Error fixing car:', err);
+          console.error('Error fixing bicycle:', err);
         },
       });
     }
   }
 
-  seeAllRentals(): void {
-    this.router.navigate([`/rentals/${this.bicycle.id}`]);
-  }
 
-  seeAllFaults(): void {
-    this.router.navigate([`/faults/${this.bicycle.id}`]);
-  }
 
   hasRole(requiredRoles: string[]): boolean {
-    return this.jwtService.hasRole(requiredRoles);
+    return this.sessionService.hasRole(requiredRoles);
   }
 }

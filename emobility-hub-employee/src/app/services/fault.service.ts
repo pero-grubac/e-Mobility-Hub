@@ -16,11 +16,19 @@ export class FaultService {
     return this.http.post<any>(`${this.baseUrl}`, data);
   }
 
-  getAll(id: number, page: number, size: number): Observable<FaultPage> {
+  getAll(
+    id: number,
+    page: number,
+    size: number,
+    search?: string,
+  ): Observable<FaultPage> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sort', 'updateDateTime,desc');
+    if (search) {
+      params = params.set('search', search);
+    }
     return this.http.get<FaultPage>(`${this.baseUrl}/getAllByVehicleId/${id}`, {
       params,
     });

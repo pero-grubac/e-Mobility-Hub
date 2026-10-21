@@ -38,6 +38,4 @@ export class RentalDetailComponent implements OnInit {
   onClientClick(clientId: number): void {
     this.router.navigate(['/client', clientId]);
   }
-
-  onVehicleSelected(vehicleId: number): void {}
 }

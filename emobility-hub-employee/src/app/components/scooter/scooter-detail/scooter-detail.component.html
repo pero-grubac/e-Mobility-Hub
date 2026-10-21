@@ -32,6 +32,10 @@
         <!-- Unique ID -->
         <div class="form-group">
           <p><strong>Unique ID:</strong> {{ scooter.uniqueIdentifier }}</p>
+          <p>
+            <strong>Status:</strong>
+            <app-vehicle-status [vehicle]="scooter"></app-vehicle-status>
+          </p>
         </div>
 
         <div class="form-group">
@@ -57,13 +61,15 @@
         <div class="form-group">
           <label>Rent Price</label>
           <input
-            [(ngModel)]="scooter.rentPrice"
-            [disabled]="!hasRole(['ROLE_MANAGER'])"
+            [value]="scooter.rentPrice"
             class="form-control"
             name="rentPrice"
-            required
+            readonly
             type="number"
           />
+          <small *ngIf="hasRole(['ROLE_MANAGER'])" class="form-text text-muted">
+            Change it on the <a routerLink="/pricing">Pricing</a> page.
+          </small>
         </div>
 
         <div class="form-group">
@@ -133,33 +139,24 @@
       Delete
     </button>
     <button
-      (click)="report()"
-      *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
-      class="btn btn-warning"
-    >
-      Report
-    </button>
-    <button
       (click)="fix()"
-      *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
       [disabled]="!scooter.broken"
       class="btn btn-primary"
     >
       Fix
     </button>
-    <button
-      (click)="seeAllRentals()"
-      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
-      class="btn btn-secondary"
-    >
-      See all rentals
-    </button>
-    <button
-      (click)="seeAllFaults()"
-      *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
-      class="btn btn-info"
-    >
-      See all faults
-    </button>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Faults</h2>
+    <app-fault-list
+      (changed)="loadScooterDetails(scooter.id)"
+      [vehicleId]="scooter.id"
+    ></app-fault-list>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Rentals</h2>
+    <app-rental-list [vehicleId]="scooter.id"></app-rental-list>
   </div>
 </div>

@@ -23,6 +23,10 @@
         <!-- Unique ID -->
         <div class="form-group">
           <p><strong>Unique ID:</strong> {{ bicycle.uniqueIdentifier }}</p>
+          <p>
+            <strong>Status:</strong>
+            <app-vehicle-status [vehicle]="bicycle"></app-vehicle-status>
+          </p>
         </div>
 
         <div class="form-group">
@@ -35,8 +39,16 @@
         </div>
         <div class="form-group">
           <label>Rent Price</label>
-          <input [(ngModel)]="bicycle.rentPrice" [disabled]="!hasRole(['ROLE_MANAGER'])" class="form-control"
-            name="rentPrice" required type="number" />
+          <input
+            [value]="bicycle.rentPrice"
+            class="form-control"
+            name="rentPrice"
+            readonly
+            type="number"
+          />
+          <small *ngIf="hasRole(['ROLE_MANAGER'])" class="form-text text-muted">
+            Change it on the <a routerLink="/pricing">Pricing</a> page.
+          </small>
         </div>
 
         <div class="form-group">
@@ -86,18 +98,22 @@
     <button (click)="deleteBicycle()" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="btn btn-danger">
       Delete
     </button>
-    <button (click)="report()" *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])" class="btn btn-warning">
-      Report
-    </button>
-    <button (click)="fix()" *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])" [disabled]="!bicycle.broken"
+    <button (click)="fix()" [disabled]="!bicycle.broken"
       class="btn btn-primary">
       Fix
     </button>
-    <button (click)="seeAllRentals()" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="btn btn-secondary">
-      See all rentals
-    </button>
-    <button (click)="seeAllFaults()" *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])" class="btn btn-info">
-      See all faults
-    </button>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Faults</h2>
+    <app-fault-list
+      (changed)="loadBicycleDetails(bicycle.id)"
+      [vehicleId]="bicycle.id"
+    ></app-fault-list>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Rentals</h2>
+    <app-rental-list [vehicleId]="bicycle.id"></app-rental-list>
   </div>
 </div>

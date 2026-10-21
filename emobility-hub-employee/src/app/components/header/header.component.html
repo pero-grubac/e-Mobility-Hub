@@ -60,6 +60,22 @@
     Rentals
   </button>
   <button
+    *ngIf="hasRole(['ROLE_OPERATOR', 'ROLE_MANAGER'])"
+    class="menu-button"
+    mat-button
+    routerLink="/map"
+  >
+    Map
+  </button>
+  <button
+    *ngIf="hasRole(['ROLE_MANAGER'])"
+    class="menu-button"
+    mat-button
+    routerLink="/pricing"
+  >
+    Pricing
+  </button>
+  <button
     *ngIf="hasRole(['ROLE_MANAGER'])"
     class="menu-button"
     mat-button

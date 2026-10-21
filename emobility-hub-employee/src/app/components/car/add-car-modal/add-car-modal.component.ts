@@ -60,8 +60,14 @@ export class AddCarModalComponent {
       formData.append('image', this.selectedImageFile);
     }
 
-    this.carService.addCar(formData).subscribe(() => {
-      this.dialogRef.close(true);
+    this.carService.addCar(formData).subscribe({
+      next: () => this.dialogRef.close(true),
+      error: (err) =>
+        alert(
+          typeof err.error === 'string' && err.status < 500
+            ? err.error
+            : 'The car could not be saved.',
+        ),
     });
   }
 

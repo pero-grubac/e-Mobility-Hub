@@ -34,7 +34,6 @@ export class ClientService {
   }
 
   block(id: number, isBlocked: boolean): Observable<any> {
-    const body = { isBlocked };
     return this.http.put<any>(`${this.baseUrl}/block/${id}`, isBlocked, {
       headers: { 'Content-Type': 'application/json' },
     });

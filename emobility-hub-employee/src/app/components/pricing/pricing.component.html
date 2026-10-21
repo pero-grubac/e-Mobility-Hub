@@ -1,0 +1,76 @@
+<div class="page">
+  <h1 class="page-title">Rental prices</h1>
+
+  <div class="toolbar">
+    <input
+      (input)="onSearch($any($event.target).value)"
+      class="search-input"
+      placeholder="Search by model or ID"
+      type="search"
+    />
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Manufacturer</th>
+          <th>Model</th>
+          <th>Status</th>
+          <th>Price per hour</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of vehicles">
+          <td>{{ vehicle.uniqueIdentifier }}</td>
+          <td>{{ typeLabels[vehicle.type] }}</td>
+          <td>{{ vehicle.manufacturer }}</td>
+          <td>{{ vehicle.model }}</td>
+          <td><app-vehicle-status [vehicle]="vehicle"></app-vehicle-status></td>
+          <td>
+            <input
+              (keyup.enter)="save(vehicle)"
+              [(ngModel)]="drafts[vehicle.id]"
+              [attr.aria-label]="'Price per hour for ' + vehicle.uniqueIdentifier"
+              [class.is-invalid]="!isValid(vehicle.id)"
+              class="form-control form-control-sm price-input"
+              max="10000"
+              min="0.01"
+              required
+              step="0.5"
+              type="number"
+            />
+            <div *ngIf="errors[vehicle.id]" class="field-error">
+              {{ errors[vehicle.id] }}
+            </div>
+          </td>
+          <td>
+            <button
+              (click)="save(vehicle)"
+              [disabled]="!isChanged(vehicle) || !isValid(vehicle.id)"
+              class="btn btn-sm btn-primary"
+              type="button"
+            >
+              Save
+            </button>
+            <span *ngIf="saved.has(vehicle.id) && !isChanged(vehicle)" class="saved">
+              ✓ Saved
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="vehicles.length === 0" class="empty-row">
+          <td colspan="7">No vehicles found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-pagination
+    (pageChange)="onPageChange($event)"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+  ></app-pagination>
+</div>

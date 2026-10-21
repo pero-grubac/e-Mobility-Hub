@@ -1,101 +1,70 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Rental, RentalPage } from '../../../models/rental.model';
 import { RentalService } from '../../../services/rental.service';
 
+// All rentals (the Rentals page) or the rentals of one vehicle (embedded on
+// its detail page).
 @Component({
   selector: 'app-rental-list',
   templateUrl: './rental-list.component.html',
-  styleUrl: './rental-list.component.css',
 })
-export class RentalListComponent implements OnInit {
+export class RentalListComponent implements OnInit, OnChanges {
+  @Input() vehicleId?: number;
   rentals: Rental[] = [];
   currentPage: number = 0;
   totalPages: number = 0;
-  pageSize: number = 12;
-  displayedPages: (number | string)[] = [];
-  vehicleId!: number;
+  pageSize: number = 10;
+  searchTerm: string = '';
 
   constructor(
     private rentalService: RentalService,
-    private route: ActivatedRoute,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.vehicleId = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.vehicleId) {
-      this.loadRentalsByVehicleId();
-    } else {
+    if (this.vehicleId === undefined) {
       this.loadRentals();
     }
   }
 
+  ngOnChanges(): void {
+    if (this.vehicleId !== undefined) {
+      this.pageSize = 5;
+      this.currentPage = 0;
+      this.loadRentals();
+    }
+  }
+
+  get embedded(): boolean {
+    return this.vehicleId !== undefined;
+  }
+
   loadRentals(): void {
-    this.rentalService.getAll(this.currentPage, this.pageSize).subscribe({
+    const request = this.embedded
+      ? this.rentalService.getAllByVehicleId(this.currentPage, this.pageSize, this.vehicleId!, this.searchTerm)
+      : this.rentalService.getAll(this.currentPage, this.pageSize, this.searchTerm);
+    request.subscribe({
       next: (data: RentalPage) => {
         this.rentals = data.content;
         this.totalPages = data.page.totalPages;
-        this.updateDisplayedPages();
       },
-      error: (err) => {
-        console.error('Error fetching rentals:', err);
-      },
+      error: (err) => console.error('Error fetching rentals:', err),
     });
   }
 
-  loadRentalsByVehicleId(): void {
-    this.rentalService
-      .getAllByVehicleId(this.currentPage, this.pageSize, this.vehicleId)
-      .subscribe({
-        next: (data: RentalPage) => {
-          this.rentals = data.content;
-          this.totalPages = data.page.totalPages;
-          this.updateDisplayedPages();
-        },
-        error: (err) => {
-          console.error('Error fetching rentals:', err);
-        },
-      });
+  onSearch(term: string): void {
+    this.searchTerm = term;
+    this.currentPage = 0;
+    this.loadRentals();
   }
 
-  goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.loadRentalsByVehicleId();
-    }
-  }
-
-  handlePageClick(page: number | string): void {
-    if (typeof page === 'number') this.goToPage(page);
-  }
-
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadRentals();
   }
 
   onRentalSelected(rentalId: number): void {
-    this.router.navigate([`/rental/${rentalId}`]);
-  }
-
-  private updateDisplayedPages(): void {
-    const delta = 2;
-    const range: (number | string)[] = [];
-    const start = Math.max(0, this.currentPage - delta);
-    const end = Math.min(this.totalPages - 1, this.currentPage + delta);
-
-    if (start > 0) {
-      range.push(0);
-      if (start > 1) range.push('...');
-    }
-
-    for (let i = start; i <= end; i++) range.push(i);
-
-    if (end < this.totalPages - 1) {
-      if (end < this.totalPages - 2) range.push('...');
-      range.push(this.totalPages - 1);
-    }
-
-    this.displayedPages = range;
+    this.router.navigate(['/rental', rentalId]);
   }
 }

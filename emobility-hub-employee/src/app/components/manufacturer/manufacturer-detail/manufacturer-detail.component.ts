@@ -61,8 +61,4 @@ export class ManufacturerDetailComponent implements OnInit {
         });
     }
   }
-
-  onVehicleSelected(vehicleId: number): void {
-    console.log('Selected vehicle ID:', vehicleId);
-  }
 }

@@ -1,100 +1,105 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Fault, FaultPage } from '../../../models/fault.models';
 import { FaultService } from '../../../services/fault.service';
+import { SessionService } from '../../../services/session.service';
+import { AddFaultModalComponent } from '../add-fault-modal/add-fault-modal.component';
 import { FaultDetailModalComponent } from '../fault-detail-modal/fault-detail-modal.component';
-import { MatDialog } from '@angular/material/dialog';
 
+// All faults of one vehicle, shown on its detail page.
 @Component({
   selector: 'app-fault-list',
   templateUrl: './fault-list.component.html',
-  styleUrl: './fault-list.component.css',
 })
-export class FaultListComponent implements OnInit {
+export class FaultListComponent implements OnChanges {
+  @Input() vehicleId!: number;
+  // Adding or removing a fault changes the vehicle's broken flag.
+  @Output() changed = new EventEmitter<void>();
   faults: Fault[] = [];
   currentPage: number = 0;
   totalPages: number = 0;
-  pageSize: number = 12;
-  displayedPages: (number | string)[] = [];
-  vehicleId!: number;
+  pageSize: number = 5;
+  searchTerm: string = '';
 
   constructor(
     private faultService: FaultService,
-    private route: ActivatedRoute,
+    private sessionService: SessionService,
     private dialog: MatDialog,
   ) {}
 
-  ngOnInit(): void {
-    this.vehicleId = Number(this.route.snapshot.paramMap.get('id'));
+  ngOnChanges(): void {
+    this.currentPage = 0;
     this.loadFaults();
   }
 
   loadFaults(): void {
-    if (!this.vehicleId) {
-      console.error('No vehicle ID found in URL.');
-      return;
-    }
-
     this.faultService
-      .getAll(this.vehicleId, this.currentPage, this.pageSize)
+      .getAll(this.vehicleId, this.currentPage, this.pageSize, this.searchTerm)
       .subscribe({
         next: (data: FaultPage) => {
           this.faults = data.content;
           this.totalPages = data.page.totalPages;
-          this.updateDisplayedPages();
         },
-        error: (err) => {
-          console.error('Error fetching faults:', err);
-        },
+        error: (err) => console.error('Error fetching faults:', err),
       });
   }
 
-  goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.loadFaults();
-    }
+  canManage(): boolean {
+    return this.sessionService.hasRole(['ROLE_ADMIN', 'ROLE_MANAGER']);
   }
 
-  handlePageClick(page: number | string): void {
-    if (typeof page === 'number') this.goToPage(page);
+  onSearch(term: string): void {
+    this.searchTerm = term;
+    this.currentPage = 0;
+    this.loadFaults();
   }
 
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadFaults();
+  }
+
+  addFault(): void {
+    this.dialog
+      .open(AddFaultModalComponent, { width: '400px', data: this.vehicleId })
+      .afterClosed()
+      .subscribe((added) => {
+        if (added) {
+          this.loadFaults();
+          this.changed.emit();
+        }
+      });
   }
 
   openFaultDetails(fault: Fault): void {
-    const dialogRef = this.dialog.open(FaultDetailModalComponent, {
-      width: '400px',
-      data: { fault, vehicleId: this.vehicleId },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadFaults(); // Ponovno učitaj listu nakon ažuriranja ili brisanja
-      }
-    });
+    if (!this.canManage()) {
+      return;
+    }
+    this.dialog
+      .open(FaultDetailModalComponent, {
+        width: '400px',
+        data: { fault: { ...fault }, vehicleId: this.vehicleId },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.loadFaults();
+          this.changed.emit();
+        }
+      });
   }
 
-  private updateDisplayedPages(): void {
-    const delta = 2;
-    const range: (number | string)[] = [];
-    const start = Math.max(0, this.currentPage - delta);
-    const end = Math.min(this.totalPages - 1, this.currentPage + delta);
-
-    if (start > 0) {
-      range.push(0);
-      if (start > 1) range.push('...');
+  deleteFault(event: Event, fault: Fault): void {
+    event.stopPropagation();
+    if (!confirm('Delete this fault?')) {
+      return;
     }
-
-    for (let i = start; i <= end; i++) range.push(i);
-
-    if (end < this.totalPages - 1) {
-      if (end < this.totalPages - 2) range.push('...');
-      range.push(this.totalPages - 1);
-    }
-
-    this.displayedPages = range;
+    this.faultService.delete(fault.id).subscribe({
+      next: () => {
+        this.loadFaults();
+        this.changed.emit();
+      },
+      error: () => alert('The fault could not be deleted.'),
+    });
   }
 }

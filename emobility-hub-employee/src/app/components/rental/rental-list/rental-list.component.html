@@ -1,32 +1,63 @@
-<h1 class="rental-list-title">Rentals</h1>
-<div class="rental-list-container">
-  <div class="rental-list">
-    <app-rental-item
-      (rentalClick)="onRentalSelected($event)"
-      *ngFor="let rental of rentals"
-      [rental]="rental"
-    ></app-rental-item>
+<div [class.page]="!embedded">
+  <h1 *ngIf="!embedded" class="page-title">Rentals</h1>
+
+  <div class="toolbar">
+    <input
+      (input)="onSearch($any($event.target).value)"
+      [placeholder]="
+        embedded ? 'Search by client' : 'Search by client or vehicle ID'
+      "
+      class="search-input"
+      type="search"
+    />
   </div>
 
-  <div class="pagination">
-    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
-      Previous
-    </button>
-
-    <button
-      (click)="handlePageClick(page)"
-      *ngFor="let page of displayedPages"
-      [class.active]="page === currentPage"
-      [disabled]="!isNumber(page)"
-    >
-      {{ page }}
-    </button>
-
-    <button
-      (click)="goToPage(currentPage + 1)"
-      [disabled]="currentPage + 1 >= totalPages"
-    >
-      Next
-    </button>
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th *ngIf="!embedded">Vehicle</th>
+          <th>Client</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Duration (h)</th>
+          <th>Distance (km)</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          (click)="onRentalSelected(rental.id)"
+          *ngFor="let rental of rentals"
+          class="clickable"
+        >
+          <td>{{ rental.id }}</td>
+          <td *ngIf="!embedded">{{ rental.vehicleUniqueIdentifier }}</td>
+          <td>{{ rental.clientUsername }}</td>
+          <td>{{ rental.rentalStart | date: "dd.MM.yyyy. HH:mm" }}</td>
+          <td>
+            <span *ngIf="rental.rentalEnd; else inProgress">{{
+              rental.rentalEnd | date: "dd.MM.yyyy. HH:mm"
+            }}</span>
+            <ng-template #inProgress>
+              <span class="status status-rented">In progress</span>
+            </ng-template>
+          </td>
+          <td>{{ rental.duration | number: "1.0-2" }}</td>
+          <td>{{ rental.distance | number: "1.0-2" }}</td>
+          <td>{{ rental.price | number: "1.2-2" }}</td>
+        </tr>
+        <tr *ngIf="rentals.length === 0" class="empty-row">
+          <td colspan="8">No rentals.</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+  <app-pagination
+    (pageChange)="onPageChange($event)"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+  ></app-pagination>
 </div>

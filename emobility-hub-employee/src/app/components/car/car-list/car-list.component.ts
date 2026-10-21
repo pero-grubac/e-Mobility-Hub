@@ -1,20 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Car } from '../../../models/car.models';
+import { VehicleColumn } from '../../../models/vehicle.model';
 import { CarService } from '../../../services/car.service';
 import { AddCarModalComponent } from '../add-car-modal/add-car-modal.component';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-car-list',
   templateUrl: './car-list.component.html',
-  styleUrl: './car-list.component.css',
 })
 export class CarListComponent implements OnInit {
+  readonly columns: VehicleColumn[] = [
+    { key: 'purchaseDate', label: 'Purchase date', format: 'date' },
+    { key: 'description', label: 'Description' },
+  ];
   cars: Car[] = [];
   currentPage: number = 0;
   totalPages: number = 0;
-  pageSize: number = 12;
+  pageSize: number = 10;
   searchTerm: string = '';
 
   constructor(
@@ -24,16 +28,12 @@ export class CarListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadCars();
+    this.load();
   }
 
-  handleVehicleSelected(vehicleId: number): void {
-    this.router.navigate(['/car', vehicleId]);
-  }
-
-  loadCars(searchTerm: string = ''): void {
+  load(): void {
     this.carService
-      .getCars(this.currentPage, this.pageSize, searchTerm)
+      .getCars(this.currentPage, this.pageSize, this.searchTerm)
       .subscribe((data) => {
         this.cars = data.content;
         this.totalPages = data.page.totalPages;
@@ -41,25 +41,36 @@ export class CarListComponent implements OnInit {
       });
   }
 
-  handleSearch(term: string): void {
-    this.currentPage = 0;
-    this.loadCars(term);
+  handleVehicleSelected(vehicleId: number): void {
+    this.router.navigate(['/car', vehicleId]);
   }
 
-  handleAdd(): void {
-    const dialogRef = this.dialog.open(AddCarModalComponent, {
-      width: '600px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadCars();
-      }
-    });
+  handleSearch(term: string): void {
+    this.searchTerm = term;
+    this.currentPage = 0;
+    this.load();
   }
 
   handlePageChange(page: number): void {
     this.currentPage = page;
-    this.loadCars();
+    this.load();
+  }
+
+  handleAdd(): void {
+    this.dialog
+      .open(AddCarModalComponent, { width: '600px' })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.load();
+        }
+      });
+  }
+
+  handleDelete(id: number): void {
+    this.carService.deleteCar(id).subscribe({
+      next: () => this.load(),
+      error: () => alert('The vehicle could not be deleted.'),
+    });
   }
 }

@@ -1,0 +1,28 @@
+<div class="page">
+  <h1 class="page-title">Vehicle map</h1>
+
+  <div class="toolbar map-filters">
+    <span class="filter-label">Type:</span>
+    <label *ngFor="let type of types" class="filter">
+      <input
+        (change)="toggleType(type.value)"
+        [checked]="shownTypes.has(type.value)"
+        type="checkbox"
+      />
+      {{ type.label }}
+    </label>
+    <span class="filter-label">Status:</span>
+    <label *ngFor="let status of statuses" class="filter">
+      <input
+        (change)="toggleStatus(status.value)"
+        [checked]="shownStatuses.has(status.value)"
+        type="checkbox"
+      />
+      <span [style.background]="colors[status.value]" class="dot"></span>
+      {{ status.label }}
+    </label>
+    <span class="count">{{ visible.length }} of {{ vehicles.length }} vehicles</span>
+  </div>
+
+  <div #map class="map"></div>
+</div>

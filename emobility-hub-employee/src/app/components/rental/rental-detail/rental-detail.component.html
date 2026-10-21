@@ -8,18 +8,41 @@
       {{ rental.rentalStart | date: "dd.MM.yyyy, HH:mm" }}
     </p>
     <p>
-      <strong>End:</strong> {{ rental.rentalEnd | date: "dd.MM.yyyy, HH:mm" }}
+      <strong>End:</strong>
+      <span *ngIf="rental.rentalEnd; else inProgress">{{
+        rental.rentalEnd | date: "dd.MM.yyyy, HH:mm"
+      }}</span>
+      <ng-template #inProgress>
+        <span class="status status-rented">In progress</span>
+      </ng-template>
     </p>
-    <p><strong>Duration:</strong> {{ rental.duration }} hours</p>
-    <p><strong>Distance:</strong> {{ rental.distance | number: "1.2-2" }} km</p>
-    <p><strong>Price:</strong> ${{ rental.price | number: "1.2-2" }}</p>
+    <p *ngIf="rental.duration !== null">
+      <strong>Duration:</strong> {{ rental.duration | number: "1.0-2" }} hours
+    </p>
+    <p *ngIf="rental.distance !== null">
+      <strong>Distance:</strong> {{ rental.distance | number: "1.2-2" }} km
+    </p>
+    <p *ngIf="rental.price !== null">
+      <strong>Price:</strong> {{ rental.price | number: "1.2-2" }}
+    </p>
     <p>
       <strong>Start Location:</strong> ({{ rental.startLocation.latitude }},
       {{ rental.startLocation.longitude }})
     </p>
-    <p>
+    <p *ngIf="rental.endLocation">
       <strong>End Location:</strong> ({{ rental.endLocation.latitude }},
       {{ rental.endLocation.longitude }})
+    </p>
+    <p *ngIf="rental.documentType">
+      <strong>Identity document:</strong>
+      {{ rental.documentType === "PASSPORT" ? "Passport" : "ID card" }}
+      {{ rental.documentNumber }}
+    </p>
+    <p *ngIf="rental.driverLicenseNumber">
+      <strong>Driver's licence:</strong> {{ rental.driverLicenseNumber }}
+    </p>
+    <p *ngIf="rental.paymentCardLast4">
+      <strong>Paid with card:</strong> **** {{ rental.paymentCardLast4 }}
     </p>
   </div>
 
@@ -34,10 +57,16 @@
 
     <div class="vehicle-info">
       <h2>Vehicle Information</h2>
-      <app-vehicle-item
-        (vehicleClick)="onVehicleSelected($event)"
-        [vehicle]="rental.vehicle"
-      ></app-vehicle-item>
+      <p><strong>ID:</strong> {{ rental.vehicle.uniqueIdentifier }}</p>
+      <p><strong>Model:</strong> {{ rental.vehicle.model }}</p>
+      <p>
+        <strong>Rent price:</strong>
+        {{ rental.vehicle.rentPrice | number: "1.2-2" }} / hour
+      </p>
+      <p>
+        <strong>Status:</strong>
+        <app-vehicle-status [vehicle]="rental.vehicle"></app-vehicle-status>
+      </p>
     </div>
   </div>
 </div>

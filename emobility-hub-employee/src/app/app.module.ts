@@ -6,7 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HeaderComponent } from './components/header/header.component';
@@ -20,7 +21,6 @@ import { ScooterDetailComponent } from './components/scooter/scooter-detail/scoo
 import { AddCarModalComponent } from './components/car/add-car-modal/add-car-modal.component';
 import { AddBicycleModalComponent } from './components/bicycle/add-bicycle-modal/add-bicycle-modal.component';
 import { AddScooterModalComponent } from './components/scooter/add-scooter-modal/add-scooter-modal.component';
-import { VehicleItemComponent } from './components/vehicle/vehicle-item/vehicle-item.component';
 import { ManufacturerItemComponent } from './components/manufacturer/manufacturer-item/manufacturer-item.component';
 import { ManufacturerListComponent } from './components/manufacturer/manufacturer-list/manufacturer-list.component';
 import { ManufacturerDetailComponent } from './components/manufacturer/manufacturer-detail/manufacturer-detail.component';
@@ -34,10 +34,8 @@ import { EmployeeDetailComponent } from './components/employee/employee-detail/e
 import { ClientDetailComponent } from './components/client/client-detail/client-detail.component';
 import { AddEmployeeModalComponent } from './components/employee/add-employee-modal/add-employee-modal.component';
 import { AddFaultModalComponent } from './components/faults/add-fault-modal/add-fault-modal.component';
-import { FaultItemComponent } from './components/faults/fault-item/fault-item.component';
 import { FaultListComponent } from './components/faults/fault-list/fault-list.component';
 import { FaultDetailModalComponent } from './components/faults/fault-detail-modal/fault-detail-modal.component';
-import { RentalItemComponent } from './components/rental/rental-item/rental-item.component';
 import { RentalListComponent } from './components/rental/rental-list/rental-list.component';
 import { RentalDetailComponent } from './components/rental/rental-detail/rental-detail.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -49,13 +47,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { LoginComponent } from './components/login/login.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { PaginationComponent } from './components/shared/pagination/pagination.component';
+import { VehicleStatusComponent } from './components/shared/vehicle-status/vehicle-status.component';
+import { VehicleMapComponent } from './components/vehicle-map/vehicle-map.component';
+import { PricingComponent } from './components/pricing/pricing.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     VehicleListComponent,
-    VehicleItemComponent,
     CarListComponent,
     CarDetailComponent,
     BicycleListComponent,
@@ -77,15 +78,17 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
     ClientDetailComponent,
     AddEmployeeModalComponent,
     AddFaultModalComponent,
-    FaultItemComponent,
     FaultListComponent,
     FaultDetailModalComponent,
-    RentalItemComponent,
     RentalListComponent,
     RentalDetailComponent,
     StatisticsComponent,
     LoginComponent,
     WelcomeComponent,
+    PaginationComponent,
+    VehicleStatusComponent,
+    VehicleMapComponent,
+    PricingComponent,
   ],
   imports: [
     BrowserModule,
@@ -103,7 +106,10 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
     MatFormFieldModule,
     MatInputModule,
   ],
-  providers: [provideAnimationsAsync()],
+  providers: [
+    provideAnimationsAsync(),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

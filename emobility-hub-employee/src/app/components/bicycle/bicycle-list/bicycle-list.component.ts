@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Bicycle } from '../../../models/bicycle.models';
+import { VehicleColumn } from '../../../models/vehicle.model';
 import { BicycleService } from '../../../services/bicycle.service';
 import { AddBicycleModalComponent } from '../add-bicycle-modal/add-bicycle-modal.component';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bicycle-list',
   templateUrl: './bicycle-list.component.html',
-  styleUrl: './bicycle-list.component.css',
 })
 export class BicycleListComponent implements OnInit {
-  bicycles: Bicycle[];
+  readonly columns: VehicleColumn[] = [{ key: 'rangePerCharge', label: 'Range (km)' }];
+  bicycles: Bicycle[] = [];
   currentPage: number = 0;
   totalPages: number = 0;
-  pageSize: number = 12;
+  pageSize: number = 10;
   searchTerm: string = '';
 
   constructor(
@@ -24,17 +25,12 @@ export class BicycleListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadBicycles();
+    this.load();
   }
 
-  handleVehicleSelected(vehicleId: number): void {
-    console.log(vehicleId);
-    this.router.navigate(['/bicycle', vehicleId]);
-  }
-
-  loadBicycles(searchTerm: string = ''): void {
+  load(): void {
     this.bicycleService
-      .getBicycles(this.currentPage, this.pageSize, searchTerm)
+      .getBicycles(this.currentPage, this.pageSize, this.searchTerm)
       .subscribe((data) => {
         this.bicycles = data.content;
         this.totalPages = data.page.totalPages;
@@ -42,25 +38,36 @@ export class BicycleListComponent implements OnInit {
       });
   }
 
-  handleSearch(term: string): void {
-    this.currentPage = 0;
-    this.loadBicycles(term);
+  handleVehicleSelected(vehicleId: number): void {
+    this.router.navigate(['/bicycle', vehicleId]);
   }
 
-  handleAdd(): void {
-    const dialogRef = this.dialog.open(AddBicycleModalComponent, {
-      width: '600px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadBicycles();
-      }
-    });
+  handleSearch(term: string): void {
+    this.searchTerm = term;
+    this.currentPage = 0;
+    this.load();
   }
 
   handlePageChange(page: number): void {
     this.currentPage = page;
-    this.loadBicycles();
+    this.load();
+  }
+
+  handleAdd(): void {
+    this.dialog
+      .open(AddBicycleModalComponent, { width: '600px' })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.load();
+        }
+      });
+  }
+
+  handleDelete(id: number): void {
+    this.bicycleService.deleteBicycle(id).subscribe({
+      next: () => this.load(),
+      error: () => alert('The vehicle could not be deleted.'),
+    });
   }
 }

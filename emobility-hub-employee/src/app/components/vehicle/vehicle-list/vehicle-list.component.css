@@ -1,102 +1,12 @@
-.vehicle-list-container {
-  max-width: 1400px;
-  margin: 32px auto;
-  padding: 16px;
-}
-
-.vehicle-list-header {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 32px;
-}
-
-.search-input {
-  width: 70%;
-  max-width: none;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 18px;
-  transition: border-color 0.3s ease;
-}
-
-.search-bar-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
-  width: 70%;
-}
-
-.search-input:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
-.add-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.add-button:hover {
-  background-color: #0056b3;
-}
-
-.upload-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.upload-button:disabled {
-  background-color: #ddd;
-  cursor: not-allowed;
-}
-
-.vehicle-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  justify-items: center;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
-  gap: 8px;
-}
-
-.pagination button {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: white;
-  cursor: pointer;
+.upload-status {
+  margin-top: 16px;
   font-size: 14px;
+  color: #1b7a36;
 }
 
-.pagination button.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-
-.pagination button:disabled {
-  background-color: #f8f9fa;
-  cursor: not-allowed;
-  opacity: 0.6;
+.upload-errors {
+  font-size: 13px;
+  color: #b42318;
 }
 
 .modal {
@@ -109,6 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 .modal-content {
@@ -116,6 +27,7 @@
   padding: 20px;
   border-radius: 8px;
   width: 400px;
+  max-width: calc(100% - 32px);
   text-align: center;
 }
 
@@ -124,41 +36,8 @@
   width: 100%;
 }
 
-.modal-actions button {
-  margin: 0 8px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.modal-actions button:disabled {
-  background-color: #ddd;
-  cursor: not-allowed;
-}
-
-.upload-status {
-  margin-top: 16px;
-  font-size: 14px;
-  color: green;
-}
-
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #007bff;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  display: inline-block;
-  margin-right: 10px;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }

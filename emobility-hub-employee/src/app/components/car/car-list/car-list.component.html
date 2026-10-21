@@ -1,11 +1,14 @@
-<div class="car-list-page">
-  <h1>Cars</h1>
+<div class="page">
+  <h1 class="page-title">Cars</h1>
   <app-vehicle-list
     (addEvent)="handleAdd()"
+    (deleteEvent)="handleDelete($event)"
+    (pageChange)="handlePageChange($event)"
     (searchEvent)="handleSearch($event)"
+    (uploaded)="load()"
     (vehicleSelected)="handleVehicleSelected($event)"
+    [columns]="columns"
     [currentPage]="currentPage"
-    [onPageChange]="handlePageChange.bind(this)"
     [totalPages]="totalPages"
     [vehicles]="cars"
   ></app-vehicle-list>

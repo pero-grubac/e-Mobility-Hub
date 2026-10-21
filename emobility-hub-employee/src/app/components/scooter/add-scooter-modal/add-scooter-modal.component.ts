@@ -58,8 +58,14 @@ export class AddScooterModalComponent {
       formData.append('image', this.selectedImageFile);
     }
 
-    this.scooterService.addScooter(formData).subscribe(() => {
-      this.dialogRef.close(true);
+    this.scooterService.addScooter(formData).subscribe({
+      next: () => this.dialogRef.close(true),
+      error: (err) =>
+        alert(
+          typeof err.error === 'string' && err.status < 500
+            ? err.error
+            : 'The scooter could not be saved.',
+        ),
     });
   }
 

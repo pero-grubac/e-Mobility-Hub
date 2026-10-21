@@ -1,6 +1,15 @@
-<div class="bicycle-list-page">
-  <h1>Bicycles</h1>
-  <app-vehicle-list (addEvent)="handleAdd()" (searchEvent)="handleSearch($event)"
-    (vehicleSelected)="handleVehicleSelected($event)" [currentPage]="currentPage"
-    [onPageChange]="handlePageChange.bind(this)" [totalPages]="totalPages" [vehicles]="bicycles"></app-vehicle-list>
+<div class="page">
+  <h1 class="page-title">Bicycles</h1>
+  <app-vehicle-list
+    (addEvent)="handleAdd()"
+    (deleteEvent)="handleDelete($event)"
+    (pageChange)="handlePageChange($event)"
+    (searchEvent)="handleSearch($event)"
+    (uploaded)="load()"
+    (vehicleSelected)="handleVehicleSelected($event)"
+    [columns]="columns"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [vehicles]="bicycles"
+  ></app-vehicle-list>
 </div>

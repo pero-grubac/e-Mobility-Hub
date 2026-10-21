@@ -16,44 +16,32 @@ export class RentalService {
     page: number,
     size: number,
     id: number,
+    search?: string,
   ): Observable<RentalPage> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString())
-      .set('sort', 'id,desc');
     return this.http.get<RentalPage>(
       `${this.baseUrl}/getAllByVehicleId/${id}`,
-      {
-        params,
-      },
+      { params: this.pageParams(page, size, search) },
     );
-  }
-
-  getAllByClientId(
-    page: number,
-    size: number,
-    id: number,
-  ): Observable<RentalPage> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString())
-      .set('sort', 'id,desc');
-    return this.http.get<RentalPage>(`${this.baseUrl}/getAllByClientId/${id}`, {
-      params,
-    });
   }
 
   getById(id: number): Observable<DetailedRental> {
     return this.http.get<DetailedRental>(`${this.baseUrl}/${id}`);
   }
 
-  getAll(page: number, size: number): Observable<RentalPage> {
+  getAll(page: number, size: number, search?: string): Observable<RentalPage> {
+    return this.http.get<RentalPage>(`${this.baseUrl}`, {
+      params: this.pageParams(page, size, search),
+    });
+  }
+
+  private pageParams(page: number, size: number, search?: string): HttpParams {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sort', 'id,desc');
-    return this.http.get<RentalPage>(`${this.baseUrl}`, {
-      params,
-    });
+    if (search) {
+      params = params.set('search', search);
+    }
+    return params;
   }
 }

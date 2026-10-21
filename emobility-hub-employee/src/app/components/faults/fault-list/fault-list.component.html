@@ -1,32 +1,53 @@
-<h1 class="fault-list-title">Faults</h1>
-<div class="fault-list-container">
-  <div class="fault-list">
-    <app-fault-item
-      (faultSelected)="openFaultDetails($event)"
-      *ngFor="let fault of faults"
-      [fault]="fault"
-    ></app-fault-item>
-  </div>
-
-  <div class="pagination">
-    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
-      Previous
-    </button>
-
-    <button
-      (click)="handlePageClick(page)"
-      *ngFor="let page of displayedPages"
-      [class.active]="page === currentPage"
-      [disabled]="!isNumber(page)"
-    >
-      {{ page }}
-    </button>
-
-    <button
-      (click)="goToPage(currentPage + 1)"
-      [disabled]="currentPage + 1 >= totalPages"
-    >
-      Next
-    </button>
-  </div>
+<div class="toolbar">
+  <input
+    (input)="onSearch($any($event.target).value)"
+    class="search-input"
+    placeholder="Search faults by description"
+    type="search"
+  />
+  <button (click)="addFault()" class="btn btn-warning" type="button">
+    Report fault
+  </button>
 </div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Reported</th>
+        <th>Last update</th>
+        <th>Description</th>
+        <th *ngIf="canManage()"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        (click)="openFaultDetails(fault)"
+        *ngFor="let fault of faults"
+        [class.clickable]="canManage()"
+      >
+        <td>{{ fault.creationDateTime | date: "dd.MM.yyyy. HH:mm" }}</td>
+        <td>{{ fault.updateDateTime | date: "dd.MM.yyyy. HH:mm" }}</td>
+        <td class="wrap">{{ fault.description }}</td>
+        <td *ngIf="canManage()">
+          <button
+            (click)="deleteFault($event, fault)"
+            class="btn btn-sm btn-outline-danger"
+            type="button"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="faults.length === 0" class="empty-row">
+        <td colspan="4">No faults.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-pagination
+  (pageChange)="onPageChange($event)"
+  [currentPage]="currentPage"
+  [totalPages]="totalPages"
+></app-pagination>

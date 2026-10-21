@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { JWTService } from '../../services/jwt.service';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-header',
@@ -12,19 +12,21 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private jwtService: JWTService,
+    private sessionService: SessionService,
   ) {}
 
   ngOnInit(): void {
-    this.userRole = this.jwtService.getRole();
+    this.userRole = this.sessionService.getRole();
   }
 
   onLogout(): void {
-    this.jwtService.removeJWT();
-    this.router.navigate(['/login']);
+    this.sessionService.logout().subscribe({
+      complete: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login']),
+    });
   }
 
   hasRole(requiredRoles: string[]): boolean {
-    return this.jwtService.hasRole(requiredRoles);
+    return this.sessionService.hasRole(requiredRoles);
   }
 }

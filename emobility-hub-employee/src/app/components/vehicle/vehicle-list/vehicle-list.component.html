@@ -1,76 +1,123 @@
-<div class="vehicle-list-container">
-  <div class="vehicle-list-header">
-    <div class="search-bar-container">
-      <input
-        (input)="onSearch($event.target.value)"
-        class="search-input"
-        placeholder="Search by model"
-        type="text"
-      />
-      <button
-        (click)="onAdd()"
-        *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
-        class="add-button"
+<div class="toolbar">
+  <input
+    (input)="onSearch($any($event.target).value)"
+    class="search-input"
+    placeholder="Search by model"
+    type="search"
+  />
+  <ng-container *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])">
+    <button (click)="onAdd()" class="btn btn-primary" type="button">
+      Add
+    </button>
+    <button
+      (click)="openModal()"
+      [disabled]="isUploading"
+      class="btn btn-outline-primary"
+      type="button"
+    >
+      Upload CSV
+    </button>
+  </ng-container>
+</div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>ID</th>
+        <th>Manufacturer</th>
+        <th>Model</th>
+        <th *ngFor="let column of columns">{{ column.label }}</th>
+        <th>Purchase price</th>
+        <th>Rent / hour</th>
+        <th>Status</th>
+        <th *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        (click)="onVehicleSelected(vehicle.id)"
+        *ngFor="let vehicle of vehicles"
+        class="clickable"
       >
-        Add
-      </button>
+        <td>
+          <img
+            [src]="vehicle.image || 'assets/images/default-avatar.png'"
+            alt="{{ vehicle.model }}"
+            class="thumb"
+          />
+        </td>
+        <td>{{ vehicle.uniqueIdentifier }}</td>
+        <td>{{ vehicle.manufacturerName }}</td>
+        <td>{{ vehicle.model }}</td>
+        <td
+          *ngFor="let column of columns"
+          [class.wrap]="column.key === 'description'"
+        >
+          <ng-container [ngSwitch]="column.format">
+            <span *ngSwitchCase="'date'">{{
+              valueOf(vehicle, column.key) | date: "dd.MM.yyyy."
+            }}</span>
+            <span *ngSwitchDefault>{{ valueOf(vehicle, column.key) }}</span>
+          </ng-container>
+        </td>
+        <td>{{ vehicle.purchasePrice | number: "1.2-2" }}</td>
+        <td>{{ vehicle.rentPrice | number: "1.2-2" }}</td>
+        <td><app-vehicle-status [vehicle]="vehicle"></app-vehicle-status></td>
+        <td *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])">
+          <button
+            (click)="onDelete($event, vehicle.id)"
+            [disabled]="vehicle.rented"
+            class="btn btn-sm btn-outline-danger"
+            title="Delete"
+            type="button"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="vehicles.length === 0" class="empty-row">
+        <td colspan="20">No vehicles found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-pagination
+  (pageChange)="pageChange.emit($event)"
+  [currentPage]="currentPage"
+  [totalPages]="totalPages"
+></app-pagination>
+
+<p *ngIf="uploadStatus" class="upload-status">{{ uploadStatus }}</p>
+<ul *ngIf="uploadErrors.length" class="upload-errors">
+  <li *ngFor="let error of uploadErrors">
+    Row {{ error.rowNumber }}: {{ error.message }}
+  </li>
+</ul>
+
+<div (click)="closeModal()" *ngIf="isModalOpen" class="modal">
+  <div (click)="$event.stopPropagation()" class="modal-content">
+    <h2>Upload CSV File</h2>
+    <input
+      (change)="onFileSelected($event)"
+      accept=".csv"
+      class="file-input"
+      type="file"
+    />
+    <div class="modal-actions">
       <button
-        (click)="openModal()"
-        *ngIf="hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
-        [disabled]="isUploading"
-        class="upload-button"
+        (click)="uploadFile()"
+        [disabled]="!selectedFile"
+        class="btn btn-primary"
+        type="button"
       >
         Upload
       </button>
-    </div>
-  </div>
-
-  <div class="vehicle-list">
-    <app-vehicle-item
-      (vehicleClick)="onVehicleSelected($event)"
-      *ngFor="let vehicle of vehicles"
-      [vehicle]="vehicle"
-    ></app-vehicle-item>
-  </div>
-
-  <div class="pagination">
-    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
-      Previous
-    </button>
-
-    <button
-      (click)="handlePageClick(page)"
-      *ngFor="let page of displayedPages"
-      [class.active]="page === currentPage"
-      [disabled]="!isNumber(page)"
-    >
-      {{ page }}
-    </button>
-
-    <button
-      (click)="goToPage(currentPage + 1)"
-      [disabled]="currentPage + 1 >= totalPages"
-    >
-      Next
-    </button>
-  </div>
-  <p *ngIf="uploadStatus" class="upload-status">{{ uploadStatus }}</p>
-
-  <div (click)="closeModal()" *ngIf="isModalOpen" class="modal">
-    <div (click)="$event.stopPropagation()" class="modal-content">
-      <h2>Upload CSV File</h2>
-      <input
-        (change)="onFileSelected($event)"
-        accept=".csv"
-        class="file-input"
-        type="file"
-      />
-      <div class="modal-actions">
-        <button (click)="uploadFile()" [disabled]="!selectedFile">
-          Upload
-        </button>
-        <button (click)="closeModal()">Cancel</button>
-      </div>
+      <button (click)="closeModal()" class="btn btn-secondary" type="button">
+        Cancel
+      </button>
     </div>
   </div>
 </div>

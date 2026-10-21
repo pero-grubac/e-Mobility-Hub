@@ -5,9 +5,7 @@ import { BaseManufacturer } from '../../../models/manufacturer.model';
 import { CarService } from '../../../services/car.service';
 import { ManufacturerService } from '../../../services/manufacturer.service';
 import { UtilService } from '../../../services/util.service';
-import { AddFaultModalComponent } from '../../faults/add-fault-modal/add-fault-modal.component';
-import { MatDialog } from '@angular/material/dialog';
-import { JWTService } from '../../../services/jwt.service';
+import { SessionService } from '../../../services/session.service';
 
 @Component({
   selector: 'app-car-detail',
@@ -28,15 +26,14 @@ export class CarDetailComponent implements OnInit {
     private carService: CarService,
     private manufacturerService: ManufacturerService,
     private utilService: UtilService,
-    private dialog: MatDialog,
-    private jwtService: JWTService,
+    private sessionService: SessionService,
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadCarDetails(id);
     this.loadManufacturers();
-    this.userRole = this.jwtService.getRole();
+    this.userRole = this.sessionService.getRole();
   }
 
   loadCarDetails(id: number): void {
@@ -118,6 +115,9 @@ export class CarDetailComponent implements OnInit {
   }
 
   deleteCar(): void {
+    if (!confirm('Delete this car?')) {
+      return;
+    }
     this.carService.deleteCar(this.car.id).subscribe({
       next: () => {
         alert('Car deleted successfully!');
@@ -129,29 +129,11 @@ export class CarDetailComponent implements OnInit {
     });
   }
 
-  report(): void {
-    const dialogRef = this.dialog.open(AddFaultModalComponent, {
-      width: '400px',
-      data: this.car.id,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('Fault reported successfully!');
-      }
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadCarDetails(this.car.id);
-      }
-    });
-  }
 
   fix(): void {
     if (this.car.broken) {
       this.carService.fix(this.car.id).subscribe({
         next: () => {
-          console.log(`Car with ID: ${this.car.id} fixed successfully.`);
           this.loadCarDetails(this.car.id); // Ponovno učitavanje ažuriranih podataka
         },
         error: (err) => {
@@ -161,17 +143,9 @@ export class CarDetailComponent implements OnInit {
     }
   }
 
-  seeAllRentals(): void {
-    this.router.navigate([`/rentals/${this.car.id}`]);
-  }
 
-  seeAllFaults(): void {
-    this.router.navigate([`/faults/${this.car.id}`]);
-  }
 
   hasRole(requiredRoles: string[]): boolean {
-    return this.jwtService.hasRole(requiredRoles);
-    // TODO
-    // for input [disabled]="!hasRole(['ROLE_ADMIN', 'ROLE_MANAGER'])"
+    return this.sessionService.hasRole(requiredRoles);
   }
 }

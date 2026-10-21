@@ -1,15 +1,13 @@
-<h1 class="employee-list-title">Employees</h1>
-<div class="employee-list-container">
-  <div class="employee-list-header">
-    <div class="search-bar-container">
-      <input
-        (input)="onSearch($event.target.value)"
-        class="search-input"
-        placeholder="Search by username"
-        type="text"
-      />
-      <button (click)="onAdd()" class="add-button">Add</button>
-    </div>
+<div class="page">
+  <h1 class="page-title">Employees</h1>
+  <div class="toolbar">
+    <input
+      (input)="onSearch($any($event.target).value)"
+      class="search-input"
+      placeholder="Search by username"
+      type="search"
+    />
+    <button (click)="onAdd()" class="btn btn-primary" type="button">Add</button>
   </div>
 
   <div class="employee-list">
@@ -20,25 +18,9 @@
     ></app-employee-item>
   </div>
 
-  <div class="pagination">
-    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
-      Previous
-    </button>
-
-    <button
-      (click)="handlePageClick(page)"
-      *ngFor="let page of displayedPages"
-      [class.active]="page === currentPage"
-      [disabled]="!isNumber(page)"
-    >
-      {{ page }}
-    </button>
-
-    <button
-      (click)="goToPage(currentPage + 1)"
-      [disabled]="currentPage + 1 >= totalPages"
-    >
-      Next
-    </button>
-  </div>
+  <app-pagination
+    (pageChange)="onPageChange($event)"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+  ></app-pagination>
 </div>

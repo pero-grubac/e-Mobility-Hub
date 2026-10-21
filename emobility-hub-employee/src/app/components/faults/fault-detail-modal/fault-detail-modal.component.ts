@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Fault, FaultRequest } from '../../../models/fault.models';
 import { FaultService } from '../../../services/fault.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-fault-detail-modal',
@@ -17,13 +16,15 @@ export class FaultDetailModalComponent {
     public dialogRef: MatDialogRef<FaultDetailModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { fault: Fault; vehicleId: number },
     private faultService: FaultService,
-    private route: ActivatedRoute,
   ) {
     this.fault = data.fault;
     this.vehicleId = data.vehicleId;
   }
 
   onUpdate(): void {
+    if (!this.fault.description?.trim()) {
+      return;
+    }
     const update: FaultRequest = {
       id: this.fault.id,
       description: this.fault.description,

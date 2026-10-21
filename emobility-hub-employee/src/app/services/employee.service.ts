@@ -41,11 +41,6 @@ export class EmployeeService {
     return this.http.delete<any>(`${this.baseUrl}/${id}`);
   }
 
-  changeRole(id: number, role: string): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/changeRole/${id}`, role, {
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
 
   register(user: DetailedUserRequest): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/register`, user);

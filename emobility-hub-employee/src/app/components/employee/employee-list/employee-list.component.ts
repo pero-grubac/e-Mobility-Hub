@@ -16,7 +16,6 @@ export class EmployeeListComponent implements OnInit {
   totalPages: number = 0;
   pageSize: number = 12;
   searchTerm: string = '';
-  displayedPages: number[] = [];
 
   constructor(
     private employeeService: EmployeeService,
@@ -28,22 +27,16 @@ export class EmployeeListComponent implements OnInit {
     this.loadEmployees();
   }
 
-  loadEmployees(searchTerm: string = ''): void {
+  loadEmployees(): void {
     this.employeeService
-      .getEmployees(this.currentPage, this.pageSize, searchTerm)
+      .getEmployees(this.currentPage, this.pageSize, this.searchTerm)
       .subscribe((data) => {
         this.employees = data.content;
         this.totalPages = data.page.totalPages;
         this.currentPage = data.page.number;
-        this.updateDisplayedPages();
       });
   }
 
-  handleSearch(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 0;
-    this.loadEmployees(term);
-  }
 
   onAdd(): void {
     const dialogRef = this.dialog.open(AddEmployeeModalComponent, {
@@ -52,7 +45,7 @@ export class EmployeeListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadEmployees(); // Osveži listu zaposlenih nakon kreiranja
+        this.loadEmployees();
       }
     });
   }
@@ -61,19 +54,7 @@ export class EmployeeListComponent implements OnInit {
     this.router.navigate(['/employee', employeeId]);
   }
 
-  handlePageChange(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.loadEmployees();
-    }
-  }
 
-  goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.loadEmployees();
-    }
-  }
 
   onSearch(term: string): void {
     this.searchTerm = term;
@@ -81,20 +62,8 @@ export class EmployeeListComponent implements OnInit {
     this.loadEmployees();
   }
 
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
-  }
-
-  private updateDisplayedPages(): void {
-    const delta = 2;
-    const range: number[] = [];
-    for (
-      let i = Math.max(0, this.currentPage - delta);
-      i <= Math.min(this.totalPages - 1, this.currentPage + delta);
-      i++
-    ) {
-      range.push(i);
-    }
-    this.displayedPages = range;
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadEmployees();
   }
 }

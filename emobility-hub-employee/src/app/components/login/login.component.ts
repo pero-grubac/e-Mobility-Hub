@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AuthRequest } from '../../models/auth.models';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { JWTService } from '../../services/jwt.service';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-login',
@@ -16,14 +16,14 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private jwtService: JWTService,
+    private sessionService: SessionService,
   ) {}
 
   onSubmit(): void {
     this.authService.login(this.authRequest).subscribe({
       next: (response) => {
-        const token = response.token;
-        this.jwtService.setJWT(token);
+        // The backend already set the httpOnly session cookie.
+        this.sessionService.set(response);
         this.router.navigate(['/']);
       },
       error: (error) => {

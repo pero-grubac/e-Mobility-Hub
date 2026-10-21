@@ -1,44 +1,55 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { Vehicle } from '../../../models/vehicle.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Vehicle, VehicleColumn } from '../../../models/vehicle.model';
 import { ParseVehicle } from '../../../services/parseVehicle.service';
-import { JWTService } from '../../../services/jwt.service';
+import { SessionService } from '../../../services/session.service';
 
+interface ParseError {
+  rowNumber: number;
+  message: string;
+}
+
+// The fleet table for one vehicle type, with search, create, delete and CSV
+// import. The parent page owns loading and the type-specific columns.
 @Component({
   selector: 'app-vehicle-list',
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.css'],
 })
-export class VehicleListComponent implements OnInit, OnChanges {
-  userRole: string | null = null;
+export class VehicleListComponent {
   @Input() vehicles: Vehicle[] = [];
-  @Input() entityType: string = '';
+  @Input() columns: VehicleColumn[] = [];
   @Input() totalPages: number = 0;
   @Input() currentPage: number = 0;
-  @Input() onPageChange!: (page: number) => void;
   @Output() searchEvent = new EventEmitter<string>();
   @Output() addEvent = new EventEmitter<void>();
-  @Output() uploadEvent = new EventEmitter<void>();
-  displayedPages: (number | string)[] = [];
+  @Output() deleteEvent = new EventEmitter<number>();
+  @Output() pageChange = new EventEmitter<number>();
+  @Output() uploaded = new EventEmitter<void>();
+  @Output() vehicleSelected = new EventEmitter<number>();
   isModalOpen: boolean = false;
   selectedFile: File | null = null;
   uploadStatus: string | null = null;
+  uploadErrors: ParseError[] = [];
   isUploading: boolean = false;
-  @Output() vehicleSelected = new EventEmitter<number>();
 
   constructor(
     private parseVehicle: ParseVehicle,
-    private jwtService: JWTService,
+    private sessionService: SessionService,
   ) {}
+
+  valueOf(vehicle: Vehicle, key: string): unknown {
+    return (vehicle as unknown as Record<string, unknown>)[key];
+  }
 
   onVehicleSelected(vehicleId: number): void {
     this.vehicleSelected.emit(vehicleId);
+  }
+
+  onDelete(event: Event, vehicleId: number): void {
+    event.stopPropagation();
+    if (confirm('Delete this vehicle?')) {
+      this.deleteEvent.emit(vehicleId);
+    }
   }
 
   openModal(): void {
@@ -54,9 +65,8 @@ export class VehicleListComponent implements OnInit, OnChanges {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      console.log('Selected file:', file);
 
-      if (file.type !== 'text/csv') {
+      if (!file.name.toLowerCase().endsWith('.csv')) {
         alert('Please upload a valid CSV file.');
         return;
       }
@@ -72,34 +82,27 @@ export class VehicleListComponent implements OnInit, OnChanges {
     if (this.selectedFile) {
       this.isUploading = true;
       this.uploadStatus = 'Uploading...';
+      this.uploadErrors = [];
       this.parseVehicle.uploadCsv(this.selectedFile).subscribe({
-        next: (response) => {
-          console.log('Upload successful:', response);
+        next: (result) => {
           this.isUploading = false;
-          this.uploadStatus = 'Upload successful!';
+          const imported = result.parsedVehicles?.length ?? 0;
+          this.uploadErrors = result.errors ?? [];
+          this.uploadStatus = `Imported ${imported} vehicle(s), ${this.uploadErrors.length} row(s) rejected.`;
           this.closeModal();
+          this.uploaded.emit();
         },
         error: (error) => {
           console.error('Upload failed:', error);
           this.isUploading = false;
           this.uploadStatus = 'Upload failed. Please try again.';
-          console.error('Upload failed:', error);
         },
       });
     }
   }
 
-  ngOnInit(): void {
-    this.userRole = this.jwtService.getRole();
-    this.updateDisplayedPages();
-  }
-
   hasRole(requiredRoles: string[]): boolean {
-    return this.jwtService.hasRole(requiredRoles);
-  }
-
-  ngOnChanges(): void {
-    this.updateDisplayedPages();
+    return this.sessionService.hasRole(requiredRoles);
   }
 
   onSearch(term: string): void {
@@ -108,54 +111,5 @@ export class VehicleListComponent implements OnInit, OnChanges {
 
   onAdd(): void {
     this.addEvent.emit();
-  }
-
-  onUpload(): void {
-    this.uploadEvent.emit();
-  }
-
-  goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.onPageChange(page);
-      this.updateDisplayedPages();
-    }
-  }
-
-  isNumber(page: number | string): boolean {
-    return typeof page === 'number';
-  }
-
-  handlePageClick(page: number | string): void {
-    if (this.isNumber(page)) {
-      this.goToPage(page as number);
-    }
-  }
-
-  private updateDisplayedPages(): void {
-    const delta = 2;
-    const range: (number | string)[] = [];
-    const start = Math.max(0, this.currentPage - delta);
-    const end = Math.min(this.totalPages - 1, this.currentPage + delta);
-
-    if (start > 0) {
-      range.push(0);
-      if (start > 1) {
-        range.push('...');
-      }
-    }
-
-    for (let i = start; i <= end; i++) {
-      range.push(i);
-    }
-
-    if (end < this.totalPages - 1) {
-      if (end < this.totalPages - 2) {
-        range.push('...');
-      }
-      range.push(this.totalPages - 1);
-    }
-
-    this.displayedPages = range;
   }
 }

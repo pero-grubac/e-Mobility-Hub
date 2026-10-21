@@ -4,9 +4,7 @@ import { BaseManufacturer } from '../../../models/manufacturer.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ManufacturerService } from '../../../services/manufacturer.service';
 import { ScooterService } from '../../../services/scooter.service';
-import { MatDialog } from '@angular/material/dialog';
-import { AddFaultModalComponent } from '../../faults/add-fault-modal/add-fault-modal.component';
-import { JWTService } from '../../../services/jwt.service';
+import { SessionService } from '../../../services/session.service';
 
 @Component({
   selector: 'app-scooter-detail',
@@ -26,17 +24,16 @@ export class ScooterDetailComponent implements OnInit {
     private router: Router,
     private scooterService: ScooterService,
     private manufacturerService: ManufacturerService,
-    private dialog: MatDialog,
-    private jwtService: JWTService,
+    private sessionService: SessionService,
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadScooterDetailes(id);
+    this.loadScooterDetails(id);
     this.loadManufacturers();
   }
 
-  loadScooterDetailes(id: number): void {
+  loadScooterDetails(id: number): void {
     this.scooterService.getById(id).subscribe({
       next: (bicycle) => {
         this.scooter = bicycle;
@@ -109,6 +106,9 @@ export class ScooterDetailComponent implements OnInit {
   }
 
   deleteScooter(): void {
+    if (!confirm('Delete this scooter?')) {
+      return;
+    }
     this.scooterService.deleteScooter(this.scooter.id).subscribe({
       next: () => {
         alert('Scooter deleted successfully!');
@@ -120,47 +120,23 @@ export class ScooterDetailComponent implements OnInit {
     });
   }
 
-  report(): void {
-    const dialogRef = this.dialog.open(AddFaultModalComponent, {
-      width: '400px',
-      data: this.scooter.id,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('Fault reported successfully!');
-      }
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadScooterDetailes(this.scooter.id);
-      }
-    });
-  }
 
   fix(): void {
     if (this.scooter.broken) {
       this.scooterService.fix(this.scooter.id).subscribe({
         next: () => {
-          console.log(`Car with ID: ${this.scooter.id} fixed successfully.`);
-          this.loadScooterDetailes(this.scooter.id); // Ponovno učitavanje ažuriranih podataka
+          this.loadScooterDetails(this.scooter.id); // Ponovno učitavanje ažuriranih podataka
         },
         error: (err) => {
-          console.error('Error fixing car:', err);
+          console.error('Error fixing scooter:', err);
         },
       });
     }
   }
 
-  seeAllRentals(): void {
-    this.router.navigate([`/rentals/${this.scooter.id}`]);
-  }
 
-  seeAllFaults(): void {
-    this.router.navigate([`/faults/${this.scooter.id}`]);
-  }
 
   hasRole(requiredRoles: string[]): boolean {
-    return this.jwtService.hasRole(requiredRoles);
+    return this.sessionService.hasRole(requiredRoles);
   }
 }
