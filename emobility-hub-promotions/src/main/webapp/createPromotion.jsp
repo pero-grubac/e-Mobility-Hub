@@ -1,103 +1,98 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="org.unibl.etf.emobility_hub_promotions.services.ApiException" %>
 <%@ page import="org.unibl.etf.emobility_hub_promotions.services.PromotionService" %>
 <%@ page import="org.unibl.etf.emobility_hub_promotions.models.dto.request.PromotionRequest" %>
+<%@ page import="org.unibl.etf.emobility_hub_promotions.util.FormValidation" %>
+<%@ page import="org.unibl.etf.emobility_hub_promotions.util.Html" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.List" %>
 <jsp:useBean id="userBean" class="org.unibl.etf.emobility_hub_promotions.beans.UserBean" scope="session" />
 <%
-if (userBean == null || !userBean.isLoggedIn() || userBean.getToken() == null || userBean.getToken().isEmpty()) {
-    response.sendRedirect("login.jsp");
-    return;
-}
+String pageTitle = "New promotion";
+String title = request.getParameter("title");
+String content = request.getParameter("content");
+String startDate = request.getParameter("startDate");
+String endDate = request.getParameter("endDate");
+List<String> errors = Collections.emptyList();
 
-String errorMessage = null;
-
-try {
-    if ("create".equals(request.getParameter("action"))) {
-        PromotionRequest promotionRequest = new PromotionRequest();
-        promotionRequest.setTitle(request.getParameter("title"));
-        promotionRequest.setContent(request.getParameter("content"));
-        promotionRequest.setStartDate(request.getParameter("startDate").replace(" ", "T"));
-        promotionRequest.setEndDate(request.getParameter("endDate").replace(" ", "T"));
-        PromotionService promotionService = new PromotionService();
-        promotionService.createPromotion(userBean.getToken(), promotionRequest);
-        response.sendRedirect("promotions.jsp");
-        return;
+if ("POST".equals(request.getMethod())) {
+    errors = FormValidation.validatePromotion(title, content, startDate, endDate);
+    if (errors.isEmpty()) {
+        try {
+            PromotionRequest promotionRequest = new PromotionRequest();
+            promotionRequest.setTitle(title.trim());
+            promotionRequest.setContent(content.trim());
+            promotionRequest.setStartDate(startDate);
+            promotionRequest.setEndDate(endDate);
+            new PromotionService().createPromotion(userBean.getToken(), promotionRequest);
+            session.setAttribute("flash", "Promotion \"" + title.trim() + "\" was created.");
+            response.sendRedirect("home.jsp");
+            return;
+        } catch (ApiException e) {
+            if (e.isSessionExpired()) {
+                session.invalidate();
+                response.sendRedirect("login.jsp?expired=1");
+                return;
+            }
+            errors = List.of(e.getMessage());
+        }
     }
-} catch (Exception e) {
-    errorMessage = "Error: " + e.getMessage();
 }
 %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Create Promotion</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-    <style>
-        .logout-btn { position: absolute; top: 20px; right: 20px; }
-        h1 { text-align: center; margin-bottom: 30px; }
-        .navigation-buttons { margin-top: 20px; }
-    </style>
+    <%@ include file="/WEB-INF/jspf/head.jspf" %>
 </head>
 <body class="bg-light">
-<div class="container mt-5">
-    <form action="logout.jsp" method="post" style="display: inline;">
-        <button type="submit" class="btn btn-danger logout-btn">Logout</button>
-    </form>
-
-    <h1>Create Promotion</h1>
-
-    <% if (errorMessage != null) { %>
-    <div class="alert alert-danger"><%= errorMessage %></div>
-    <% } %>
-
-    <form method="post">
-        <div class="card mt-4 shadow-sm">
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="content" class="form-label">Content</label>
-                    <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="startDate" class="form-label">Start Date</label>
-                    <div class='input-group date' id='startDatePicker'>
-                        <input type='text' class="form-control" id="startDate" name="startDate" required />
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+<%@ include file="/WEB-INF/jspf/navbar.jspf" %>
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="h3 mb-3">New promotion</h1>
+            <% if (!errors.isEmpty()) { %>
+            <div class="alert alert-danger" role="alert">
+                <ul class="mb-0"><% for (String error : errors) { %><li><%= Html.escape(error) %></li><% } %></ul>
+            </div>
+            <% } %>
+            <form method="post" action="createPromotion.jsp" class="card shadow-sm needs-validation" novalidate id="promotion-form">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required
+                               maxlength="<%= FormValidation.TITLE_MAX %>" value="<%= Html.escape(title) %>">
+                        <div class="invalid-feedback">A title is required.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Description</label>
+                        <textarea class="form-control" id="content" name="content" rows="4" required
+                                  maxlength="<%= FormValidation.PROMOTION_CONTENT_MAX %>"><%= Html.escape(content) %></textarea>
+                        <div class="invalid-feedback">A description is required (up to <%= FormValidation.PROMOTION_CONTENT_MAX %> characters).</div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="startDate" class="form-label">Starts</label>
+                            <input type="datetime-local" class="form-control" id="startDate" name="startDate" required
+                                   value="<%= Html.escape(startDate) %>">
+                            <div class="invalid-feedback">Choose when the promotion starts.</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="endDate" class="form-label">Ends</label>
+                            <input type="datetime-local" class="form-control" id="endDate" name="endDate" required
+                                   value="<%= Html.escape(endDate) %>">
+                            <div class="invalid-feedback">The end must be after the start.</div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="endDate" class="form-label">End Date</label>
-                    <div class='input-group date' id='endDatePicker'>
-                        <input type='text' class="form-control" id="endDate" name="endDate" required />
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a class="btn btn-outline-secondary" href="home.jsp">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="save-promotion">Create promotion</button>
                 </div>
-            </div>
-            <div class="card-footer d-flex justify-content-between">
-                <button type="submit" name="action" value="create" class="btn btn-primary">Create</button>
-                <button type="button" class="btn btn-secondary" onclick="redirectToPromotions()">Back to Promotions</button>
-            </div>
+            </form>
         </div>
-    </form>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#startDatePicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm' });
-        $('#endDatePicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm' });
-    });
-
-    function redirectToPromotions() {
-        window.location.href = "promotions.jsp";
-    }
-</script>
+    </div>
+</main>
+<script src="<%= request.getContextPath() %>/js/bootstrap.bundle.min.js"></script>
+<script src="<%= request.getContextPath() %>/js/forms.js"></script>
 </body>
 </html>

@@ -6,9 +6,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
+import org.unibl.etf.emobility_hub_promotions.properties.AppConfig;
 import org.unibl.etf.emobility_hub_promotions.beans.PromotionResponseBean;
 import org.unibl.etf.emobility_hub_promotions.models.dto.PaginatedResponse;
 import org.unibl.etf.emobility_hub_promotions.models.dto.request.PromotionRequest;
@@ -16,10 +17,15 @@ import org.unibl.etf.emobility_hub_promotions.models.dto.request.PromotionReques
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class PromotionService {
-	private static final String PROMOTIONS_URL = new AppConfig().getPromotionsUrl();
+	private final String PROMOTIONS_URL;
 	private ObjectMapper objectMapper;
 
 	public PromotionService() {
+		this(new AppConfig().getPromotionsUrl());
+	}
+
+	public PromotionService(String promotionsUrl) {
+		PROMOTIONS_URL = promotionsUrl;
 		objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 	}
@@ -29,7 +35,7 @@ public class PromotionService {
 		String urlWithParams = PROMOTIONS_URL + "/getAll" + "?page=" + page + "&size=" + size + "&sort=id,desc";
 
 		if (search != null && !search.trim().isEmpty()) {
-			urlWithParams += "&search=" + URLEncoder.encode(search, "UTF-8");
+			urlWithParams += "&search=" + URLEncoder.encode(search.trim(), StandardCharsets.UTF_8);
 		}
 
 		URL url = new URL(urlWithParams);
@@ -38,13 +44,9 @@ public class PromotionService {
 		connection.setRequestProperty("Accept", "application/json");
 		connection.setRequestProperty("Authorization", "Bearer " + token);
 
-		if (connection.getResponseCode() != 200) {
-			throw new RuntimeException("Failed to fetch promotions: HTTP error code " + connection.getResponseCode());
-		}
+		ApiException.expect(connection, HttpURLConnection.HTTP_OK, "Loading promotions");
 
-		objectMapper.registerModule(new JavaTimeModule());
-
-		try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
+		try (InputStreamReader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
 			return objectMapper.readValue(reader, new TypeReference<PaginatedResponse<PromotionResponseBean>>() {
 			});
 		}
@@ -60,22 +62,17 @@ public class PromotionService {
 		connection.setDoOutput(true);
 
 		promotionRequest.setId(id);
-		DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-		promotionRequest.setId(id);
 		promotionRequest.setStartDate(promotionRequest.getStartDate().replace(" ", "T"));
 		promotionRequest.setEndDate(promotionRequest.getEndDate().replace(" ", "T"));
 		String jsonRequest = objectMapper.writeValueAsString(promotionRequest);
 
 		try (OutputStream os = connection.getOutputStream()) {
-			os.write(jsonRequest.getBytes());
+			os.write(jsonRequest.getBytes(StandardCharsets.UTF_8));
 			os.flush();
 		}
 
-		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			return objectMapper.readValue(connection.getInputStream(), PromotionResponseBean.class);
-		} else {
-			throw new RuntimeException("Failed to update promotion. HTTP error code: " + connection.getResponseCode());
-		}
+		ApiException.expect(connection, HttpURLConnection.HTTP_OK, "Saving the promotion");
+		return objectMapper.readValue(connection.getInputStream(), PromotionResponseBean.class);
 	}
 
 	public void deletePromotion(String token, Long id) throws Exception {
@@ -84,9 +81,7 @@ public class PromotionService {
 		connection.setRequestMethod("DELETE");
 		connection.setRequestProperty("Authorization", "Bearer " + token);
 
-		if (connection.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
-			throw new RuntimeException("Failed to delete promotion. HTTP error code: " + connection.getResponseCode());
-		}
+		ApiException.expect(connection, HttpURLConnection.HTTP_NO_CONTENT, "Deleting the promotion");
 	}
 
 	public PromotionResponseBean getPromotionById(String token, Long id) throws Exception {
@@ -96,13 +91,9 @@ public class PromotionService {
 		connection.setRequestProperty("Authorization", "Bearer " + token);
 		connection.setRequestProperty("Accept", "application/json");
 
-		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
-				return objectMapper.readValue(reader, PromotionResponseBean.class);
-			}
-		} else {
-			throw new RuntimeException(
-					"Failed to fetch promotion details. HTTP error code: " + connection.getResponseCode());
+		ApiException.expect(connection, HttpURLConnection.HTTP_OK, "Loading the promotion");
+		try (InputStreamReader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+			return objectMapper.readValue(reader, PromotionResponseBean.class);
 		}
 	}
 
@@ -118,13 +109,11 @@ public class PromotionService {
 		String jsonRequest = objectMapper.writeValueAsString(promotionRequest);
 
 		try (OutputStream os = connection.getOutputStream()) {
-			os.write(jsonRequest.getBytes());
+			os.write(jsonRequest.getBytes(StandardCharsets.UTF_8));
 			os.flush();
 		}
 
-		if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-			throw new RuntimeException("Failed to create promotion. HTTP error code: " + connection.getResponseCode());
-		}
+		ApiException.expect(connection, HttpURLConnection.HTTP_OK, "Creating the promotion");
 	}
 
 }

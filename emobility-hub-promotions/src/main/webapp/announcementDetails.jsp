@@ -1,104 +1,117 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="org.unibl.etf.emobility_hub_promotions.services.ApiException" %>
 <%@ page import="org.unibl.etf.emobility_hub_promotions.services.AnnouncementService" %>
 <%@ page import="org.unibl.etf.emobility_hub_promotions.beans.AnnouncementResponseBean" %>
 <%@ page import="org.unibl.etf.emobility_hub_promotions.models.dto.request.AnnouncementRequest" %>
+<%@ page import="org.unibl.etf.emobility_hub_promotions.util.FormValidation" %>
+<%@ page import="org.unibl.etf.emobility_hub_promotions.util.Html" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.List" %>
 <jsp:useBean id="userBean" class="org.unibl.etf.emobility_hub_promotions.beans.UserBean" scope="session" />
 <%
-if (userBean == null || !userBean.isLoggedIn() || userBean.getToken() == null || userBean.getToken().isEmpty()) {
-    response.sendRedirect("login.jsp");
-    return;
-}
-
-String action = request.getParameter("action");
-String errorMessage = null;
+String pageTitle = "Announcement";
+AnnouncementService announcementService = new AnnouncementService();
+List<String> errors = Collections.emptyList();
 AnnouncementResponseBean announcement = null;
+String title = request.getParameter("title");
+String content = request.getParameter("content");
+
+Long id = null;
+try {
+    id = Long.valueOf(request.getParameter("id"));
+} catch (NumberFormatException e) {
+    // Shown below as "not found".
+}
 
 try {
-    AnnouncementService announcementService = new AnnouncementService();
-    if (action != null) {
-        if ("update".equals(action)) {
-            AnnouncementRequest announcementRequest = new AnnouncementRequest();
-            announcementRequest.setId(Long.parseLong(request.getParameter("id")));
-            announcementRequest.setTitle(request.getParameter("title"));
-            announcementRequest.setContent(request.getParameter("content"));
-            announcementService.update(userBean.getToken(), announcementRequest.getId(), announcementRequest);
-            response.sendRedirect("announcementDetails.jsp?id=" + announcementRequest.getId());
-            return;
-        } else if ("delete".equals(action)) {
-            Long id = Long.parseLong(request.getParameter("id"));
+    if (id != null && "POST".equals(request.getMethod())) {
+        if ("delete".equals(request.getParameter("action"))) {
             announcementService.delete(userBean.getToken(), id);
-            response.sendRedirect("announcements.jsp");
+            session.setAttribute("flash", "The announcement was deleted.");
+            response.sendRedirect("home.jsp");
             return;
         }
-    } else {
-        String announcementId = request.getParameter("id");
-        announcement = announcementService.getById(userBean.getToken(), Long.parseLong(announcementId));
+        errors = FormValidation.validateAnnouncement(title, content);
+        if (errors.isEmpty()) {
+            AnnouncementRequest announcementRequest = new AnnouncementRequest();
+            announcementRequest.setTitle(title.trim());
+            announcementRequest.setContent(content.trim());
+            announcementService.update(userBean.getToken(), id, announcementRequest);
+            session.setAttribute("flash", "The announcement was saved.");
+            response.sendRedirect("home.jsp");
+            return;
+        }
     }
-} catch (Exception e) {
-    errorMessage = "Error: " + e.getMessage();
-    session.invalidate();
-    response.sendRedirect("login.jsp");
-    return;
+    if (id != null) {
+        announcement = announcementService.getById(userBean.getToken(), id);
+        if (errors.isEmpty()) {
+            title = announcement.getTitle();
+            content = announcement.getContent();
+        }
+    }
+} catch (ApiException e) {
+    if (e.isSessionExpired()) {
+        session.invalidate();
+        response.sendRedirect("login.jsp?expired=1");
+        return;
+    }
+    if (e.getStatus() != 404) {
+        errors = List.of(e.getMessage());
+    }
 }
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Announcement Details</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <style>
-        .logout-btn { position: absolute; top: 20px; right: 20px; }
-        .form-group { margin-bottom: 20px; }
-        .button-container { display: flex; justify-content: space-between; }
-        .button-container .btn { margin-right: 10px; }
-        .navigation-buttons { margin-top: 20px; }
-        h1 { text-align: center; margin-bottom: 30px; }
-    </style>
+    <%@ include file="/WEB-INF/jspf/head.jspf" %>
 </head>
 <body class="bg-light">
-<div class="container mt-5">
-    <form action="logout.jsp" method="post" style="display: inline;">
-        <button type="submit" class="btn btn-danger logout-btn">Logout</button>
-    </form>
-
-    <h1>Announcement Details</h1>
-
-    <% if (errorMessage != null) { %>
-    <div class="alert alert-danger"><%= errorMessage %></div>
-    <% } else if (announcement != null) { %>
-    <form method="post">
-        <div class="card mt-4 shadow-sm">
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" value="<%= announcement.getTitle() %>" required>
-                </div>
-                <div class="form-group">
-                    <label for="content" class="form-label">Content</label>
-                    <textarea class="form-control" id="content" name="content" rows="3" required><%= announcement.getContent() %></textarea>
-                </div>
+<%@ include file="/WEB-INF/jspf/navbar.jspf" %>
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <a href="home.jsp" class="btn btn-link px-0 mb-2">&larr; Back to overview</a>
+            <h1 class="h3 mb-3">Announcement</h1>
+            <% if (!errors.isEmpty()) { %>
+            <div class="alert alert-danger" role="alert">
+                <ul class="mb-0"><% for (String error : errors) { %><li><%= Html.escape(error) %></li><% } %></ul>
             </div>
-            <div class="card-footer">
-                <div class="button-container">
-                    <button type="submit" name="action" value="update" class="btn btn-primary">Update</button>
-                    <button type="submit" name="action" value="delete" class="btn btn-danger"
-                        onclick="return confirm('Are you sure you want to delete this announcement?');">Delete</button>
+            <% } %>
+            <% if (announcement == null) { %>
+            <div class="alert alert-warning">This announcement does not exist.</div>
+            <% } else { %>
+            <form method="post" action="announcementDetails.jsp?id=<%= id %>" class="card shadow-sm needs-validation" novalidate>
+                <div class="card-body">
+                    <p class="small text-muted">
+                        Created <%= announcement.getCreationDate().format(formatter) %> ·
+                        updated <%= announcement.getUpdateDate().format(formatter) %>
+                    </p>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required
+                               maxlength="<%= FormValidation.TITLE_MAX %>" value="<%= Html.escape(title) %>">
+                        <div class="invalid-feedback">A title is required.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Content</label>
+                        <textarea class="form-control" id="content" name="content" rows="4" required
+                                  maxlength="<%= FormValidation.ANNOUNCEMENT_CONTENT_MAX %>"><%= Html.escape(content) %></textarea>
+                        <div class="invalid-feedback">Content is required (up to <%= FormValidation.ANNOUNCEMENT_CONTENT_MAX %> characters).</div>
+                    </div>
                 </div>
-            </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <button type="submit" name="action" value="delete" class="btn btn-outline-danger"
+                            formnovalidate onclick="return confirm('Delete this announcement?');">Delete</button>
+                    <button type="submit" name="action" value="update" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+            <% } %>
         </div>
-    </form>
-    <div class="navigation-buttons mt-4">
-        <button class="btn btn-secondary" onclick="redirectToAnnouncements()">Back to Announcements</button>
     </div>
-    <% } else { %>
-    <div class="alert alert-warning">Announcement not found.</div>
-    <% } %>
-</div>
-
-<script>
-    function redirectToAnnouncements() { window.location.href = "announcements.jsp"; }
-</script>
+</main>
+<script src="<%= request.getContextPath() %>/js/bootstrap.bundle.min.js"></script>
+<script src="<%= request.getContextPath() %>/js/forms.js"></script>
 </body>
 </html>

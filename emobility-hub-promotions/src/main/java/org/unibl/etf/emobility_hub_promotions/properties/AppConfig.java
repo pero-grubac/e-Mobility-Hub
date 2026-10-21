@@ -27,17 +27,14 @@ public class AppConfig {
 		}
 	}
 
+	// LOGIN_URL, PROMOTIONS_URL and ANNOUNCEMENTS_URL can be set as environment
+	// variables (Docker does); app.properties holds the local defaults.
 	private String getProperty(String key) {
-		return properties.getProperty(key);
+		String env = System.getenv(key);
+		return env != null && !env.isEmpty() ? env : properties.getProperty(key);
 	}
 
-	private double getDoubleProperty(String key) {
-		return Double.parseDouble(properties.getProperty(key));
-	}
 
-	private Integer getIntegerProperty(String key) {
-		return Integer.parseInt(properties.getProperty(key));
-	}
 
 	public String getLoginUrl() {
 		return getProperty("LOGIN_URL");

@@ -12,10 +12,44 @@ import java.util.Map;
 
 public class AuthService implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static AppConfig conf = new AppConfig();
-	private static final String LOGIN_URL = conf.getLoginUrl();
+	private final String LOGIN_URL;
 
-	public String login(String username, String password) {
+	// What the API returns for a successful login.
+	public static final class LoginResult implements Serializable {
+		private static final long serialVersionUID = 1L;
+		private final String username;
+		private final String role;
+		private final String token;
+
+		LoginResult(String username, String role, String token) {
+			this.username = username;
+			this.role = role;
+			this.token = token;
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public String getRole() {
+			return role;
+		}
+
+		public String getToken() {
+			return token;
+		}
+	}
+
+	public AuthService() {
+		this(new AppConfig().getLoginUrl());
+	}
+
+	public AuthService(String loginUrl) {
+		LOGIN_URL = loginUrl;
+	}
+
+	// Returns null when the credentials are wrong or the API cannot be reached.
+	public LoginResult login(String username, String password) {
 		try {
 			URL url = new URL(LOGIN_URL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -23,7 +57,9 @@ public class AuthService implements Serializable {
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
 
-			String jsonInputString = String.format("{\"username\":\"%s\", \"password\":\"%s\"}", username, password);
+			// Serialised by Jackson so quotes or backslashes in a password stay valid JSON.
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jsonInputString = objectMapper.writeValueAsString(Map.of("username", username, "password", password));
 			try (OutputStream os = conn.getOutputStream()) {
 				byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
 				os.write(input, 0, input.length);
@@ -31,11 +67,9 @@ public class AuthService implements Serializable {
 
 			int responseCode = conn.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) {
-				ObjectMapper objectMapper = new ObjectMapper();
-
-				Map<String, String> responseMap = objectMapper.readValue(conn.getInputStream(), Map.class);
-
-				return responseMap.get("token");
+				Map<?, ?> responseMap = objectMapper.readValue(conn.getInputStream(), Map.class);
+				return new LoginResult((String) responseMap.get("username"), (String) responseMap.get("role"),
+						(String) responseMap.get("token"));
 			} else {
 				throw new RuntimeException("Login failed with HTTP code: " + responseCode);
 			}

@@ -1,0 +1,6 @@
+<%-- Shared <head> content. The including page declares pageTitle first. --%>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= pageTitle %> · eMobilityHub Promotions</title>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap.min.css">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">

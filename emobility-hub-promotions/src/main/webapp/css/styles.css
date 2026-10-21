@@ -1,19 +1,12 @@
-/* style.css */
-.logout-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+/* App-specific additions to Bootstrap 5 */
+.card-preview {
+    min-height: 3rem;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
+.item-card {
+    transition: box-shadow 0.15s ease-in-out;
 }
 
-.navigation-buttons {
-    margin-top: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
+.item-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
 }
