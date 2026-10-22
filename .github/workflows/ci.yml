@@ -41,7 +41,7 @@ jobs:
       frontend: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.frontend == 'true' }}
       stack: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.stack == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -80,9 +80,9 @@ jobs:
       run:
         working-directory: emobility-hub
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -116,9 +116,9 @@ jobs:
       run:
         working-directory: ${{ matrix.app }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -147,9 +147,9 @@ jobs:
       run:
         working-directory: emobility-hub-employee
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: npm              # ~/.npm, keyed on package-lock.json
@@ -190,7 +190,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: docker/setup-buildx-action@v3
 
@@ -220,7 +220,8 @@ jobs:
           # Tomcat needs a few seconds to deploy each WAR, so retry.
           check() {
             for _ in $(seq 1 30); do
-              code=$(curl -s -o /dev/null -w '%{http_code}' "$1")
+              # "|| true": while a service starts curl fails, and the step runs with bash -e
+              code=$(curl -s -o /dev/null -w '%{http_code}' "$1" || true)
               [ "$code" = "${2:-200}" ] && echo "$1 -> $code" && return 0
               sleep 2
             done
@@ -230,8 +231,10 @@ jobs:
           check http://localhost/
           check http://localhost/login
           # Angular routes that share a name with an API resource still load the app
-          curl -fs http://localhost/statistics | grep -q '<app-root'
-          curl -fs http://localhost/rentals | grep -q '<app-root'
+          for route in statistics rentals; do
+            curl -fs -o page.html "http://localhost/$route"
+            grep -q '<app-root' page.html
+          done
           check http://localhost:8081/user/
           check http://localhost:8082/promotions/
           check http://localhost:8080/rss/promotions
@@ -246,14 +249,15 @@ jobs:
             -d '{"username":"admin","password":"admin123"}' http://localhost/api/auth/login > /dev/null
           grep -q EMH_SESSION "$jar"
           # The cookie alone authenticates reads
-          curl -fs -b "$jar" -c "$jar" http://localhost/api/auth/me | grep -q ROLE_ADMIN
+          curl -fs -b "$jar" -c "$jar" -o me.json http://localhost/api/auth/me
+          grep -q ROLE_ADMIN me.json
           curl -fs -b "$jar" -c "$jar" 'http://localhost/api/electric-cars?page=0&size=1' > /dev/null
           # A write without the CSRF header is refused...
-          code=$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" -X DELETE http://localhost/api/electric-cars/999999)
+          code=$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" -X DELETE http://localhost/api/electric-cars/999999 || true)
           echo "write without CSRF -> $code"; [ "$code" = "403" ]
           # ...and accepted with it (404: the vehicle does not exist)
           xsrf=$(awk '$6=="XSRF-TOKEN"{print $7}' "$jar")
-          code=$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" -H "X-XSRF-TOKEN: $xsrf" -X DELETE http://localhost/api/electric-cars/999999)
+          code=$(curl -s -o /dev/null -w '%{http_code}' -b "$jar" -H "X-XSRF-TOKEN: $xsrf" -X DELETE http://localhost/api/electric-cars/999999 || true)
           echo "write with CSRF -> $code"; [ "$code" = "404" ]
 
       - name: Logs on failure
@@ -284,7 +288,7 @@ jobs:
           - { image: user, context: emobility-hub-user, scope: jsp-user }
           - { image: promotions, context: emobility-hub-promotions, scope: jsp-promotions }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: docker/setup-buildx-action@v3
 
