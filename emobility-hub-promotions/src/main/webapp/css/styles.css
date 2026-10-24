@@ -1,12 +1,348 @@
-/* App-specific additions to Bootstrap 5 */
-.card-preview {
-    min-height: 3rem;
+/* App-specific additions to Bootstrap 5: the same indigo brand as the
+   employee app, cards with a colour per type, and a mobile-first login. */
+
+:root {
+    --brand: #3f51b5;
+    --brand-dark: #283593;
+    --brand-darker: #1a237e;
+    --accent: #ffb300;
+    --bs-link-color-rgb: 63, 81, 181;
+    --bs-link-hover-color-rgb: 40, 53, 147;
+}
+
+body {
+    background: #f5f7fa;
+}
+
+/* ── Bootstrap in brand colours ─────────────────────────────────────────── */
+
+.btn-primary {
+    --bs-btn-bg: var(--brand);
+    --bs-btn-border-color: var(--brand);
+    --bs-btn-hover-bg: var(--brand-dark);
+    --bs-btn-hover-border-color: var(--brand-dark);
+    --bs-btn-active-bg: var(--brand-darker);
+    --bs-btn-active-border-color: var(--brand-darker);
+    --bs-btn-disabled-bg: var(--brand);
+    --bs-btn-disabled-border-color: var(--brand);
+}
+
+.pagination {
+    --bs-pagination-color: var(--brand);
+    --bs-pagination-active-bg: var(--brand);
+    --bs-pagination-active-border-color: var(--brand);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #9fa8da;
+    box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.18);
+}
+
+.form-control.is-valid:focus,
+.form-control.is-invalid:focus {
+    box-shadow: none;
+}
+
+/* ── Navigation ─────────────────────────────────────────────────────────── */
+
+.app-navbar {
+    background: linear-gradient(90deg, var(--brand-dark), var(--brand));
+    box-shadow: 0 2px 8px rgba(26, 35, 126, 0.25);
+}
+
+.app-navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.app-navbar .navbar-brand svg {
+    width: 26px;
+    height: 26px;
+}
+
+.app-navbar .nav-link.active {
+    font-weight: 600;
+}
+
+/* ── Overview page ──────────────────────────────────────────────────────── */
+
+.search-panel {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.section-title .count {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: #e8eaf6;
+    color: var(--brand-dark);
 }
 
 .item-card {
-    transition: box-shadow 0.15s ease-in-out;
+    border: none;
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+    transition: box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
 }
 
 .item-card:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0.5rem 1rem rgba(26, 35, 126, 0.12);
+    transform: translateY(-2px);
+}
+
+.item-card .card-footer {
+    background: transparent;
+    border-top: 1px solid #eef0f3;
+}
+
+.item-promotion {
+    border-left-color: var(--accent);
+}
+
+.item-announcement {
+    border-left-color: var(--brand);
+}
+
+.card-preview {
+    min-height: 3rem;
+    color: #4b5563;
+}
+
+.status-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.status-active {
+    background: #e3f6e8;
+    color: #1b7a36;
+}
+
+.status-upcoming {
+    background: #fff4d6;
+    color: #8a5a00;
+}
+
+.status-ended {
+    background: #eef0f3;
+    color: #6b7280;
+}
+
+/* ── Forms ──────────────────────────────────────────────────────────────── */
+
+.form-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
+
+.form-card .card-footer {
+    background: transparent;
+}
+
+/* ── Login ──────────────────────────────────────────────────────────────── */
+
+.login-page {
+    display: flex;
+    min-height: 100vh;
+}
+
+.login-brand {
+    flex: 0 0 44%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 3rem 3.5rem;
+    color: #fff;
+    background:
+        radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.12) 0, transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(255, 179, 0, 0.2) 0, transparent 40%),
+        linear-gradient(150deg, var(--brand) 0%, var(--brand-dark) 60%, var(--brand-darker) 100%);
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.login-logo svg {
+    width: 40px;
+    height: 40px;
+}
+
+.login-brand h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+}
+
+.login-brand .lead-text {
+    max-width: 26rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.login-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.login-chips li {
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 0.875rem;
+}
+
+.login-chips li::before {
+    content: "●";
+    margin-right: 0.45rem;
+    color: var(--accent);
+}
+
+.login-note {
+    margin: 0;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.login-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+    padding: 2.25rem 2rem 2rem;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(26, 35, 126, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.login-card h2 {
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.login-card .form-control {
+    padding: 0.7rem 0.85rem;
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-field .form-control {
+    padding-right: 4rem;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 0;
+    right: 0.35rem;
+    height: calc(1.5em + 1.4rem + 2px);
+    border: none;
+    background: none;
+    color: var(--brand);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.login-card .btn-primary {
+    padding: 0.7rem;
+    font-size: 1.05rem;
+}
+
+/* ── Phones ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 767.98px) {
+    .login-page {
+        flex-direction: column;
+        background: #f5f7fa;
+    }
+
+    /* The brand becomes a curved header the card slides over. */
+    .login-brand {
+        flex: none;
+        gap: 0.75rem;
+        padding: 1.75rem 1.5rem 4.5rem;
+        border-radius: 0 0 28px 28px;
+    }
+
+    .login-brand h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .login-brand .lead-text {
+        font-size: 0.95rem;
+    }
+
+    .login-chips li {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.78rem;
+    }
+
+    .login-note {
+        display: none;
+    }
+
+    .login-main {
+        align-items: flex-start;
+        margin-top: -3rem;
+        padding: 0 1rem 2rem;
+    }
+
+    .login-card {
+        max-width: none;
+        padding: 1.75rem 1.25rem 1.5rem;
+    }
+
+    /* Big, thumb-friendly buttons stacked under the forms. */
+    .form-card .card-footer {
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+    }
+
+    .form-card .card-footer .btn,
+    .form-card .card-footer form,
+    .form-card .card-footer form .btn {
+        width: 100%;
+    }
+
+    .search-panel {
+        padding: 0.85rem;
+    }
 }

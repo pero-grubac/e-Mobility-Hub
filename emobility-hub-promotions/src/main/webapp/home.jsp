@@ -65,6 +65,7 @@ try {
 // Pagination links keep the search and the other list's page.
 String searchQuery = search == null ? "" : "&search=" + URLEncoder.encode(search, StandardCharsets.UTF_8);
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+java.time.LocalDateTime now = java.time.LocalDateTime.now();
 String flash = (String) session.getAttribute("flash");
 session.removeAttribute("flash");
 %>
@@ -83,7 +84,7 @@ session.removeAttribute("flash");
     </div>
     <% } %>
 
-    <form method="get" action="home.jsp" class="mb-4" id="searchForm" role="search">
+    <form method="get" action="home.jsp" class="mb-4 search-panel" id="searchForm" role="search">
         <label for="search" class="form-label fw-semibold">Search promotions and announcements by content</label>
         <div class="input-group">
             <input type="search" class="form-control" id="search" name="search" maxlength="255"
@@ -101,7 +102,7 @@ session.removeAttribute("flash");
 
     <section class="mb-5" id="promotions">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-            <h2 class="h4 mb-0">Promotions <span class="badge bg-secondary"><%= promotionTotal %></span></h2>
+            <h2 class="h4 mb-0 section-title">Promotions <span class="count"><%= promotionTotal %></span></h2>
             <a class="btn btn-primary btn-sm" href="createPromotion.jsp" id="create-promotion">New promotion</a>
         </div>
         <div class="row g-3">
@@ -110,9 +111,16 @@ session.removeAttribute("flash");
             <% } %>
             <% for (PromotionResponseBean promotion : promotions) { %>
             <div class="col-sm-6 col-lg-4">
-                <a class="card h-100 item-card text-decoration-none text-body" href="promotionDetails.jsp?id=<%= promotion.getId() %>">
+                <%
+                    String status = promotion.getEndDate().isBefore(now) ? "ended"
+                            : promotion.getStartDate().isAfter(now) ? "upcoming" : "active";
+                %>
+                <a class="card h-100 item-card item-promotion text-decoration-none text-body" href="promotionDetails.jsp?id=<%= promotion.getId() %>">
                     <div class="card-body">
-                        <h3 class="h6 card-title"><%= Html.escape(promotion.getTitle()) %></h3>
+                        <div class="d-flex justify-content-between align-items-start gap-2">
+                            <h3 class="h6 card-title mb-2"><%= Html.escape(promotion.getTitle()) %></h3>
+                            <span class="status-badge status-<%= status %>"><%= status.substring(0, 1).toUpperCase() + status.substring(1) %></span>
+                        </div>
                         <p class="card-text card-preview"><%= Html.preview(promotion.getContent(), 90) %></p>
                     </div>
                     <div class="card-footer small text-muted">
@@ -137,7 +145,7 @@ session.removeAttribute("flash");
 
     <section id="announcements">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-            <h2 class="h4 mb-0">Announcements <span class="badge bg-secondary"><%= announcementTotal %></span></h2>
+            <h2 class="h4 mb-0 section-title">Announcements <span class="count"><%= announcementTotal %></span></h2>
             <a class="btn btn-primary btn-sm" href="createAnnouncement.jsp" id="create-announcement">New announcement</a>
         </div>
         <div class="row g-3">
@@ -146,7 +154,7 @@ session.removeAttribute("flash");
             <% } %>
             <% for (AnnouncementResponseBean announcement : announcements) { %>
             <div class="col-sm-6 col-lg-4">
-                <a class="card h-100 item-card text-decoration-none text-body" href="announcementDetails.jsp?id=<%= announcement.getId() %>">
+                <a class="card h-100 item-card item-announcement text-decoration-none text-body" href="announcementDetails.jsp?id=<%= announcement.getId() %>">
                     <div class="card-body">
                         <h3 class="h6 card-title"><%= Html.escape(announcement.getTitle()) %></h3>
                         <p class="card-text card-preview"><%= Html.preview(announcement.getContent(), 90) %></p>

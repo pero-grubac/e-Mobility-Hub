@@ -55,7 +55,7 @@ if ("POST".equals(request.getMethod())) {
                 <ul class="mb-0"><% for (String error : errors) { %><li><%= Html.escape(error) %></li><% } %></ul>
             </div>
             <% } %>
-            <form method="post" action="createPromotion.jsp" class="card shadow-sm needs-validation" novalidate id="promotion-form">
+            <form method="post" action="createPromotion.jsp" class="card form-card needs-validation" novalidate id="promotion-form">
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>

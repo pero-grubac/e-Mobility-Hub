@@ -1,7 +1,13 @@
 <%-- Shared navigation for the signed-in manager. Needs the session userBean. --%>
-<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+<nav class="navbar navbar-expand-md navbar-dark app-navbar">
     <div class="container">
-        <a class="navbar-brand fw-semibold" href="home.jsp">eMobilityHub Promotions</a>
+        <a class="navbar-brand fw-semibold" href="home.jsp">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+                <circle cx="24" cy="24" r="22" fill="rgba(255,255,255,.16)"/>
+                <path d="M27 6 13 27h10l-3 15 15-22H25z" fill="#ffd54f"/>
+            </svg>
+            eMobilityHub Promotions
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
                 aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

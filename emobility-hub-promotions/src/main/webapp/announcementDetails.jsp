@@ -82,7 +82,7 @@ DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             <% if (announcement == null) { %>
             <div class="alert alert-warning">This announcement does not exist.</div>
             <% } else { %>
-            <form method="post" action="announcementDetails.jsp?id=<%= id %>" class="card shadow-sm needs-validation" novalidate>
+            <form method="post" action="announcementDetails.jsp?id=<%= id %>" class="card form-card needs-validation" novalidate>
                 <div class="card-body">
                     <p class="small text-muted">
                         Created <%= announcement.getCreationDate().format(formatter) %> ·

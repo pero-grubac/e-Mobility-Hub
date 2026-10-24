@@ -36,38 +36,58 @@ if ("POST".equals(request.getMethod()) && username != null) {
 <head>
     <%@ include file="/WEB-INF/jspf/head.jspf" %>
 </head>
-<body class="bg-light">
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-sm-10 col-md-6 col-lg-4">
-            <div class="card mt-5 shadow">
-                <div class="card-body p-4">
-                    <h1 class="h3 text-center mb-1">eMobilityHub</h1>
-                    <p class="text-center text-muted mb-4">Promotions &amp; announcements</p>
-                    <% if (!loginMessage.isEmpty()) { %>
-                    <div class="alert alert-danger" role="alert" id="login-error"><%= loginMessage %></div>
-                    <% } else if (!infoMessage.isEmpty()) { %>
-                    <div class="alert alert-info" role="alert"><%= infoMessage %></div>
-                    <% } %>
-                    <form action="login.jsp" method="post" class="needs-validation" novalidate>
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required
-                                   value="<%= Html.escape(username) %>" autocomplete="username">
-                            <div class="invalid-feedback">Enter your username.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required
-                                   autocomplete="current-password">
-                            <div class="invalid-feedback">Enter your password.</div>
-                        </div>
-                        <button type="submit" id="login-button" class="btn btn-primary w-100">Login</button>
-                    </form>
-                </div>
-            </div>
+<body>
+<div class="login-page">
+    <section class="login-brand" aria-hidden="true">
+        <div class="login-logo">
+            <svg viewBox="0 0 48 48">
+                <circle cx="24" cy="24" r="22" fill="rgba(255,255,255,.14)"/>
+                <path d="M27 6 13 27h10l-3 15 15-22H25z" fill="#ffd54f"/>
+            </svg>
+            <span>eMobilityHub</span>
         </div>
-    </div>
+        <div>
+            <h1>Promotions portal</h1>
+            <p class="lead-text">Campaigns and news for everyone who rents with us, published on the site and in the RSS feed.</p>
+        </div>
+        <ul class="login-chips">
+            <li>Promotions</li>
+            <li>Announcements</li>
+            <li>RSS</li>
+        </ul>
+        <p class="login-note">For managers only</p>
+    </section>
+
+    <main class="login-main">
+        <div class="login-card">
+            <h2>Sign in</h2>
+            <p class="text-muted mb-4">Use your manager account.</p>
+            <% if (!loginMessage.isEmpty()) { %>
+            <div class="alert alert-danger py-2" role="alert" id="login-error"><%= loginMessage %></div>
+            <% } else if (!infoMessage.isEmpty()) { %>
+            <div class="alert alert-info py-2" role="alert"><%= infoMessage %></div>
+            <% } %>
+            <form action="login.jsp" method="post" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required
+                           value="<%= Html.escape(username) %>" autocomplete="username">
+                    <div class="invalid-feedback">Enter your username.</div>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="password-field">
+                        <input type="password" class="form-control" id="password" name="password" required
+                               autocomplete="current-password">
+                        <button type="button" class="password-toggle" data-toggle-password="password"
+                                aria-label="Show password">Show</button>
+                        <div class="invalid-feedback">Enter your password.</div>
+                    </div>
+                </div>
+                <button type="submit" id="login-button" class="btn btn-primary w-100">Sign in</button>
+            </form>
+        </div>
+    </main>
 </div>
 <script src="<%= request.getContextPath() %>/js/forms.js"></script>
 </body>

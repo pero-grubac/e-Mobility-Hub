@@ -33,3 +33,14 @@
         });
     });
 })();
+
+// "Show" / "Hide" next to a password field.
+document.querySelectorAll('[data-toggle-password]').forEach(function (button) {
+    button.addEventListener('click', function () {
+        var input = document.getElementById(button.getAttribute('data-toggle-password'));
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        button.textContent = show ? 'Hide' : 'Show';
+        button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    });
+});

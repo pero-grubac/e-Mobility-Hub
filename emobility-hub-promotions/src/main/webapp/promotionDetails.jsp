@@ -86,7 +86,7 @@ try {
             <% if (promotion == null) { %>
             <div class="alert alert-warning">This promotion does not exist.</div>
             <% } else { %>
-            <form method="post" action="promotionDetails.jsp?id=<%= id %>" class="card shadow-sm needs-validation" novalidate>
+            <form method="post" action="promotionDetails.jsp?id=<%= id %>" class="card form-card needs-validation" novalidate>
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
