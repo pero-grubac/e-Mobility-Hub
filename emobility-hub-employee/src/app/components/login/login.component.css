@@ -141,7 +141,7 @@
   font-size: 16px;
 }
 
-/* ── Phones: the brand panel becomes a header ───────────────────────────── */
+/* ── Phones: the brand becomes a curved header the card slides over ────── */
 
 @media (max-width: 800px) {
   .login-page {
@@ -150,20 +150,42 @@
 
   .brand-panel {
     flex: none;
-    gap: 16px;
-    padding: 28px 24px;
+    gap: 12px;
+    padding: 28px 24px 76px;
+    border-radius: 0 0 28px 28px;
   }
 
   .brand-copy h1 {
     font-size: 28px;
+    margin-bottom: 6px;
   }
 
-  .vehicle-list,
+  .brand-copy p {
+    font-size: 15px;
+  }
+
+  .vehicle-list li {
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  .vehicle-list svg {
+    width: 16px;
+    height: 16px;
+  }
+
   .brand-footer {
     display: none;
   }
 
   .form-panel {
     align-items: flex-start;
+    margin-top: -52px;
+    padding: 0 16px 32px;
+  }
+
+  .login-card {
+    max-width: none;
+    padding: 28px 20px 24px;
   }
 }
