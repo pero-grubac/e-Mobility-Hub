@@ -1,37 +1,89 @@
-<div class="login-container">
-  <h2>Login</h2>
-  <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Username</mat-label>
-      <input
-        [(ngModel)]="authRequest.username"
-        matInput
-        name="username"
-        required
-        type="text"
-      />
-    </mat-form-field>
+<div class="login-page">
+  <section aria-hidden="true" class="brand-panel">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="22" fill="rgba(255,255,255,.14)" />
+        <path d="M27 6 13 27h10l-3 15 15-22H25z" fill="#ffd54f" />
+      </svg>
+      <span>eMobilityHub</span>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Password</mat-label>
-      <input
-        [(ngModel)]="authRequest.password"
-        matInput
-        name="password"
-        required
-        type="password"
-      />
-    </mat-form-field>
+    <div class="brand-copy">
+      <h1>Employee portal</h1>
+      <p>Fleet, clients, rentals and statistics for electric cars, bicycles and scooters.</p>
+    </div>
 
-    <button
-      [disabled]="loginForm.invalid"
-      color="primary"
-      mat-raised-button
-      type="submit"
-    >
-      Login
-    </button>
+    <ul class="vehicle-list">
+      <li>
+        <svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11v6a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H8v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1zm2.2 0h9.6l-1-3H8.2zM7.5 14.5a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4m9 0a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4" /></svg>
+        Cars
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24"><path d="M5 18.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m0-1.6a1.9 1.9 0 1 0 0-3.8 1.9 1.9 0 0 0 0 3.8m14 1.6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m0-1.6a1.9 1.9 0 1 0 0-3.8 1.9 1.9 0 0 0 0 3.8M11.2 16 9 10.6 6.3 15l-1.4-.8 3.4-5.6H7V7h4v1.6h-1l.7 1.8h5.5l-.9-2.4H14V6.4h2.4l2.3 6.3-1.5.6-.6-1.3H12l1.3 3.1z" /></svg>
+        Bicycles
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24"><path d="M6 19.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0-1.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2m12 1.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0-1.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2M8.4 16.2l7-.1-2.9-10.6H10V4h3.6l3.3 11.8-.6.9-7.9.1z" /></svg>
+        Scooters
+      </li>
+    </ul>
 
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-  </form>
+    <p class="brand-footer">Administrators · Operators · Managers</p>
+  </section>
+
+  <main class="form-panel">
+    <div class="login-card">
+      <h2>Sign in</h2>
+      <p class="subtitle">Use your employee account.</p>
+
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input
+            [(ngModel)]="authRequest.username"
+            autocomplete="username"
+            matInput
+            name="username"
+            required
+            type="text"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input
+            [(ngModel)]="authRequest.password"
+            [type]="showPassword ? 'text' : 'password'"
+            autocomplete="current-password"
+            matInput
+            name="password"
+            required
+          />
+          <button
+            (click)="showPassword = !showPassword"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            class="toggle-password"
+            matSuffix
+            type="button"
+          >
+            {{ showPassword ? "Hide" : "Show" }}
+          </button>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-message" role="alert">
+          {{ errorMessage }}
+        </div>
+
+        <button
+          [disabled]="loginForm.invalid || submitting"
+          class="submit-button"
+          color="primary"
+          mat-flat-button
+          type="submit"
+        >
+          {{ submitting ? "Signing in…" : "Sign in" }}
+        </button>
+      </form>
+    </div>
+  </main>
 </div>
