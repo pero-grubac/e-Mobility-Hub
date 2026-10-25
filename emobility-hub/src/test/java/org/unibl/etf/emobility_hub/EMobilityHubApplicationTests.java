@@ -11,6 +11,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
@@ -55,6 +56,8 @@ class EMobilityHubApplicationTests {
     JwtService jwtService;
     @Autowired
     ObjectMapper json;
+    @Autowired
+    JdbcTemplate jdbc;
 
     final Map<String, String> tokens = new HashMap<>();
 
@@ -200,6 +203,56 @@ class EMobilityHubApplicationTests {
     void dailyRevenueAndFaultStatistics() {
         assertThat(get("/statistics/getDailyRevenue?start=2024-03-01T00:00:00&end=2024-03-31T23:59:59", "manager")).hasSize(4);
         assertThat(get("/statistics/getFaultsPerVehicle", "manager")).hasSize(4);
+    }
+
+    // February 2025 has no seeded rentals: these tests add their own rides
+    // there and remove them again, so the other revenue totals stay as seeded.
+    void addRide(String start, String end, Double price) {
+        jdbc.update("INSERT INTO rental (rentalStart, rentalEnd, price, client_id, vehicle_id) "
+                + "SELECT ?, ?, ?, 4, id FROM transport_vehicle WHERE uniqueIdentifier = 'BIC-001'", start, end, price);
+    }
+
+    void removeAddedRides() {
+        jdbc.update("DELETE FROM rental WHERE rentalStart >= '2025-02-01' AND rentalStart < '2025-03-02'");
+    }
+
+    Map<String, JsonNode> february2025Revenue() {
+        Map<String, JsonNode> days = new HashMap<>();
+        get("/statistics/getDailyRevenue?start=2025-02-01T00:00:00&end=2025-03-01T00:00:00", "manager")
+                .forEach(d -> days.put(d.get("rentalDay").asText(), d.get("totalRevenue")));
+        return days;
+    }
+
+    @Test
+    void dailyRevenueCountsOnlyFinishedRides() {
+        try {
+            addRide("2025-02-10 09:00:00", "2025-02-10 10:00:00", 12.0);
+            addRide("2025-02-10 15:00:00", null, null);
+            // The only ride that day is still running: no revenue yet, not a NULL day.
+            addRide("2025-02-14 08:00:00", null, null);
+
+            Map<String, JsonNode> days = february2025Revenue();
+
+            assertThat(days).containsOnlyKeys("2025-02-10");
+            assertThat(days.get("2025-02-10").asDouble()).isEqualTo(12.0, offset(0.001));
+        } finally {
+            removeAddedRides();
+        }
+    }
+
+    @Test
+    void dailyRevenueMonthEndsAtTheStartOfTheNextMonth() {
+        try {
+            addRide("2025-02-28 21:30:00", "2025-02-28 22:00:00", 7.5);
+            addRide("2025-03-01 00:00:00", "2025-03-01 00:30:00", 99.0);
+
+            Map<String, JsonNode> days = february2025Revenue();
+
+            assertThat(days).containsOnlyKeys("2025-02-28");
+            assertThat(days.get("2025-02-28").asDouble()).isEqualTo(7.5, offset(0.001));
+        } finally {
+            removeAddedRides();
+        }
     }
 
     @Test

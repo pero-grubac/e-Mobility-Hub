@@ -24,16 +24,7 @@ export class StatisticsComponent implements OnInit {
   constructor(private statisticService: StatisticService) {}
 
   ngOnInit(): void {
-    const start = this.formatDate(
-      new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1),
-    );
-    const end = this.formatDate(
-      new Date(
-        this.currentDate.getFullYear(),
-        this.currentDate.getMonth() + 1,
-        0,
-      ),
-    );
+    const [start, end] = this.monthRange(this.currentDate);
     this.fetchDailyRevenue(start, end);
 
     this.fetchRevenueByVehicleType();
@@ -46,7 +37,7 @@ export class StatisticsComponent implements OnInit {
         if (data && Array.isArray(data)) {
           this.dailyRevenueData = data.map((entry) => ({
             name: entry.rentalDay, // Ensure name is a valid date string
-            value: entry.totalRevenue, // Ensure value is a number
+            value: entry.totalRevenue ?? 0, // The chart cannot draw a missing value
           }));
         } else {
           console.error('Invalid data received for daily revenue:', data);
@@ -61,17 +52,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   chooseMonth(normalizedMonth: Date, datepicker: MatDatepicker<Date>): void {
-    const start = this.formatDate(
-      new Date(normalizedMonth.getFullYear(), normalizedMonth.getMonth(), 1),
-    );
-    const end = this.formatDate(
-      new Date(
-        normalizedMonth.getFullYear(),
-        normalizedMonth.getMonth() + 1,
-        0,
-      ),
-    );
-
+    const [start, end] = this.monthRange(normalizedMonth);
     this.fetchDailyRevenue(start, end);
     datepicker.close();
   }
@@ -95,6 +76,14 @@ export class StatisticsComponent implements OnInit {
     this.maxFaultValue = Math.ceil(
       Math.max(...this.faultsPerVehicleData.map((d) => d.value)),
     );
+  }
+
+  // The month of the given date, from its first day up to (not including) the
+  // first day of the next month, so rides on the last day are counted.
+  private monthRange(date: Date): [string, string] {
+    const start = new Date(date.getFullYear(), date.getMonth(), 1);
+    const end = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    return [this.formatDate(start), this.formatDate(end)];
   }
 
   // Format date to yyyy-MM-ddThh:mm:ss

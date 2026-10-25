@@ -23,9 +23,12 @@ public interface RentalEntityRepository extends JpaRepository<RentalEntity, Long
 
     // STATISTIC
 
+    // Finished rides only: a running ride has no price yet. The end is
+    // exclusive, so a month is [first day, first day of the next month).
     @Query("SELECT FUNCTION('DATE', r.rentalStart) AS rentalDay, SUM(r.price) AS totalRevenue " +
             "FROM RentalEntity r " +
-            "WHERE r.rentalStart BETWEEN :start AND :end " +
+            "WHERE r.rentalStart >= :start AND r.rentalStart < :end " +
+            "AND r.rentalEnd IS NOT NULL " +
             "GROUP BY FUNCTION('DATE', r.rentalStart)")
     List<DailyRevenueProjection> findDailyRevenue(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
