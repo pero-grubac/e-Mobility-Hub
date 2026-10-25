@@ -47,31 +47,31 @@ Each recording shows the main flow of one role; the caption at the bottom names 
 
 ### 🏢 Employee app · 🔑 Administrator
 
-<img src="images/emobility-hub-admin.gif" alt="Administrator: fleet tables, adding a car, CSV import with a rejected row, editing a car, adding and deleting faults, rentals of a vehicle, creating a manufacturer, blocking a client, creating an employee" width="900">
+<img src="images/emobility-hub-admin.gif" alt="Administrator: adding a car, a CSV import that saves two cars and rejects a row with an unknown manufacturer, and creating an operator account" width="900">
 
 Fleet tables with every field and status → add a car → import scooters from CSV (one row rejected with its reason) → edit a car on its detail page → add a fault and delete an old one, see the vehicle's rentals → create a manufacturer → block and unblock a client → create an employee.
 
 ### 🏢 Employee app · 🔧 Operator
 
-<img src="images/emobility-hub-operator.gif" alt="Operator: searching rentals and opening one, the vehicle map with filters and a popup, reporting a fault on a scooter and marking it fixed, blocking a client" width="900">
+<img src="images/emobility-hub-operator.gif" alt="Operator: searching rentals and opening one, the vehicle map with a type filter and a scooter popup, reporting a fault on a scooter and marking it fixed, and blocking a client" width="900">
 
 Search the rentals and open one (read only) → the fleet on a map, filtered by status → open a vehicle from the map → report a fault, then mark it fixed after the repair → block and unblock a client.
 
 ### 🏢 Employee app · 📊 Manager
 
-<img src="images/emobility-hub-manager.gif" alt="Manager: statistics for March 2024 and October 2026, revenue by vehicle type and faults per vehicle, changing rental prices, and the admin and operator pages" width="900">
+<img src="images/emobility-hub-manager.gif" alt="Manager: statistics for March 2024 with daily revenue, revenue by vehicle type and faults per vehicle, back to October 2026, then changing a scooter rental price" width="900">
 
 Revenue per day for a chosen month → revenue by vehicle type and faults per vehicle → set rental prices for the fleet → the admin pages (cars, employees) and operator pages (rentals, map) that managers also have.
 
 ### 🛒 Client app (mobile-first)
 
-<img src="images/emobility-hub-user.gif" alt="Client app on a phone: registration with a profile picture, sign in, the four options, renting a car with ID card, driver's licence and card payment, the live ride, finishing, the invoice, reporting a broken scooter, the profile and changing the password" width="320">
+<img src="images/emobility-hub-user.gif" alt="Client app on a phone with demo data: sign in, rent a car with a sample ID card, driver's licence and test card number, the live ride, then finishing it and the receipt" width="320">
 
 Register with a profile picture → sign in → the four options → pick a car → detect the start location → ID document and driver's licence → card payment and confirmation → live ride clock and price → finish at the drop-off point → PDF invoice → report a broken scooter → profile with all rentals → change the password.
 
 ### 🎯 Promotions app (managers only)
 
-<img src="images/emobility-hub-promotions.gif" alt="Promotions app: an operator is refused, the manager signs in, searches promotions and announcements, creates and edits a promotion and publishes an announcement" width="900">
+<img src="images/emobility-hub-promotions.gif" alt="Promotions app: an operator is refused, the manager signs in, searches for scooter deals, creates a promotion and publishes an announcement" width="900">
 
 An operator is refused → the manager signs in → promotions and announcements on one page, one search for both → create a promotion with its dates → open and edit it → publish an announcement.
 
