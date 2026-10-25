@@ -18,6 +18,8 @@
 
 **A rental platform for electric cars, bicycles and scooters: an employee back office, a client web shop and a promotions portal on one Spring Boot API.**
 
+<img src="images/demo.gif" alt="eMobilityHub demo: a manager signs in to the employee app, opens the car fleet and a car's details, the vehicle map with a scooter popup, and the revenue statistics" width="900">
+
 </div>
 
 ---
